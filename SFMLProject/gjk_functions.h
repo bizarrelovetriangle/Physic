@@ -56,10 +56,10 @@ public:
 				draw_line(nearest_a.minkowski_different, nearest_b.minkowski_different, window, sf::Color::Blue);
 
 				if (nearest_a.point_a == nearest_b.point_a) {
-					draw_line(nearest_a.point_b, nearest_b.point_b, window, sf::Color::Blue);
+					draw_line(*nearest_a.point_b, *nearest_b.point_b, window, sf::Color::Blue);
 				}
 				else {
-					draw_line(nearest_a.point_a, nearest_b.point_a, window, sf::Color::Blue);
+					draw_line(*nearest_a.point_a, *nearest_b.point_a, window, sf::Color::Blue);
 				}
 
 				return;
@@ -80,7 +80,7 @@ public:
 
 	static void inseart_into_sorted_list(
 		edjes_by_distance& edges_sort_by_distance,
-		double distance, support_function_result a, support_function_result b)
+		double distance, support_function_result& a, support_function_result& b)
 	{
 		auto first = std::find_if(edges_sort_by_distance.begin(), edges_sort_by_distance.end(), 
 			[&distance](auto distace_edges) 
@@ -158,7 +158,7 @@ public:
 			draw_number(a, window, number);
 			draw_number(b, window, number);
 		}
-		support_function_result result(a, b, a - b);
+		support_function_result result(&a, &b, a - b);
 		return result;
 	}
 
