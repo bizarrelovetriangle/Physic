@@ -7,7 +7,6 @@
 
 class gjk_functions {
 public:
-	// todo: inhearit primitives::vector2 from sf::Vector2
 	// todo: use separate class to draw lines and text
 	// remove primitives
 
@@ -116,9 +115,9 @@ public:
 
 		auto mink_a = support_function(a_vectors, b_vectors, direction, window, 1, false);
 		auto mink_b = support_function(a_vectors, b_vectors, -direction, window, 2, false);
-		//draw_line(a, b, window, sf::Color::Red);
-		//draw_number(a, window, 1);
-		//draw_number(b, window, 2);
+		//draw_line(mink_a.differens, mink_b.differens, window, sf::Color::Red);
+		//draw_number(mink_a.differens, window, 1);
+		//draw_number(mink_b.differens, window, 2);
 
 		for (int i = 0; i < 10; i++) {
 			direction = perpendicular_to_point(mink_a.differens, mink_b.differens, zero_vector);
@@ -153,7 +152,7 @@ public:
 	}
 
 	template<size_t N, size_t M>
-	static minkowski_differens& support_function(
+	static minkowski_differens support_function(
 		primitives::vector2(&a_vectors)[N],
 		primitives::vector2(&b_vectors)[M],
 		primitives::vector2 direction,
@@ -162,11 +161,11 @@ public:
 		auto a = farthest_point(a_vectors, direction);
 		auto b = farthest_point(b_vectors, -direction);
 		if (draw_numder) {
-			draw_number(a, window, number);
-			draw_number(b, window, number);
+			draw_number(*a, window, number);
+			draw_number(*b, window, number);
 		}
-		minkowski_differens result(&a, &b, a - b);
-		return result;
+
+		return minkowski_differens(a, b, *a - *b);
 	}
 
 	template<size_t N>
@@ -177,12 +176,12 @@ public:
 	{
 		primitives::vector2 direction(1, 0);
 
-		auto a = farthest_point(vectors, direction);
-		auto b = farthest_point(vectors, -direction);
+		auto a = *farthest_point(vectors, direction);
+		auto b = *farthest_point(vectors, -direction);
 
 		for (int i = 0; i < 10; i++) {
 			direction = perpendicular_to_point(a, b, point);
-			auto c = farthest_point(vectors, direction);
+			auto c = *farthest_point(vectors, direction);
 
 			if (a == c || b == c) {
 				return false;
@@ -204,7 +203,7 @@ public:
 	}
 
 	template<size_t N>
-	static primitives::vector2 farthest_point(
+	static primitives::vector2* farthest_point(
 		primitives::vector2(&vectors)[N], 
 		primitives::vector2 direction = primitives::vector2()) 
 	{
@@ -220,7 +219,7 @@ public:
 			}
 		}
 	
-		return *farthest_point;
+		return farthest_point;
 	}
 
 	static primitives::vector2& perpendicular_to_point(
