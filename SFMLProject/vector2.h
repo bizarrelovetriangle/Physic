@@ -89,30 +89,30 @@ public:
 	}
 
 	auto operator*(double d) {
-		return vector2(this->x * d, this->y * d);
+		return vector2(x * d, y * d);
 	}
 
 	auto operator/(double d) {
-		return vector2(this->x / d, this->y / d);
+		return vector2(x / d, y / d);
 	}
 
 	auto operator+(vector2 v) {
-		return vector2(this->x + v.x, this->y + v.y);
+		return vector2(x + v.x, y + v.y);
 	}
 
 	vector2 operator-(vector2 v) {
-		return vector2(this->x - v.x, this->y - v.y);
+		return vector2(x - v.x, y - v.y);
 	}
 
 	auto operator=(vector2 v) {
-		this->x = v.x;
-		this->y = v.y;
+		x = v.x;
+		y = v.y;
 		sf::Vector2f::x = v.x;
 		sf::Vector2f::y = v.y;
 	}
 
 	auto operator-() {
-		return vector2(-this->x, -this->y);
+		return vector2(-x, -y);
 	}
 
 	auto operator==(vector2 a) {

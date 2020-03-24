@@ -8,7 +8,6 @@
 class gjk_functions {
 public:
 	// todo: use separate class to draw lines and text
-	// remove primitives
 
 	template<size_t N, size_t M>
 	static void EPA(
@@ -84,7 +83,7 @@ public:
 
 	static void inseart_into_sorted_list(
 		std::list<minkowski_edge_distance>& edges_sort_by_distance,
-		minkowski_edge_distance new_edge_distance)
+		minkowski_edge_distance&& new_edge_distance)
 	{
 		if (edges_sort_by_distance.empty() ||
 			new_edge_distance.distance > edges_sort_by_distance.back().distance) 

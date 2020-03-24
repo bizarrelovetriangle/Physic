@@ -8,12 +8,12 @@ vector2 center_point(0);
 
 int main()
 {
-    primitives::box box2;
+    box_block box2;
     box2.size = vector2(100., 100.);
     box2.pos = vector2(-55, 80);
 
 
-    primitives::box box;
+    box_block box;
     box.size = vector2(100., 100.);
     box.angle = 20;
 
@@ -26,7 +26,7 @@ int main()
 
     window.setView(view);
 
-    primitives::box* selected = NULL;
+    box_block* selected = NULL;
     vector2 shoulder;
 
     while (window.isOpen())
