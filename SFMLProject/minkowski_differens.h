@@ -1,7 +1,7 @@
 #include "vector2.h"
 
-#ifndef SUPPORT_RESULT
-#define SUPPORT_RESULT
+#ifndef MINK_DIFF
+#define MINK_DIFF
 class minkowski_differens {
 public:
 	minkowski_differens() 
@@ -18,7 +18,7 @@ public:
 	primitives::vector2* point_b;
 	primitives::vector2 differens;
 
-	bool operator==(minkowski_differens result) 
+	bool operator==(minkowski_differens& result) 
 	{
 		return this->differens == result.differens;
 	}

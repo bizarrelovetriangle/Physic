@@ -86,10 +86,10 @@ int main()
 
         sf::Vertex line[4] =
         {
-            sf::Vertex(primitives::vector2(-100, 0).sf_vector(), sf::Color::White),
-            sf::Vertex(primitives::vector2(100, 0).sf_vector(), sf::Color::White),
-            sf::Vertex(primitives::vector2(0, 100).sf_vector(), sf::Color::White),
-            sf::Vertex(primitives::vector2(0, -100).sf_vector(), sf::Color::White)
+            sf::Vertex(primitives::vector2(-100, 0), sf::Color::White),
+            sf::Vertex(primitives::vector2(100, 0), sf::Color::White),
+            sf::Vertex(primitives::vector2(0, 100), sf::Color::White),
+            sf::Vertex(primitives::vector2(0, -100), sf::Color::White)
         };
         window.draw(line, 4, sf::Lines);
 

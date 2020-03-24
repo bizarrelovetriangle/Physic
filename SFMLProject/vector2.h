@@ -6,7 +6,7 @@ namespace primitives {
 #ifndef VECTOR2
 #define VECTOR2
 
-	class vector2 {
+	class vector2 : public sf::Vector2f{
 	public:
 		double x = 0., y = 0.;
 
@@ -19,35 +19,36 @@ namespace primitives {
 
 		}
 
-		vector2(double& v) {
+		vector2(double& v) : sf::Vector2f(v, v) {
 			x = v;
 			y = v;
 		}
 
-		vector2(double v) {
+		vector2(double v) : sf::Vector2f(v, v) {
 			x = v;
 			y = v;
 		}
 
-		vector2(double x, double y) {
+		vector2(double x, double y) : sf::Vector2f(x, y) {
 			this->x = x;
 			this->y = y;
 		}
 
-		//vector2 rotate(double angle) {
-		//	double radians = angle / 180 * 3.1415;
-		//	double _x = x * cos(radians) + y * sin(radians);
-		//	double _y = x * sin(radians) - y * cos(radians);
-		//	return vector2(_x, _y);
-		//}
-
-		void rotate(double angle) {
-			double radians = angle / 180 * 3.1416;
+		vector2 rotate(double angle) {
+			double radians = angle / 180 * 3.1415;
 			double _x = x * cos(radians) + y * sin(radians);
 			double _y = x * sin(radians) - y * cos(radians);
-			
+			return vector2(_x, _y);
+		}
+
+		void rotate_it(double angle) {
+			double radians = angle / 180 * 3.1415;
+			double _x = x * cos(radians) + y * sin(radians);
+			double _y = x * sin(radians) - y * cos(radians);
 			x = _x;
 			y = _y;
+			sf::Vector2f::x = _x;
+			sf::Vector2f::y = _y;
 		}
 
 		auto normalize() {
@@ -63,14 +64,16 @@ namespace primitives {
 			return (*this - o).length();
 		}
 			
-		void negate() {
+		auto negate() {
+			return vector2(-x, -y);
+		}
+
+		void negate_it() {
+			sf::Vector2f::x = -x;
+			sf::Vector2f::y = -y;
 			x = -x;
 			y = -y;
 		}
-
-		//auto negate() {
-		//	return vector2(-x, -y);
-		//}
 
 		double dot_product(primitives::vector2 o) {
 			return x * o.x + y * o.y;
@@ -107,6 +110,8 @@ namespace primitives {
 		auto operator=(vector2 v) {
 			this->x = v.x;
 			this->y = v.y;
+			sf::Vector2f::x = v.x;
+			sf::Vector2f::y = v.y;
 		}
 
 		auto operator-() {
@@ -115,10 +120,6 @@ namespace primitives {
 
 		auto operator==(vector2 a) {
 			return x == a.x && y == a.y;
-		}
-
-		sf::Vector2f sf_vector() {
-			return sf::Vector2f(x, y);
 		}
 	};
 #endif

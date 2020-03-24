@@ -167,6 +167,7 @@
     <ClInclude Include="box.h" />
     <ClInclude Include="gjk_functions.h" />
     <ClInclude Include="minkowski_differens.h" />
+    <ClInclude Include="minkowski_edge_distance.h" />
     <ClInclude Include="vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

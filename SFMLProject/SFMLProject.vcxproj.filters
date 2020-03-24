@@ -41,5 +41,8 @@
     <ClInclude Include="minkowski_differens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="minkowski_edge_distance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

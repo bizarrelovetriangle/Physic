@@ -3,13 +3,13 @@
 #include "gjk_result.h"
 #include <list>
 #include "minkowski_differens.h"
+#include "minkowski_edge_distance.h"
 
 class gjk_functions {
 public:
-	// todo: use class instead fuck tuple in edjes_by_distance
 	// todo: inhearit primitives::vector2 from sf::Vector2
 	// todo: use separate class to draw lines and text
-	typedef std::list<std::tuple<double, minkowski_differens, minkowski_differens>> edjes_by_distance;
+	// remove primitives
 
 	template<size_t N, size_t M>
 	static void EPA(
@@ -31,26 +31,26 @@ public:
 		draw_line(mink_b.differens, mink_c.differens, window, sf::Color::Cyan);
 		draw_line(mink_c.differens, mink_a.differens, window, sf::Color::Cyan);
 
-		edjes_by_distance edges_sort_by_distance;
-
 		double a_b_distance_o = line_point_distance(mink_a.differens, mink_b.differens, zero_vector);
 		double a_c_distance_o = line_point_distance(mink_a.differens, mink_c.differens, zero_vector);
 		double b_c_distance_o = line_point_distance(mink_b.differens, mink_c.differens, zero_vector);
 
-		inseart_into_sorted_list(edges_sort_by_distance, a_b_distance_o, mink_a, mink_b);
-		inseart_into_sorted_list(edges_sort_by_distance, a_c_distance_o, mink_a, mink_c);
-		inseart_into_sorted_list(edges_sort_by_distance, b_c_distance_o, mink_b, mink_c);
+		std::list<minkowski_edge_distance> edges_sort_by_distance;
+		
+		inseart_into_sorted_list(edges_sort_by_distance, minkowski_edge_distance(a_b_distance_o, mink_a, mink_b));
+		inseart_into_sorted_list(edges_sort_by_distance, minkowski_edge_distance(a_c_distance_o, mink_a, mink_c));
+		inseart_into_sorted_list(edges_sort_by_distance, minkowski_edge_distance(b_c_distance_o, mink_b, mink_c));
 
 		for (int i = 0; i < 10; i++) {
-			auto nearest_enge = *edges_sort_by_distance.begin();
+			auto nearest_edge = *edges_sort_by_distance.begin();
 			edges_sort_by_distance.pop_front();
 
-			auto& nearest_mink_a = std::get<1>(nearest_enge);
-			auto& nearest_mink_b = std::get<2>(nearest_enge);
+			auto& nearest_mink_a = nearest_edge.mink_a;
+			auto& nearest_mink_b = nearest_edge.mink_b;
 
 			draw_line(nearest_mink_a.differens, nearest_mink_b.differens, window, sf::Color::Magenta);
 
-			auto perpendicular_from_zero = -perpendicular_to_point(nearest_mink_a.differens, nearest_mink_b.differens, zero_vector);
+			auto perpendicular_from_zero = perpendicular_from_point(nearest_mink_a.differens, nearest_mink_b.differens, zero_vector);
 
 			auto new_mink_point = support_function(a_vectors, b_vectors, perpendicular_from_zero, window, 1, true);
 
@@ -68,13 +68,15 @@ public:
 				return;
 			}
 
-			double new_minkowski_point_nearest_a_distance_o =
+			double new_mink_point_nearest_a_distance_o =
 				line_point_distance(new_mink_point.differens, nearest_mink_a.differens, zero_vector);
-			double new_minkowski_point_nearest_b_distance_o =
+			double new_mink_point_nearest_b_distance_o =
 				line_point_distance(new_mink_point.differens, nearest_mink_b.differens, zero_vector);
 
-			inseart_into_sorted_list(edges_sort_by_distance, new_minkowski_point_nearest_a_distance_o, new_mink_point, nearest_mink_a);
-			inseart_into_sorted_list(edges_sort_by_distance, new_minkowski_point_nearest_b_distance_o, new_mink_point, nearest_mink_b);
+			inseart_into_sorted_list(edges_sort_by_distance,
+				minkowski_edge_distance(new_mink_point_nearest_a_distance_o, new_mink_point, nearest_mink_a));
+			inseart_into_sorted_list(edges_sort_by_distance,
+				minkowski_edge_distance(new_mink_point_nearest_b_distance_o, new_mink_point, nearest_mink_b));
 
 			draw_line(new_mink_point.differens, nearest_mink_a.differens, window, sf::Color::Yellow);
 			draw_line(new_mink_point.differens, nearest_mink_b.differens, window, sf::Color::Yellow);
@@ -82,21 +84,23 @@ public:
 	}
 
 	static void inseart_into_sorted_list(
-		edjes_by_distance& edges_sort_by_distance,
-		double distance, minkowski_differens& a, minkowski_differens& b)
+		std::list<minkowski_edge_distance>& edges_sort_by_distance,
+		minkowski_edge_distance new_edge_distance)
 	{
-		auto first = std::find_if(edges_sort_by_distance.begin(), edges_sort_by_distance.end(),
-			[&distance](auto distace_edges)
+		if (edges_sort_by_distance.empty() ||
+			new_edge_distance.distance > edges_sort_by_distance.back().distance) 
+		{
+			edges_sort_by_distance.push_back(new_edge_distance);
+			return;
+		}
+
+		auto position = std::find_if(edges_sort_by_distance.begin(), edges_sort_by_distance.end(),
+			[&new_edge_distance](auto edge_distance)
 			{
-				return distance < std::get<0>(distace_edges);
+				return new_edge_distance.distance < edge_distance.distance;
 			});
 
-		if (first == edges_sort_by_distance.end()) {
-			edges_sort_by_distance.push_back(std::make_tuple(distance, a, b));
-		}
-		else {
-			edges_sort_by_distance.emplace(first, std::make_tuple(distance, a, b));
-		}
+		edges_sort_by_distance.emplace(position, new_edge_distance);
 	}
 
 	template<size_t N, size_t M>
@@ -220,16 +224,34 @@ public:
 	}
 
 	static primitives::vector2& perpendicular_to_point(
-		primitives::vector2& a, primitives::vector2& b, 
-		primitives::vector2& o) 
+		primitives::vector2& a, primitives::vector2& b,
+		primitives::vector2& o)
 	{
 		auto b_a = b - a;
 		auto o_a = o - a;
-		
+
 		// negative cross product means that point is clockwise relative b_a
 		if (b_a.is_clockwise(o_a))
 		{
-			b_a.negate();
+			b_a.negate_it();
+		}
+
+		// this method always return non clockwise perpendicular
+		primitives::vector2 perp_to_point(-b_a.y, b_a.x);
+		return perp_to_point;
+	}
+
+	static primitives::vector2& perpendicular_from_point(
+		primitives::vector2& a, primitives::vector2& b,
+		primitives::vector2& o)
+	{
+		auto b_a = b - a;
+		auto o_a = o - a;
+
+		// negative cross product means that point is clockwise relative b_a
+		if (!b_a.is_clockwise(o_a))
+		{
+			b_a.negate_it();
 		}
 
 		// this method always return non clockwise perpendicular
@@ -287,8 +309,8 @@ public:
 	{
 		sf::Vertex line[2] =
 		{
-			sf::Vertex(a.sf_vector(), color),
-			sf::Vertex(b.sf_vector(), color)
+			sf::Vertex(a, color),
+			sf::Vertex(b, color)
 		};
 		window.draw(line, 2, sf::Lines);
 	}
@@ -313,7 +335,7 @@ public:
 		sf::Text text;
 		text.setFont(font);
 		text.setString(str);
-		text.setPosition(pos.sf_vector());
+		text.setPosition(pos);
 		text.setFillColor(sf::Color::Blue);
 		text.setCharacterSize(20);
 		window.draw(text);

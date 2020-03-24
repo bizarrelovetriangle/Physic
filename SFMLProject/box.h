@@ -43,7 +43,7 @@ namespace primitives {
 
 			for (int i = 0; i < array_extentions::array_size(original_points); i++)
 			{
-				original_points[i].rotate(angle);
+				original_points[i].rotate_it(angle);
 			}
 
 			for (int i = 0; i < array_extentions::array_size(points); i++)
@@ -57,7 +57,7 @@ namespace primitives {
 			sf::ConvexShape shape(4);
 
 			for (int i = 0; i < array_extentions::array_size(points); i++) {
-				shape.setPoint(i, points[i].sf_vector());
+				shape.setPoint(i, points[i]);
 			}
 
 			shape.setFillColor(sf::Color::Green);
