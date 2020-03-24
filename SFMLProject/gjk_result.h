@@ -1,5 +1,5 @@
 #include "vector2.h"
-#include "support_function_result.h"
+#include "minkowski_differens.h"
 
 class gjk_result {
 public:
@@ -9,14 +9,14 @@ public:
 
 	gjk_result(
 		bool is_collide,
-		support_function_result a, support_function_result b, support_function_result c)
-		: is_collide(is_collide), a(a), b(b), c(c)
+		minkowski_differens mink_a, minkowski_differens mink_b, minkowski_differens mink_c)
+		: is_collide(is_collide), mink_a(mink_a), mink_b(mink_b), mink_c(mink_c)
 	{
 	}
 
-	support_function_result a;
-	support_function_result b;
-	support_function_result c;
+	minkowski_differens mink_a;
+	minkowski_differens mink_b;
+	minkowski_differens mink_c;
 
 	bool is_collide = false;
 };

@@ -2,11 +2,14 @@
 #include <fstream>  
 #include "gjk_result.h"
 #include <list>
-#include "support_function_result.h"
+#include "minkowski_differens.h"
 
 class gjk_functions {
 public:
-	typedef std::list<std::tuple<double, support_function_result, support_function_result>> edjes_by_distance;
+	// todo: use class instead fuck tuple in edjes_by_distance
+	// todo: inhearit primitives::vector2 from sf::Vector2
+	// todo: use separate class to draw lines and text
+	typedef std::list<std::tuple<double, minkowski_differens, minkowski_differens>> edjes_by_distance;
 
 	template<size_t N, size_t M>
 	static void EPA(
@@ -20,71 +23,71 @@ public:
 		
 		primitives::vector2 zero_vector(0);
 
-		support_function_result& a = gjk_result.a;
-		support_function_result& b = gjk_result.b;
-		support_function_result& c = gjk_result.c;
+		auto& mink_a = gjk_result.mink_a;
+		auto& mink_b = gjk_result.mink_b;
+		auto& mink_c = gjk_result.mink_c;
 
-		draw_line(a.minkowski_different, b.minkowski_different, window, sf::Color::Cyan);
-		draw_line(b.minkowski_different, c.minkowski_different, window, sf::Color::Cyan);
-		draw_line(c.minkowski_different, a.minkowski_different, window, sf::Color::Cyan);
+		draw_line(mink_a.differens, mink_b.differens, window, sf::Color::Cyan);
+		draw_line(mink_b.differens, mink_c.differens, window, sf::Color::Cyan);
+		draw_line(mink_c.differens, mink_a.differens, window, sf::Color::Cyan);
 
 		edjes_by_distance edges_sort_by_distance;
 
-		double a_b_distance_o = line_point_distance(a.minkowski_different, b.minkowski_different, zero_vector);
-		double a_c_distance_o = line_point_distance(a.minkowski_different, c.minkowski_different, zero_vector);
-		double b_c_distance_o = line_point_distance(b.minkowski_different, c.minkowski_different, zero_vector);
+		double a_b_distance_o = line_point_distance(mink_a.differens, mink_b.differens, zero_vector);
+		double a_c_distance_o = line_point_distance(mink_a.differens, mink_c.differens, zero_vector);
+		double b_c_distance_o = line_point_distance(mink_b.differens, mink_c.differens, zero_vector);
 
-		inseart_into_sorted_list(edges_sort_by_distance, a_b_distance_o, a, b);
-		inseart_into_sorted_list(edges_sort_by_distance, a_c_distance_o, a, c);
-		inseart_into_sorted_list(edges_sort_by_distance, b_c_distance_o, b, c);
+		inseart_into_sorted_list(edges_sort_by_distance, a_b_distance_o, mink_a, mink_b);
+		inseart_into_sorted_list(edges_sort_by_distance, a_c_distance_o, mink_a, mink_c);
+		inseart_into_sorted_list(edges_sort_by_distance, b_c_distance_o, mink_b, mink_c);
 
 		for (int i = 0; i < 10; i++) {
 			auto nearest_enge = *edges_sort_by_distance.begin();
 			edges_sort_by_distance.pop_front();
 
-			support_function_result& nearest_a = std::get<1>(nearest_enge);
-			support_function_result& nearest_b = std::get<2>(nearest_enge);
+			auto& nearest_mink_a = std::get<1>(nearest_enge);
+			auto& nearest_mink_b = std::get<2>(nearest_enge);
 
-			draw_line(nearest_a.minkowski_different, nearest_b.minkowski_different, window, sf::Color::Magenta);
+			draw_line(nearest_mink_a.differens, nearest_mink_b.differens, window, sf::Color::Magenta);
 
-			auto perpendicular_from_zero = -perpendicular_to_point(nearest_a.minkowski_different, nearest_b.minkowski_different, zero_vector);
+			auto perpendicular_from_zero = -perpendicular_to_point(nearest_mink_a.differens, nearest_mink_b.differens, zero_vector);
 
-			auto new_minkowski_point = support_function(a_vectors, b_vectors, perpendicular_from_zero, window, 1, true);
+			auto new_mink_point = support_function(a_vectors, b_vectors, perpendicular_from_zero, window, 1, true);
 
-			if (nearest_a == new_minkowski_point || nearest_b == new_minkowski_point)
+			if (nearest_mink_a == new_mink_point || nearest_mink_b == new_mink_point)
 			{
-				draw_line(nearest_a.minkowski_different, nearest_b.minkowski_different, window, sf::Color::Blue);
+				draw_line(nearest_mink_a.differens, nearest_mink_b.differens, window, sf::Color::Blue);
 
-				if (nearest_a.point_a == nearest_b.point_a) {
-					draw_line(*nearest_a.point_b, *nearest_b.point_b, window, sf::Color::Blue);
+				if (nearest_mink_a.point_a == nearest_mink_b.point_a) {
+					draw_line(*nearest_mink_a.point_b, *nearest_mink_b.point_b, window, sf::Color::Blue);
 				}
 				else {
-					draw_line(*nearest_a.point_a, *nearest_b.point_a, window, sf::Color::Blue);
+					draw_line(*nearest_mink_a.point_a, *nearest_mink_b.point_a, window, sf::Color::Blue);
 				}
 
 				return;
 			}
 
 			double new_minkowski_point_nearest_a_distance_o =
-				line_point_distance(new_minkowski_point.minkowski_different, nearest_a.minkowski_different, zero_vector);
+				line_point_distance(new_mink_point.differens, nearest_mink_a.differens, zero_vector);
 			double new_minkowski_point_nearest_b_distance_o =
-				line_point_distance(new_minkowski_point.minkowski_different, nearest_b.minkowski_different, zero_vector);
+				line_point_distance(new_mink_point.differens, nearest_mink_b.differens, zero_vector);
 
-			inseart_into_sorted_list(edges_sort_by_distance, new_minkowski_point_nearest_a_distance_o, new_minkowski_point, nearest_a);
-			inseart_into_sorted_list(edges_sort_by_distance, new_minkowski_point_nearest_b_distance_o, new_minkowski_point, nearest_b);
+			inseart_into_sorted_list(edges_sort_by_distance, new_minkowski_point_nearest_a_distance_o, new_mink_point, nearest_mink_a);
+			inseart_into_sorted_list(edges_sort_by_distance, new_minkowski_point_nearest_b_distance_o, new_mink_point, nearest_mink_b);
 
-			draw_line(new_minkowski_point.minkowski_different, nearest_a.minkowski_different, window, sf::Color::Yellow);
-			draw_line(new_minkowski_point.minkowski_different, nearest_b.minkowski_different, window, sf::Color::Yellow);
+			draw_line(new_mink_point.differens, nearest_mink_a.differens, window, sf::Color::Yellow);
+			draw_line(new_mink_point.differens, nearest_mink_b.differens, window, sf::Color::Yellow);
 		}
 	}
 
 	static void inseart_into_sorted_list(
 		edjes_by_distance& edges_sort_by_distance,
-		double distance, support_function_result& a, support_function_result& b)
+		double distance, minkowski_differens& a, minkowski_differens& b)
 	{
-		auto first = std::find_if(edges_sort_by_distance.begin(), edges_sort_by_distance.end(), 
-			[&distance](auto distace_edges) 
-			{ 
+		auto first = std::find_if(edges_sort_by_distance.begin(), edges_sort_by_distance.end(),
+			[&distance](auto distace_edges)
+			{
 				return distance < std::get<0>(distace_edges);
 			});
 
@@ -100,45 +103,45 @@ public:
 	static gjk_result GJK(
 		primitives::vector2(&a_vectors)[N],
 		primitives::vector2(&b_vectors)[M],
-		sf::RenderWindow& window) 
+		sf::RenderWindow& window)
 	{
 		int counter = 1;
 
 		primitives::vector2 zero_vector(0);
 		primitives::vector2 direction(1, 0);
 
-		auto a = support_function(a_vectors, b_vectors, direction, window, 1, false);
-		auto b = support_function(a_vectors, b_vectors, -direction, window, 2, false);
+		auto mink_a = support_function(a_vectors, b_vectors, direction, window, 1, false);
+		auto mink_b = support_function(a_vectors, b_vectors, -direction, window, 2, false);
 		//draw_line(a, b, window, sf::Color::Red);
 		//draw_number(a, window, 1);
 		//draw_number(b, window, 2);
 
 		for (int i = 0; i < 10; i++) {
-			direction = perpendicular_to_point(a.minkowski_different, b.minkowski_different, zero_vector);
-			auto c = support_function(a_vectors, b_vectors, direction, window, i + 3, false);
+			direction = perpendicular_to_point(mink_a.differens, mink_b.differens, zero_vector);
+			auto mink_c = support_function(a_vectors, b_vectors, direction, window, i + 3, false);
 
-			if (a == c || b == c) {
+			if (mink_a == mink_c || mink_b == mink_c) {
 				return false;
 			}
 
 			//draw_line(b, c, window, sf::Color::Red);
 			//draw_number(c, window, 3);
 
-			if (triangle_contains(a.minkowski_different, b.minkowski_different, c.minkowski_different, zero_vector)) {
+			if (triangle_contains(mink_a.differens, mink_b.differens, mink_c.differens, zero_vector)) {
 				//draw_line(a, b, window, sf::Color::Cyan);
 				//draw_line(b, c, window, sf::Color::Cyan);
 				//draw_line(c, a, window, sf::Color::Cyan);
-				return gjk_result(true, a, b, c);
+				return gjk_result(true, mink_a, mink_b, mink_c);
 			}
 
-			if (line_point_distance(a.minkowski_different, c.minkowski_different, zero_vector) < 
-					line_point_distance(b.minkowski_different, c.minkowski_different, zero_vector)) {
+			if (line_point_distance(mink_a.differens, mink_c.differens, zero_vector) <
+				line_point_distance(mink_b.differens, mink_c.differens, zero_vector)) {
 				//draw_line(a, c, window, sf::Color::Yellow);
-				b = c;
+				mink_b = mink_c;
 			}
 			else {
 				//draw_line(b, c, window, sf::Color::Yellow);
-				a = c;
+				mink_a = mink_c;
 			}
 		}
 
@@ -146,7 +149,7 @@ public:
 	}
 
 	template<size_t N, size_t M>
-	static support_function_result& support_function(
+	static minkowski_differens& support_function(
 		primitives::vector2(&a_vectors)[N],
 		primitives::vector2(&b_vectors)[M],
 		primitives::vector2 direction,
@@ -158,7 +161,7 @@ public:
 			draw_number(a, window, number);
 			draw_number(b, window, number);
 		}
-		support_function_result result(&a, &b, a - b);
+		minkowski_differens result(&a, &b, a - b);
 		return result;
 	}
 

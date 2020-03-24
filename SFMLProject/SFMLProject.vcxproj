@@ -166,7 +166,7 @@
     <ClInclude Include="array_extentions.h" />
     <ClInclude Include="box.h" />
     <ClInclude Include="gjk_functions.h" />
-    <ClInclude Include="support_function_result.h" />
+    <ClInclude Include="minkowski_differens.h" />
     <ClInclude Include="vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
