@@ -4,17 +4,17 @@
 #define screen_width 800
 #define screen_height 800
 
-primitives::vector2 center_point(0);
+vector2 center_point(0);
 
 int main()
 {
     primitives::box box2;
-    box2.size = primitives::vector2(100., 100.);
-    box2.pos = primitives::vector2(-55, 80);
+    box2.size = vector2(100., 100.);
+    box2.pos = vector2(-55, 80);
 
 
     primitives::box box;
-    box.size = primitives::vector2(100., 100.);
+    box.size = vector2(100., 100.);
     box.angle = 20;
 
     sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "SFML works!");
@@ -27,12 +27,12 @@ int main()
     window.setView(view);
 
     primitives::box* selected = NULL;
-    primitives::vector2 shoulder;
+    vector2 shoulder;
 
     while (window.isOpen())
     {
         auto pos = sf::Mouse::getPosition(window);
-        primitives::vector2 position(pos.x - (screen_width / 2), pos.y - (screen_height / 2));
+        vector2 position(pos.x - (screen_width / 2), pos.y - (screen_height / 2));
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -86,10 +86,10 @@ int main()
 
         sf::Vertex line[4] =
         {
-            sf::Vertex(primitives::vector2(-100, 0), sf::Color::White),
-            sf::Vertex(primitives::vector2(100, 0), sf::Color::White),
-            sf::Vertex(primitives::vector2(0, 100), sf::Color::White),
-            sf::Vertex(primitives::vector2(0, -100), sf::Color::White)
+            sf::Vertex(vector2(-100, 0), sf::Color::White),
+            sf::Vertex(vector2(100, 0), sf::Color::White),
+            sf::Vertex(vector2(0, 100), sf::Color::White),
+            sf::Vertex(vector2(0, -100), sf::Color::White)
         };
         window.draw(line, 4, sf::Lines);
 

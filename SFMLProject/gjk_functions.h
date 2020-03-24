@@ -12,15 +12,15 @@ public:
 
 	template<size_t N, size_t M>
 	static void EPA(
-		primitives::vector2(&a_vectors)[N],
-		primitives::vector2(&b_vectors)[M], 
+		vector2(&a_vectors)[N],
+		vector2(&b_vectors)[M], 
 		gjk_result gjk_result, sf::RenderWindow& window)
 	{
 		if (!gjk_result.is_collide) {
 			return;
 		}
 		
-		primitives::vector2 zero_vector(0);
+		vector2 zero_vector(0);
 
 		auto& mink_a = gjk_result.mink_a;
 		auto& mink_b = gjk_result.mink_b;
@@ -104,14 +104,14 @@ public:
 
 	template<size_t N, size_t M>
 	static gjk_result GJK(
-		primitives::vector2(&a_vectors)[N],
-		primitives::vector2(&b_vectors)[M],
+		vector2(&a_vectors)[N],
+		vector2(&b_vectors)[M],
 		sf::RenderWindow& window)
 	{
 		int counter = 1;
 
-		primitives::vector2 zero_vector(0);
-		primitives::vector2 direction(1, 0);
+		vector2 zero_vector(0);
+		vector2 direction(1, 0);
 
 		auto mink_a = support_function(a_vectors, b_vectors, direction, window, 1, false);
 		auto mink_b = support_function(a_vectors, b_vectors, -direction, window, 2, false);
@@ -153,9 +153,9 @@ public:
 
 	template<size_t N, size_t M>
 	static minkowski_differens support_function(
-		primitives::vector2(&a_vectors)[N],
-		primitives::vector2(&b_vectors)[M],
-		primitives::vector2 direction,
+		vector2(&a_vectors)[N],
+		vector2(&b_vectors)[M],
+		vector2 direction,
 		sf::RenderWindow& window, int number, bool draw_numder)
 	{
 		auto a = farthest_point(a_vectors, direction);
@@ -170,11 +170,11 @@ public:
 
 	template<size_t N>
 	static bool contains_point(
-		primitives::vector2 (&vectors) [N], 
-		primitives::vector2 point,
+		vector2 (&vectors) [N], 
+		vector2 point,
 		sf::RenderWindow& window)
 	{
-		primitives::vector2 direction(1, 0);
+		vector2 direction(1, 0);
 
 		auto a = *farthest_point(vectors, direction);
 		auto b = *farthest_point(vectors, -direction);
@@ -203,9 +203,9 @@ public:
 	}
 
 	template<size_t N>
-	static primitives::vector2* farthest_point(
-		primitives::vector2(&vectors)[N], 
-		primitives::vector2 direction = primitives::vector2()) 
+	static vector2* farthest_point(
+		vector2(&vectors)[N], 
+		vector2 direction = vector2()) 
 	{
 		auto* farthest_point = &vectors[0];
 		auto farthest_dot_product = farthest_point->dot_product(direction);
@@ -222,9 +222,9 @@ public:
 		return farthest_point;
 	}
 
-	static primitives::vector2& perpendicular_to_point(
-		primitives::vector2& a, primitives::vector2& b,
-		primitives::vector2& o)
+	static vector2& perpendicular_to_point(
+		vector2& a, vector2& b,
+		vector2& o)
 	{
 		auto b_a = b - a;
 		auto o_a = o - a;
@@ -236,13 +236,13 @@ public:
 		}
 
 		// this method always return non clockwise perpendicular
-		primitives::vector2 perp_to_point(-b_a.y, b_a.x);
+		vector2 perp_to_point(-b_a.y, b_a.x);
 		return perp_to_point;
 	}
 
-	static primitives::vector2& perpendicular_from_point(
-		primitives::vector2& a, primitives::vector2& b,
-		primitives::vector2& o)
+	static vector2& perpendicular_from_point(
+		vector2& a, vector2& b,
+		vector2& o)
 	{
 		auto b_a = b - a;
 		auto o_a = o - a;
@@ -254,14 +254,14 @@ public:
 		}
 
 		// this method always return non clockwise perpendicular
-		primitives::vector2 perp_to_point(-b_a.y, b_a.x);
+		vector2 perp_to_point(-b_a.y, b_a.x);
 		return perp_to_point;
 	}
 
 	// for convex and non convex shape
 	static double line_point_distance(
-		primitives::vector2& a, primitives::vector2& b,
-		primitives::vector2& o) 
+		vector2& a, vector2& b,
+		vector2& o) 
 	{
 		auto b_a = b - a;
 		auto b_a_normalize = b_a.normalize();
@@ -269,7 +269,7 @@ public:
 
 		double projection_length = b_a_normalize.dot_product(o_a);
 
-		primitives::vector2 projection_point;
+		vector2 projection_point;
 
 		if (projection_length < 0) {
 			projection_point = a;
@@ -287,8 +287,8 @@ public:
 	}
 
 	static bool triangle_contains(
-		primitives::vector2& a, primitives::vector2& b, primitives::vector2& c,
-		primitives::vector2& o)
+		vector2& a, vector2& b, vector2& c,
+		vector2& o)
 	{
 		bool b_a_cw = b.is_clockwise(o, a);
 		bool c_b_cw = c.is_clockwise(o, b);
@@ -303,7 +303,7 @@ public:
 	}
 
 	static void draw_line(
-		primitives::vector2& a, primitives::vector2& b,
+		vector2& a, vector2& b,
 		sf::RenderWindow& window, sf::Color color)
 	{
 		sf::Vertex line[2] =
@@ -315,13 +315,13 @@ public:
 	}
 
 	static void draw_number(
-		primitives::vector2& pos, sf::RenderWindow& window, int number)
+		vector2& pos, sf::RenderWindow& window, int number)
 	{
 		draw_text(pos, window, std::to_string(number));
 	}
 
 	static void draw_text(
-		primitives::vector2& pos, sf::RenderWindow& window, std::string str)
+		vector2& pos, sf::RenderWindow& window, std::string str)
 	{
 		static int i = 1;
 		static sf::Font font;
