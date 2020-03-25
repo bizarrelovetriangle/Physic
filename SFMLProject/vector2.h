@@ -12,111 +12,48 @@ public:
 
 	static vector2 zero_vector;
 
-	vector2() {
+	vector2();
 
-	}
+	vector2(double& v);
 
-	vector2(double& v) : sf::Vector2f(v, v) {
-		x = v;
-		y = v;
-	}
+	vector2(double v);
 
-	vector2(double v) : sf::Vector2f(v, v) {
-		x = v;
-		y = v;
-	}
+	vector2(double x, double y);
 
-	vector2(double x, double y) : sf::Vector2f(x, y) {
-		this->x = x;
-		this->y = y;
-	}
+	vector2 rotate(double angle);
 
-	vector2 rotate(double angle) {
-		double radians = angle / 180 * 3.1415;
-		double _x = x * cos(radians) + y * sin(radians);
-		double _y = x * sin(radians) - y * cos(radians);
-		return vector2(_x, _y);
-	}
+	void rotate_it(double angle);
 
-	void rotate_it(double angle) {
-		double radians = angle / 180 * 3.1415;
-		double _x = x * cos(radians) + y * sin(radians);
-		double _y = x * sin(radians) - y * cos(radians);
-		x = _x;
-		y = _y;
-		sf::Vector2f::x = _x;
-		sf::Vector2f::y = _y;
-	}
+	vector2 normalize();
 
-	auto normalize() {
-		double length = this->length();
-		return vector2(x / length, y / length);
-	}
+	double length();
 
-	double length() {
-		return sqrt(x * x + y * y);
-	}
-
-	double distanse(vector2 o) {
-		return (*this - o).length();
-	}
+	double distanse(vector2 o);
 			
-	auto negate() {
-		return vector2(-x, -y);
-	}
+	auto negate();
 
-	void negate_it() {
-		sf::Vector2f::x = -x;
-		sf::Vector2f::y = -y;
-		x = -x;
-		y = -y;
-	}
+	void negate_it();
 
-	double dot_product(vector2 o) {
-		return x * o.x + y * o.y;
-	}
+	double dot_product(vector2 o);
 
-	double cross_product(vector2 o) {
-		return x * o.y - y * o.x;
-	}
+	double cross_product(vector2 o);
 
-	bool is_clockwise(vector2 o) {
-		return cross_product(o) < 0;
-	}
+	bool is_clockwise(vector2 o);
 
-	bool is_clockwise(vector2 o, vector2 relative) {
-		return (*this - relative).cross_product(o - relative) < 0;
-	}
+	bool is_clockwise(vector2 o, vector2 relative);
 
-	auto operator*(double d) {
-		return vector2(x * d, y * d);
-	}
+	vector2 operator*(double d);
 
-	auto operator/(double d) {
-		return vector2(x / d, y / d);
-	}
+	vector2 operator/(double d);
 
-	auto operator+(vector2 v) {
-		return vector2(x + v.x, y + v.y);
-	}
+	vector2 operator+(vector2 v);
 
-	vector2 operator-(vector2 v) {
-		return vector2(x - v.x, y - v.y);
-	}
+	vector2 operator-(vector2 v);
 
-	auto operator=(vector2 v) {
-		x = v.x;
-		y = v.y;
-		sf::Vector2f::x = v.x;
-		sf::Vector2f::y = v.y;
-	}
+	void operator=(vector2 v);
 
-	auto operator-() {
-		return vector2(-x, -y);
-	}
+	vector2 operator-();
 
-	auto operator==(vector2 a) {
-		return x == a.x && y == a.y;
-	}
+	bool operator==(vector2 a);
 };
 #endif

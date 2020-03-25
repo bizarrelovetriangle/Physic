@@ -1,17 +1,14 @@
 #include "gjk_functions.h"
 
-template class gjk_functions<4>;
-
 gjk_functions::gjk_functions(primitives_drawer* drawer)
 	: drawer{ drawer }
 {
 
 }
 
-template<size_t N, size_t M>
 void gjk_functions::EPA(
-	vector2(&a_vectors)[N],
-	vector2(&b_vectors)[M],
+	std::vector<vector2>& a_vectors,
+	std::vector<vector2>& b_vectors,
 	gjk_result gjk_result)
 {
 	if (!gjk_result.is_collide) {
@@ -101,8 +98,8 @@ void gjk_functions::inseart_into_sorted_list(
 }
 
 gjk_result gjk_functions::GJK(
-	vector2(&a_vectors)[N],
-	vector2(&b_vectors)[M])
+	std::vector<vector2>& a_vectors,
+	std::vector<vector2>& b_vectors)
 {
 	int counter = 1;
 
@@ -135,22 +132,21 @@ gjk_result gjk_functions::GJK(
 
 		if (line_point_distance(mink_a.differens, mink_c.differens, zero_vector) <
 			line_point_distance(mink_b.differens, mink_c.differens, zero_vector)) {
-			//drawer->draw_line(a, c, window, sf::Color::Yellow);
+			//drawer->draw_line(mink_b.differens, mink_c.differens, sf::Color::Yellow);
 			mink_b = mink_c;
 		}
 		else {
-			//drawer->draw_line(b, c, window, sf::Color::Yellow);
+			//drawer->draw_line(mink_a.differens, mink_c.differens, sf::Color::Yellow);
 			mink_a = mink_c;
 		}
 	}
 
-	return gjk_result(false);;
+	return gjk_result(false);
 }
 
-template<size_t N, size_t M>
-static minkowski_differens gjk_functions::support_function(
-	vector2(&a_vectors)[N],
-	vector2(&b_vectors)[M],
+minkowski_differens gjk_functions::support_function(
+	std::vector<vector2>& a_vectors,
+	std::vector<vector2>& b_vectors,
 	vector2 direction)
 {
 	auto a = farthest_point(a_vectors, direction);
@@ -158,9 +154,8 @@ static minkowski_differens gjk_functions::support_function(
 	return minkowski_differens(a, b, *a - *b);
 }
 
-template<size_t N>
-static bool gjk_functions::contains_point(
-	vector2(&vectors)[N],
+bool gjk_functions::contains_point(
+	std::vector<vector2>& vectors,
 	vector2 point)
 {
 	vector2 direction(1, 0);
@@ -191,15 +186,14 @@ static bool gjk_functions::contains_point(
 	return false;
 }
 
-template<size_t N>
-static vector2* gjk_functions::farthest_point(
-	vector2(&vectors)[N],
+vector2* gjk_functions::farthest_point(
+	std::vector<vector2>& vectors,
 	vector2 direction)
 {
 	auto* farthest_point = &vectors[0];
 	auto farthest_dot_product = farthest_point->dot_product(direction);
 
-	for (int i = 1; i < N; i++) {
+	for (int i = 1; i < vectors.size(); i++) {
 		auto dot_product = vectors[i].dot_product(direction);
 
 		if (dot_product > farthest_dot_product) {

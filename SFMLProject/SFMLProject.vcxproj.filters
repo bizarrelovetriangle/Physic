@@ -27,16 +27,31 @@
     <ClCompile Include="primitives_drawer.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="gjk_functions.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="minkowski_differens.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="minkowski_edge_distance.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives_drawer.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vector2.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gjk_result.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="box_block.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
       <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="box.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="array_extentions.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gjk_functions.h">
       <Filter>Header Files</Filter>
@@ -46,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="minkowski_edge_distance.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="box_block.h">
+      <Filter>Header Files\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

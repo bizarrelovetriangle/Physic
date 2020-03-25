@@ -159,13 +159,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="box_block.cpp" />
+    <ClCompile Include="gjk_functions.cpp" />
+    <ClCompile Include="gjk_result.cpp" />
     <ClCompile Include="gjk_result.h" />
+    <ClCompile Include="minkowski_differens.cpp" />
+    <ClCompile Include="minkowski_edge_distance.cpp" />
+    <ClCompile Include="primitives_drawer.cpp" />
     <ClCompile Include="primitives_drawer.h" />
     <ClCompile Include="SFMLProject.cpp" />
+    <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="array_extentions.h" />
-    <ClInclude Include="box.h" />
+    <ClInclude Include="box_block.h" />
     <ClInclude Include="gjk_functions.h" />
     <ClInclude Include="minkowski_differens.h" />
     <ClInclude Include="minkowski_edge_distance.h" />

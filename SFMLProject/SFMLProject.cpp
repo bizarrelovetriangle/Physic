@@ -1,4 +1,4 @@
-#include "box.h"
+#include "box_block.h"
 #include "gjk_functions.h"
 
 #define screen_width 800
@@ -9,7 +9,7 @@ vector2 center_point(0);
 int main()
 {
     box_block box2;
-    box2.size = vector2(100., 100.);
+    box2.size = vector2(100., 200.);
     box2.pos = vector2(-55, 80);
 
 
