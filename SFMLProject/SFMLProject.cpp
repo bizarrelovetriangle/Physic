@@ -26,6 +26,9 @@ int main()
 
     window.setView(view);
 
+    primitives_drawer drawer(window);
+    gjk_functions gjk(&drawer);
+
     box_block* selected = NULL;
     vector2 shoulder;
 
@@ -40,11 +43,11 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (gjk_functions::contains_point(box.points, position, window)) {
+                if (gjk_functions::contains_point(box.points, position)) {
                     selected = &box;
                     shoulder = box.pos - position;
                 }
-                if (gjk_functions::contains_point(box2.points, position, window)) {
+                if (gjk_functions::contains_point(box2.points, position)) {
                     selected = &box2;
                     shoulder = box2.pos - position;
                 }
@@ -80,8 +83,8 @@ int main()
         window.draw(shape2);
 
 
-        auto gjk_result = gjk_functions::GJK(box.points, box2.points, window);
-        gjk_functions::EPA(box.points, box2.points, gjk_result, window);
+        auto gjk_result = gjk.GJK(box.points, box2.points);
+        gjk.EPA(box.points, box2.points, gjk_result);
         
 
         sf::Vertex line[4] =

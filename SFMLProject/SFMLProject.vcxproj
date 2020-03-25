@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gjk_result.h" />
+    <ClCompile Include="primitives_drawer.h" />
     <ClCompile Include="SFMLProject.cpp" />
   </ItemGroup>
   <ItemGroup>

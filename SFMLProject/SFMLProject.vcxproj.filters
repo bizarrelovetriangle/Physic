@@ -24,6 +24,9 @@
     <ClCompile Include="gjk_result.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="primitives_drawer.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
