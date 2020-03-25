@@ -16,10 +16,9 @@ public:
 
 	primitives_drawer* drawer;
 
-	template<size_t N, size_t M>
 	void EPA(
-		vector2(&a_vectors)[N],
-		vector2(&b_vectors)[M], 
+		std::vector<vector2>& a_vectors,
+		std::vector<vector2>& b_vectors, 
 		gjk_result gjk_result)
 	{
 		if (!gjk_result.is_collide) {
@@ -108,10 +107,9 @@ public:
 		edges_sort_by_distance.emplace(position, new_edge_distance);
 	}
 
-	template<size_t N, size_t M>
 	gjk_result GJK(
-		vector2(&a_vectors)[N],
-		vector2(&b_vectors)[M])
+		std::vector<vector2>& a_vectors,
+		std::vector<vector2>& b_vectors)
 	{
 		int counter = 1;
 
@@ -156,20 +154,18 @@ public:
 		return gjk_result(false);;
 	}
 
-	template<size_t N, size_t M>
 	static minkowski_differens support_function(
-		vector2(&a_vectors)[N],
-		vector2(&b_vectors)[M],
+		std::vector<vector2>& a_vectors,
+		std::vector<vector2>& b_vectors,
 		vector2 direction)
 	{
 		auto a = farthest_point(a_vectors, direction);
 		auto b = farthest_point(b_vectors, -direction);
 		return minkowski_differens(a, b, *a - *b);
 	}
-
-	template<size_t N>
-	static bool contains_point(
-		vector2 (&vectors) [N], 
+	
+	bool contains_point(
+		std::vector<vector2>& vectors,
 		vector2 point)
 	{
 		vector2 direction(1, 0);
@@ -199,16 +195,15 @@ public:
 
 		return false;
 	}
-
-	template<size_t N>
+	
 	static vector2* farthest_point(
-		vector2(&vectors)[N], 
+		std::vector<vector2>& vectors,
 		vector2 direction = vector2()) 
 	{
 		auto* farthest_point = &vectors[0];
 		auto farthest_dot_product = farthest_point->dot_product(direction);
 		
-		for (int i = 1; i < N; i++){
+		for (int i = 1; i < vectors.size(); i++){
 			auto dot_product = vectors[i].dot_product(direction);
 	
 			if (dot_product > farthest_dot_product) {

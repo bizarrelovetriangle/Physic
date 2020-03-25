@@ -43,11 +43,11 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (gjk_functions::contains_point(box.points, position)) {
+                if (gjk.contains_point(box.points, position)) {
                     selected = &box;
                     shoulder = box.pos - position;
                 }
-                if (gjk_functions::contains_point(box2.points, position)) {
+                if (gjk.contains_point(box2.points, position)) {
                     selected = &box2;
                     shoulder = box2.pos - position;
                 }

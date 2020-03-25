@@ -1,5 +1,6 @@
 #include "vector2.h"
 #include "array_extentions.h"
+#include <vector>
 
 #ifndef BOX_BLOCK
 #define BOX_BLOCK
@@ -10,13 +11,13 @@ public:
 
 	double angle = 0;
 
-	vector2 original_points[4];
+	std::vector<vector2> original_points { 0, 0, 0, 0 };
 	vector2& a = original_points[0];
 	vector2& b = original_points[1];
 	vector2& c = original_points[2];
 	vector2& d = original_points[3];
 
-	vector2 points[4];
+	std::vector<vector2> points { 0, 0, 0, 0 };
 
 	box_block(vector2 pos = {}, vector2 size = {})
 	{
@@ -41,13 +42,13 @@ public:
 
 		d.x = -size.width / 2;
 		d.y = -size.height / 2;
-
-		for (int i = 0; i < array_extentions::array_size(original_points); i++)
+		
+		for (int i = 0; i < original_points.size(); i++)
 		{
 			original_points[i].rotate_it(angle);
 		}
 
-		for (int i = 0; i < array_extentions::array_size(points); i++)
+		for (int i = 0; i < points.size(); i++)
 		{
 			points[i] = original_points[i] + pos;
 		}
@@ -57,7 +58,7 @@ public:
 	{
 		sf::ConvexShape shape(4);
 
-		for (int i = 0; i < array_extentions::array_size(points); i++) {
+		for (int i = 0; i < points.size(); i++) {
 			shape.setPoint(i, points[i]);
 		}
 
