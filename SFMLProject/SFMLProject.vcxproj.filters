@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Primitives">
       <UniqueIdentifier>{dd1e926d-ab81-4c9e-a896-aac469383c34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Primitives">
+      <UniqueIdentifier>{117b9cc5-0056-40ea-9c7b-be69e9dc5388}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SFMLProject.cpp">
@@ -39,14 +42,14 @@
     <ClCompile Include="primitives_drawer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="vector2.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="gjk_result.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="vector2.cpp">
+      <Filter>Resource Files\Primitives</Filter>
+    </ClCompile>
     <ClCompile Include="box_block.cpp">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ int main()
 {
     box_block box2;
     box2.size = vector2(100., 200.);
-    box2.pos = vector2(-55, 80);
+    box2.position = vector2(-55, 80);
 
 
     box_block box;
@@ -45,11 +45,11 @@ int main()
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (gjk.contains_point(box.points, position)) {
                     selected = &box;
-                    shoulder = box.pos - position;
+                    shoulder = box.position - position;
                 }
                 if (gjk.contains_point(box2.points, position)) {
                     selected = &box2;
-                    shoulder = box2.pos - position;
+                    shoulder = box2.position - position;
                 }
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -68,19 +68,16 @@ int main()
         }
 
         if (selected != NULL) {
-            selected->pos = position + shoulder;
+            selected->position = position + shoulder;
         }
 
         window.clear();
 
         box2.update_form();
         box.update_form();
-        auto shape = box.create_sfml_shape();
-        auto shape2 = box2.create_sfml_shape();
-
-        window.draw(shape);
-
-        window.draw(shape2);
+        
+        window.draw(box.sfml_shape);
+        window.draw(box2.sfml_shape);
 
 
         auto gjk_result = gjk.GJK(box.points, box2.points);

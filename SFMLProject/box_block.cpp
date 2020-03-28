@@ -1,13 +1,16 @@
 #include "box_block.h"
 
 box_block::box_block(vector2 pos, vector2 size)
+	: sfml_shape(4)
 {
 	this->size.width = size.width;
 	this->size.height = size.height;
-	this->pos.x = pos.x;
-	this->pos.y = pos.y;
+	this->position.x = position.x;
+	this->position.y = position.y;
 
 	update_form();
+
+	sfml_shape.setFillColor(sf::Color::Green);
 }
 
 void box_block::update_form()
@@ -31,19 +34,10 @@ void box_block::update_form()
 
 	for (int i = 0; i < points.size(); i++)
 	{
-		points[i] = original_points[i] + pos;
+		points[i] = original_points[i] + position;
 	}
-}
-
-sf::ConvexShape box_block::create_sfml_shape()
-{
-	sf::ConvexShape shape(4);
 
 	for (int i = 0; i < points.size(); i++) {
-		shape.setPoint(i, points[i]);
+		sfml_shape.setPoint(i, points[i]);
 	}
-
-	shape.setFillColor(sf::Color::Green);
-
-	return shape;
 }
