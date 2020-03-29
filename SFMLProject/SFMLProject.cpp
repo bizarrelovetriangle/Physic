@@ -1,5 +1,6 @@
 #include "box_block.h"
 #include "gjk_functions.h"
+#include "collider_resolver.h"
 
 #define screen_width 800
 #define screen_height 800
@@ -8,14 +9,18 @@ vector2 center_point(0);
 
 int main()
 {
-    box_block box2;
-    box2.size = vector2(100., 200.);
-    box2.position = vector2(-55, 80);
+    std::vector<box_block> box_blocks;
 
+    box_blocks.emplace_back();
+    box_blocks.emplace_back();
 
-    box_block box;
-    box.size = vector2(100., 100.);
-    box.angle = 20;
+    box_block& _box2 = box_blocks[0];
+    _box2.size = vector2(100., 200.);
+    _box2.position = vector2(-55, 80);
+
+    box_block& _box = box_blocks[1];
+    _box.size = vector2(100., 100.);
+    _box.angle = 20;
 
     sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "SFML works!");
 
@@ -28,6 +33,7 @@ int main()
 
     primitives_drawer drawer(window);
     gjk_functions gjk(&drawer);
+    collider_resolver collider_resolver(&drawer);
 
     box_block* selected = NULL;
     vector2 shoulder;
@@ -43,13 +49,12 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (gjk.contains_point(box.points, position)) {
-                    selected = &box;
-                    shoulder = box.position - position;
-                }
-                if (gjk.contains_point(box2.points, position)) {
-                    selected = &box2;
-                    shoulder = box2.position - position;
+                for (auto& box : box_blocks) {
+                    if (gjk.contains_point(box.points, position)) {
+                        selected = &box;
+                        shoulder = box.position - position;
+                        break;
+                    }
                 }
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -73,17 +78,16 @@ int main()
 
         window.clear();
 
-        box2.update_form();
-        box.update_form();
+        for (auto& box : box_blocks) {
+            box.update_form();
+        }
+
+        for (auto& box : box_blocks) {
+            window.draw(box.sfml_shape);
+        }
+
+        collider_resolver.resolve_vector(box_blocks);
         
-        window.draw(box.sfml_shape);
-        window.draw(box2.sfml_shape);
-
-
-        auto gjk_result = gjk.GJK(box.points, box2.points);
-        gjk.EPA(box.points, box2.points, gjk_result);
-        
-
         sf::Vertex line[4] =
         {
             sf::Vertex(vector2(-100, 0), sf::Color::White),
@@ -91,24 +95,8 @@ int main()
             sf::Vertex(vector2(0, 100), sf::Color::White),
             sf::Vertex(vector2(0, -100), sf::Color::White)
         };
+
         window.draw(line, 4, sf::Lines);
-
-        //double distance = GJK::line_point_distance(box.a, box.c, position);
-        //
-        //sf::Font font;
-        //if (!font.loadFromFile("OpenSans-Regular.ttf"))
-        //{
-        //    throw "error?";
-        //}
-        //sf::Text text;
-        //text.setFont(font);
-        //text.setString("x: " + std::to_string(distance));
-        //text.setPosition(-200, -200);
-        //text.setFillColor(sf::Color::Blue);
-        //text.setCharacterSize(20);
-        //window.draw(text);
-        //
-
 
         window.display();
     }

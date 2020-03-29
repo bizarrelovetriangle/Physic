@@ -3,8 +3,8 @@
 box_block::box_block(vector2 pos, vector2 size)
 	: sfml_shape(4)
 {
-	this->size.width = size.width;
-	this->size.height = size.height;
+	this->size.x = size.x;
+	this->size.y = size.y;
 	this->position.x = position.x;
 	this->position.y = position.y;
 
@@ -15,17 +15,17 @@ box_block::box_block(vector2 pos, vector2 size)
 
 void box_block::update_form()
 {
-	a.x = -size.width / 2;
-	a.y = size.height / 2;
+	original_points[0].x = -size.x / 2;
+	original_points[0].y = size.y / 2;
 
-	b.x = size.width / 2;
-	b.y = size.height / 2;
+	original_points[1].x = size.x / 2;
+	original_points[1].y = size.y / 2;
 
-	c.x = size.width / 2;
-	c.y = -size.height / 2;
+	original_points[2].x = size.x / 2;
+	original_points[2].y = -size.y / 2;
 
-	d.x = -size.width / 2;
-	d.y = -size.height / 2;
+	original_points[3].x = -size.x / 2;
+	original_points[3].y = -size.y / 2;
 		
 	for (int i = 0; i < original_points.size(); i++)
 	{

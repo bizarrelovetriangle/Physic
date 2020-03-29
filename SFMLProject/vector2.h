@@ -7,9 +7,6 @@ class vector2 : public sf::Vector2f{
 public:
 	double x = 0., y = 0.;
 
-	double& width = x;
-	double& height = y;
-
 	static vector2 zero_vector;
 
 	vector2();

@@ -51,6 +51,9 @@
     <ClCompile Include="box_block.cpp">
       <Filter>Resource Files\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="collider_resolver.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="box_block.h">
       <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="collider_resolver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
