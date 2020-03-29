@@ -13,7 +13,10 @@ void collider_resolver::resolve_vector(std::vector<box_block>& box_blocks)
             box_block& _box = box_blocks[i2];
 
             auto gjk_result = gjk.GJK(_box.points, _box2.points);
-            gjk.EPA(_box.points, _box2.points, gjk_result);
+            
+            if (gjk_result.is_collide) {
+                gjk.EPA(_box.points, _box2.points, gjk_result);
+            }
         }
     }
 }

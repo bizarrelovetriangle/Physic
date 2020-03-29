@@ -1,5 +1,7 @@
 #include "vector2.h"
 
+vector2 vector2::zero_vector = {0};
+
 vector2::vector2() {
 
 }

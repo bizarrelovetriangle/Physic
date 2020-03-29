@@ -5,6 +5,7 @@
 #include "minkowski_differens.h"
 #include "minkowski_edge_distance.h"
 #include "primitives_drawer.h"
+#include "collision_result.h"
 
 class gjk_functions {
 public:
@@ -12,10 +13,13 @@ public:
 
 	primitives_drawer* drawer;
 
-	void EPA(
+	collision_result EPA(
 		std::vector<vector2>& a_vectors,
 		std::vector<vector2>& b_vectors,
 		gjk_result gjk_result);
+
+	collision_result get_collider_result(
+		minkowski_differens& a, minkowski_differens& b);
 
 	static void inseart_into_sorted_list(
 		std::list<minkowski_edge_distance>& edges_sort_by_distance,

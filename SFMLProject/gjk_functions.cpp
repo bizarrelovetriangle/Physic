@@ -6,16 +6,14 @@ gjk_functions::gjk_functions(primitives_drawer* drawer)
 
 }
 
-void gjk_functions::EPA(
+collision_result gjk_functions::EPA(
 	std::vector<vector2>& a_vectors,
 	std::vector<vector2>& b_vectors,
 	gjk_result gjk_result)
 {
 	if (!gjk_result.is_collide) {
-		return;
+		return collision_result();;
 	}
-
-	vector2 zero_vector(0);
 
 	auto& mink_a = gjk_result.mink_a;
 	auto& mink_b = gjk_result.mink_b;
@@ -25,9 +23,9 @@ void gjk_functions::EPA(
 	drawer->draw_line(mink_b.differens, mink_c.differens, sf::Color::Cyan);
 	drawer->draw_line(mink_c.differens, mink_a.differens, sf::Color::Cyan);
 
-	double a_b_distance_o = line_point_distance(mink_a.differens, mink_b.differens, zero_vector);
-	double a_c_distance_o = line_point_distance(mink_a.differens, mink_c.differens, zero_vector);
-	double b_c_distance_o = line_point_distance(mink_b.differens, mink_c.differens, zero_vector);
+	double a_b_distance_o = line_point_distance(mink_a.differens, mink_b.differens, vector2::zero_vector);
+	double a_c_distance_o = line_point_distance(mink_a.differens, mink_c.differens, vector2::zero_vector);
+	double b_c_distance_o = line_point_distance(mink_b.differens, mink_c.differens, vector2::zero_vector);
 
 	std::list<minkowski_edge_distance> edges_sort_by_distance;
 
@@ -44,28 +42,22 @@ void gjk_functions::EPA(
 
 		drawer->draw_line(nearest_mink_a.differens, nearest_mink_b.differens, sf::Color::Magenta);
 
-		auto perpendicular_from_zero = perpendicular_from_point(nearest_mink_a.differens, nearest_mink_b.differens, zero_vector);
+		auto perpendicular_from_zero = 
+			perpendicular_from_point(nearest_mink_a.differens, nearest_mink_b.differens, vector2::zero_vector);
 
 		auto new_mink_point = support_function(a_vectors, b_vectors, perpendicular_from_zero);
 
-		if (nearest_mink_a == new_mink_point || nearest_mink_b == new_mink_point)
+		if (nearest_mink_a == new_mink_point || nearest_mink_b == new_mink_point || i == 10)
 		{
 			drawer->draw_line(nearest_mink_a.differens, nearest_mink_b.differens, sf::Color::Blue);
 
-			if (nearest_mink_a.point_a == nearest_mink_b.point_a) {
-				drawer->draw_line(*nearest_mink_a.point_b, *nearest_mink_b.point_b, sf::Color::Blue);
-			}
-			else {
-				drawer->draw_line(*nearest_mink_a.point_a, *nearest_mink_b.point_a, sf::Color::Blue);
-			}
-
-			return;
+			return get_collider_result(nearest_mink_a, nearest_mink_b);
 		}
 
 		double new_mink_point_nearest_a_distance_o =
-			line_point_distance(new_mink_point.differens, nearest_mink_a.differens, zero_vector);
+			line_point_distance(new_mink_point.differens, nearest_mink_a.differens, vector2::zero_vector);
 		double new_mink_point_nearest_b_distance_o =
-			line_point_distance(new_mink_point.differens, nearest_mink_b.differens, zero_vector);
+			line_point_distance(new_mink_point.differens, nearest_mink_b.differens, vector2::zero_vector);
 
 		inseart_into_sorted_list(edges_sort_by_distance,
 			minkowski_edge_distance(new_mink_point_nearest_a_distance_o, new_mink_point, nearest_mink_a));
@@ -75,6 +67,32 @@ void gjk_functions::EPA(
 		drawer->draw_line(new_mink_point.differens, nearest_mink_a.differens, sf::Color::Yellow);
 		drawer->draw_line(new_mink_point.differens, nearest_mink_b.differens, sf::Color::Yellow);
 	}
+
+	return collision_result();
+}
+
+collision_result gjk_functions::get_collider_result(minkowski_differens& mink_a, minkowski_differens& mink_b)
+{
+	collision_result result;
+
+	if (mink_a.point_a == mink_b.point_a) {
+		drawer->draw_line(*mink_a.point_b, *mink_b.point_b, sf::Color::Blue);
+		result.collision_point = *mink_a.point_a;
+		result.collision_normal = perpendicular_from_point(*mink_a.point_b, *mink_b.point_b, *mink_a.point_a);
+	}
+	else {
+		drawer->draw_line(*mink_a.point_a, *mink_b.point_a, sf::Color::Blue);
+		result.collision_point = *mink_a.point_b;
+		result.collision_normal = perpendicular_from_point(*mink_a.point_a, *mink_b.point_a, *mink_a.point_b);
+	}
+
+	auto norm = result.collision_normal.normalize() * 100;
+
+	auto ttyyt = result.collision_point + norm;
+
+	drawer->draw_line(result.collision_point, ttyyt, sf::Color::Red);
+
+	return result;
 }
 
 void gjk_functions::inseart_into_sorted_list(
@@ -103,7 +121,6 @@ gjk_result gjk_functions::GJK(
 {
 	int counter = 1;
 
-	vector2 zero_vector(0);
 	vector2 direction(1, 0);
 
 	auto mink_a = support_function(a_vectors, b_vectors, direction);
@@ -113,7 +130,7 @@ gjk_result gjk_functions::GJK(
 	//drawer->draw_number(mink_b.differens, window, 2);
 
 	for (int i = 0; i < 10; i++) {
-		direction = perpendicular_to_point(mink_a.differens, mink_b.differens, zero_vector);
+		direction = perpendicular_to_point(mink_a.differens, mink_b.differens, vector2::zero_vector);
 		auto mink_c = support_function(a_vectors, b_vectors, direction);
 
 		if (mink_a == mink_c || mink_b == mink_c) {
@@ -123,15 +140,15 @@ gjk_result gjk_functions::GJK(
 		//drawer->draw_line(b, c, window, sf::Color::Red);
 		//drawer->draw_number(c, window, 3);
 
-		if (triangle_contains(mink_a.differens, mink_b.differens, mink_c.differens, zero_vector)) {
+		if (triangle_contains(mink_a.differens, mink_b.differens, mink_c.differens, vector2::zero_vector)) {
 			//drawer->draw_line(a, b, window, sf::Color::Cyan);
 			//drawer->draw_line(b, c, window, sf::Color::Cyan);
 			//drawer->draw_line(c, a, window, sf::Color::Cyan);
 			return gjk_result(true, mink_a, mink_b, mink_c);
 		}
 
-		if (line_point_distance(mink_a.differens, mink_c.differens, zero_vector) <
-			line_point_distance(mink_b.differens, mink_c.differens, zero_vector)) {
+		if (line_point_distance(mink_a.differens, mink_c.differens, vector2::zero_vector) <
+			line_point_distance(mink_b.differens, mink_c.differens, vector2::zero_vector)) {
 			//drawer->draw_line(mink_b.differens, mink_c.differens, sf::Color::Yellow);
 			mink_b = mink_c;
 		}

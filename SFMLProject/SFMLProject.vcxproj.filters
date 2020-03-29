@@ -54,6 +54,9 @@
     <ClCompile Include="collider_resolver.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="collision_result.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="collider_resolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_result.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

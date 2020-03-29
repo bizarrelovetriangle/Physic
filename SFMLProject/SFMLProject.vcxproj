@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="box_block.cpp" />
     <ClCompile Include="collider_resolver.cpp" />
+    <ClCompile Include="collision_result.cpp" />
     <ClCompile Include="gjk_functions.cpp" />
     <ClCompile Include="gjk_result.cpp" />
     <ClCompile Include="gjk_result.h" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="box_block.h" />
     <ClInclude Include="collider_resolver.h" />
+    <ClInclude Include="collision_result.h" />
     <ClInclude Include="gjk_functions.h" />
     <ClInclude Include="minkowski_differens.h" />
     <ClInclude Include="minkowski_edge_distance.h" />
