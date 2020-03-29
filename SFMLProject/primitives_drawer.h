@@ -1,7 +1,6 @@
+#pragma once
 #include "vector2.h"
 
-#ifndef PRIMITIVES_DRAWER
-#define PRIMITIVES_DRAWER
 class primitives_drawer {
 public:
 	primitives_drawer(sf::RenderWindow& window);
@@ -17,4 +16,3 @@ public:
 	void draw_text(
 		vector2& pos, std::string str);
 };
-#endif

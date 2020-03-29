@@ -1,7 +1,6 @@
+#pragma once
 #include "vector2.h"
 
-#ifndef MINK_DIFF
-#define MINK_DIFF
 class minkowski_differens {
 public:
 	minkowski_differens();
@@ -15,4 +14,3 @@ public:
 
 	bool operator==(minkowski_differens& result);
 };
-#endif

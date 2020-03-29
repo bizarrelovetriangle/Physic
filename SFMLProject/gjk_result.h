@@ -1,8 +1,7 @@
+#pragma once
 #include "vector2.h"
 #include "minkowski_differens.h"
 
-#ifndef GJK_RESULT
-#define GJK_RESULT
 class gjk_result {
 public:
 	gjk_result(bool is_collide);
@@ -17,4 +16,3 @@ public:
 
 	bool is_collide = false;
 };
-#endif

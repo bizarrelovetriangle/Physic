@@ -1,3 +1,4 @@
+#pragma once
 #include <fstream>  
 #include "gjk_result.h"
 #include <list>
@@ -5,8 +6,6 @@
 #include "minkowski_edge_distance.h"
 #include "primitives_drawer.h"
 
-#ifndef GJK_FUNCTIONS
-#define GJK_FUNCTIONS
 class gjk_functions {
 public:
 	gjk_functions(primitives_drawer* drawer);
@@ -56,4 +55,3 @@ public:
 		vector2& a, vector2& b, vector2& c,
 		vector2& o);
 };
-#endif

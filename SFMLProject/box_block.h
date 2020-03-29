@@ -1,8 +1,7 @@
+#pragma once
 #include "vector2.h"
 #include <vector>
 
-#ifndef BOX_BLOCK
-#define BOX_BLOCK
 class box_block {
 public:
 	vector2 size;
@@ -25,4 +24,3 @@ public:
 
 	sf::ConvexShape create_sfml_shape();
 };
-#endif

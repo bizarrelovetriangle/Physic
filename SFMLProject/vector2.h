@@ -1,8 +1,7 @@
+#pragma once
 #include "math.h"
 #include <SFML/Graphics.hpp>
 
-#ifndef VECTOR2
-#define VECTOR2
 class vector2 : public sf::Vector2f{
 public:
 	double x = 0., y = 0.;
@@ -53,4 +52,3 @@ public:
 
 	bool operator==(vector2 a);
 };
-#endif
