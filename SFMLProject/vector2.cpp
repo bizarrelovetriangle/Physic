@@ -46,7 +46,8 @@ vector2 vector2::normalize() {
 }
 
 double vector2::length() {
-	return sqrt(x * x + y * y);
+	double _sqrt = sqrt(x * x + y * y);
+	return std::isnan(_sqrt) ? 0 : _sqrt;
 }
 
 double vector2::distanse(vector2 o) {

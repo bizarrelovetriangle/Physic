@@ -31,6 +31,9 @@ void box_block::update_form()
 	position += velocity;
 	angle += angle_velocity;
 		
+	viscosity_vector(velocity);
+	viscosity_value(angle_velocity);
+
 	for (int i = 0; i < original_points.size(); i++)
 	{
 		original_points[i].rotate_it(angle);
@@ -43,5 +46,36 @@ void box_block::update_form()
 
 	for (int i = 0; i < points.size(); i++) {
 		sfml_shape.setPoint(i, points[i]);
+	}
+}
+
+void box_block::viscosity_value(double& value)
+{
+	double viscosity_factor = 0.1;
+
+	if (std::abs(value) <= viscosity_factor) {
+		value = 0;
+	}
+	else if (value > 0) {
+		value -= viscosity_factor;
+	}
+	else {
+		value += viscosity_factor;
+	}
+}
+
+
+void box_block::viscosity_vector(vector2& vector)
+{
+	vector2 viscosity_vectro_factor = vector.normalize() * 0.1;
+
+	if (vector.length() <= viscosity_vectro_factor.length()) {
+		vector = vector2(0, 0);
+	}
+	else if (vector.length() > 0) {
+		vector -= viscosity_vectro_factor;
+	}
+	else {
+		vector += viscosity_vectro_factor;
 	}
 }
