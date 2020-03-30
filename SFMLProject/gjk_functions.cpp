@@ -23,9 +23,9 @@ collision_result gjk_functions::EPA(
 	drawer->draw_line(mink_b.differens, mink_c.differens, sf::Color::Cyan);
 	drawer->draw_line(mink_c.differens, mink_a.differens, sf::Color::Cyan);
 
-	double a_b_distance_o = line_point_distance(mink_a.differens, mink_b.differens, vector2::zero_vector);
-	double a_c_distance_o = line_point_distance(mink_a.differens, mink_c.differens, vector2::zero_vector);
-	double b_c_distance_o = line_point_distance(mink_b.differens, mink_c.differens, vector2::zero_vector);
+	double a_b_distance_o = line_point_distance_convex(mink_a.differens, mink_b.differens, vector2::zero_vector);
+	double a_c_distance_o = line_point_distance_convex(mink_a.differens, mink_c.differens, vector2::zero_vector);
+	double b_c_distance_o = line_point_distance_convex(mink_b.differens, mink_c.differens, vector2::zero_vector);
 
 	std::list<minkowski_edge_distance> edges_sort_by_distance;
 
@@ -55,9 +55,9 @@ collision_result gjk_functions::EPA(
 		}
 
 		double new_mink_point_nearest_a_distance_o =
-			line_point_distance(new_mink_point.differens, nearest_mink_a.differens, vector2::zero_vector);
+			line_point_distance_convex(new_mink_point.differens, nearest_mink_a.differens, vector2::zero_vector);
 		double new_mink_point_nearest_b_distance_o =
-			line_point_distance(new_mink_point.differens, nearest_mink_b.differens, vector2::zero_vector);
+			line_point_distance_convex(new_mink_point.differens, nearest_mink_b.differens, vector2::zero_vector);
 
 		inseart_into_sorted_list(edges_sort_by_distance,
 			minkowski_edge_distance(new_mink_point_nearest_a_distance_o, new_mink_point, nearest_mink_a));
@@ -75,22 +75,34 @@ collision_result gjk_functions::get_collider_result(minkowski_differens& mink_a,
 {
 	collision_result result;
 
+	vector2* penetration_point;
+	vector2* collision_edje_a;
+	vector2* collision_edje_b;
+
 	if (mink_a.point_a == mink_b.point_a) {
-		drawer->draw_line(*mink_a.point_b, *mink_b.point_b, sf::Color::Blue);
-		result.collision_point = *mink_a.point_a;
-		result.collision_normal = perpendicular_from_point(*mink_a.point_b, *mink_b.point_b, *mink_a.point_a);
+		penetration_point = mink_a.point_a;
+		collision_edje_a =  mink_a.point_b;
+		collision_edje_b =  mink_b.point_b; // or mink_a.point_b
 	}
 	else {
-		drawer->draw_line(*mink_a.point_a, *mink_b.point_a, sf::Color::Blue);
-		result.collision_point = *mink_a.point_b;
-		result.collision_normal = perpendicular_from_point(*mink_a.point_a, *mink_b.point_a, *mink_a.point_b);
+		penetration_point = mink_a.point_b;
+		collision_edje_a =  mink_a.point_a;
+		collision_edje_b =  mink_b.point_a; // or mink_a.point_a
 	}
 
-	auto norm = result.collision_normal.normalize() * 100;
+	drawer->draw_line(*collision_edje_a, *collision_edje_b, sf::Color::Blue);
 
-	auto ttyyt = result.collision_point + norm;
+	auto proj_point = projection_point(*collision_edje_a, *collision_edje_b, *penetration_point);
 
-	drawer->draw_line(result.collision_point, ttyyt, sf::Color::Red);
+	result.collision_point = *penetration_point;
+	result.collision_penetration_line = *penetration_point - proj_point;
+	result.collision_penetration = result.collision_penetration_line.length();
+	result.collision_normal = result.collision_penetration_line.normalize();
+	
+	auto drawing_vector_point = proj_point + result.collision_normal * 100;
+
+	drawer->draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
+	drawer->draw_line(*penetration_point, proj_point, sf::Color::Red);
 
 	return result;
 }
@@ -267,23 +279,51 @@ double gjk_functions::line_point_distance(
 	auto b_a_normalize = b_a.normalize();
 	auto o_a = o - a;
 
-	double projection_length = b_a_normalize.dot_product(o_a);
+	double proj_length = b_a_normalize.dot_product(o_a);
 
-	vector2 projection_point;
+	vector2 proj_point;
 
-	if (projection_length < 0) {
-		projection_point = a;
+	if (proj_length < 0) {
+		proj_point = a;
 	}
-	else if (projection_length > b_a.length()) {
-		projection_point = b;
+	else if (proj_length > b_a.length()) {
+		proj_point = b;
 	}
 	else {
-		projection_point = (b_a_normalize * projection_length) + a;
+		proj_point = (b_a_normalize * proj_length) + a;
 	}
 
-	double line_point_distanse = projection_point.distanse(o);
+	double line_point_distanse = proj_point.distanse(o);
 
 	return line_point_distanse;
+}
+
+
+// for convex shape
+double gjk_functions::line_point_distance_convex(
+	vector2& a, vector2& b,
+	vector2& o)
+{
+	vector2 proj_point = projection_point(a, b, o);
+
+	double line_point_distanse = proj_point.distanse(o);
+
+	return line_point_distanse;
+}
+
+vector2 gjk_functions::projection_point(
+	vector2& a, vector2& b,
+	vector2& o) 
+{
+	auto b_a = b - a;
+	auto b_a_normalize = b_a.normalize();
+	auto o_a = o - a;
+
+	double proj_length = b_a_normalize.dot_product(o_a);
+
+	vector2 proj_point = (b_a_normalize * proj_length) + a;
+
+	return proj_point;
 }
 
 bool gjk_functions::triangle_contains(

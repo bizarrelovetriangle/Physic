@@ -55,6 +55,15 @@ public:
 		vector2& a, vector2& b,
 		vector2& o);
 
+	// for convex shape
+	static double line_point_distance_convex(
+		vector2& a, vector2& b,
+		vector2& o);
+
+	static vector2 projection_point(
+		vector2& a, vector2& b,
+		vector2& o);
+
 	static bool triangle_contains(
 		vector2& a, vector2& b, vector2& c,
 		vector2& o);

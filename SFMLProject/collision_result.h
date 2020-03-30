@@ -6,5 +6,5 @@ public:
 	vector2 collision_point;
 	vector2 collision_normal;
 	double collision_penetration;
-	double collision_penetration_line;
+	vector2 collision_penetration_line;
 };
