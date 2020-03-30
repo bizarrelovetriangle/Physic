@@ -40,11 +40,19 @@ public:
 
 	vector2 operator*(double d);
 
+	void operator*=(double d);
+
 	vector2 operator/(double d);
+
+	void operator/=(double d);
 
 	vector2 operator+(vector2 v);
 
+	void operator+=(vector2 v);
+
 	vector2 operator-(vector2 v);
+
+	void operator-=(vector2 v);
 
 	void operator=(vector2 v);
 

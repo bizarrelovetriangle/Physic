@@ -2,7 +2,9 @@
 
 vector2 vector2::zero_vector = {0};
 
-vector2::vector2() {
+vector2::vector2() 
+	: x(0), y(0)
+{
 
 }
 
@@ -82,16 +84,48 @@ vector2 vector2::operator*(double d) {
 	return vector2(x * d, y * d);
 }
 
+void vector2::operator*=(double d)
+{
+	x = x * d;
+	y = y * d;
+	sf::Vector2f::x *= d;
+	sf::Vector2f::y *= d;
+}
+
 vector2 vector2::operator/(double d) {
 	return vector2(x / d, y / d);
+}
+
+void vector2::operator/=(double d)
+{
+	x = x / d;
+	y = y / d;
+	sf::Vector2f::x /= d;
+	sf::Vector2f::y /= d;
 }
 
 vector2 vector2::operator+(vector2 v) {
 	return vector2(x + v.x, y + v.y);
 }
 
+void vector2::operator+=(vector2 v)
+{
+	x = x + v.x;
+	y = y + v.y;
+	sf::Vector2f::x += v.x;
+	sf::Vector2f::y += v.y;
+}
+
 vector2 vector2::operator-(vector2 v) {
 	return vector2(x - v.x, y - v.y);
+}
+
+void vector2::operator-=(vector2 v)
+{
+	x = x - v.x;
+	y = y - v.y;
+	sf::Vector2f::x -= v.x;
+	sf::Vector2f::y -= v.y;
 }
 
 void vector2::operator=(vector2 v) {
