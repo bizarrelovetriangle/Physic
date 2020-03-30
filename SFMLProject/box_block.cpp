@@ -26,6 +26,10 @@ void box_block::update_form()
 
 	original_points[3].x = -size.x / 2;
 	original_points[3].y = -size.y / 2;
+
+	velocity += acceleration;
+	position += velocity;
+	angle += angle_velocity;
 		
 	for (int i = 0; i < original_points.size(); i++)
 	{

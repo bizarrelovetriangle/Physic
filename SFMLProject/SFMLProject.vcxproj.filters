@@ -57,6 +57,9 @@
     <ClCompile Include="collision_result.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="mouse_provider.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="collision_result.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_provider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
