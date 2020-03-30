@@ -99,6 +99,7 @@ int main()
         window.draw(line, 4, sf::Lines);
 
         window.display();
+        sf::sleep(sf::seconds(0.01f));
     }
 
     return 0;
