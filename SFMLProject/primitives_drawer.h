@@ -8,11 +8,14 @@ public:
 	sf::RenderWindow* window;
 
 	void draw_line(
-		vector2& a, vector2& b, sf::Color color);
+		vector2 a, vector2 b, sf::Color color);
+
+	void draw_cross(
+		vector2& point, sf::Color color);
 
 	void draw_number(
 		vector2& pos, sf::RenderWindow& window, int number);
 
 	void draw_text(
-		vector2& pos, std::string str);
+		vector2 pos, std::string str);
 };

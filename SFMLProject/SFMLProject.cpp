@@ -18,8 +18,11 @@ int main()
     box_block& _box = box_blocks[0];
     _box.size = vector2(100., 100.);
     _box.position = vector2(0, -100);
-    _box.angle_velocity = 1;
-    _box.velocity.y = 1;
+    _box.angle = 90;
+    //_box.angle_velocity = 2;
+    //_box.acceleration.y += 0.3;
+    _box.acceleration.y = 0.3;
+    //_box.velocity.y = 1;
 
     //box_block& _box2 = box_blocks[1];
     //_box2.size = vector2(100., 200.);
@@ -33,12 +36,12 @@ int main()
     view.reset(sf::FloatRect(center, size));
 
     window.setView(view);
-
+    
     primitives_drawer drawer(window);
     gjk_functions gjk(&drawer);
     collider_resolver collider_resolver(&drawer);
 
-    mouse_provider mouse_provider(2);
+    mouse_provider mouse_provider(200);
     
     box_block* selected = NULL;
     vector2 shoulder;
@@ -59,33 +62,33 @@ int main()
                 for (auto& box : box_blocks) {
                     if (gjk.contains_point(box.points, mouse_position)) {
                         selected = &box;
-                        selected->velocity = vector2(0, 0);
-                        selected->angle_velocity = 0;
-                        shoulder = box.position - mouse_position;
+                        //selected->velocity = vector2(0, 0);
+                        //selected->angle_velocity = 0;
+                        shoulder = (mouse_position - box.position).rotate(-selected->angle);
                         break;
                     }
                 }
             }
             if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Space) {
+                    collider_resolver.apply_impulse(_box, _box.points[0], vector2(0, -5), true);
+                }
+
                 if (selected != NULL) {
                     if (event.key.code == sf::Keyboard::Q) {
-                        selected->angle -= 10;
+                        selected->angle -= 11.25;
                     }
                     if (event.key.code == sf::Keyboard::E) {
-                        selected->angle += 10;
+                        selected->angle += 11.25;
                     }
                 }
             }
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (selected != NULL) {
-                    selected->velocity = mouse_provider.filtered_speed();
+                    //selected->velocity = mouse_provider.filtered_speed();
                 }
                 selected = NULL;
             }
-        }
-
-        if (selected != NULL) {
-            selected->position = mouse_position + shoulder;
         }
 
         window.clear();
@@ -95,15 +98,21 @@ int main()
         }
 
         for (auto& box : box_blocks) {
-            window.draw(box.sfml_shape);
+             window.draw(box.sfml_shape);
         }
 
         collider_resolver.resolve_vector(box_blocks);
-        
-        vector2 text_pos(-200, -200);
-        drawer.draw_text(text_pos, "x: " + std::to_string(mouse_speed.x) +
-            ", y: " + std::to_string(mouse_speed.y) + ", speed: " +
-            std::to_string(mouse_speed.length()));
+
+        if (selected != NULL) {
+            vector2 new_shoulder = shoulder.rotate(selected->angle) + _box.position;
+            vector2 impulse_vector = mouse_position - new_shoulder;
+            collider_resolver.apply_impulse(_box, new_shoulder, impulse_vector, true);
+        }
+
+        if (_box.position.y > screen_height / 2) {
+            _box.velocity.y = 0;
+            _box.position = vector2(_box.position.x, screen_height / 2 - 0.3);
+        }
 
         sf::Vertex line[4] =
         {

@@ -12,6 +12,8 @@ public:
 	double angle = 0;
 	double angle_velocity = 0;
 
+	double moment_of_inetia = 0.008;
+
 	std::vector<vector2> original_points { 0, 0, 0, 0 };
 
 	std::vector<vector2> points { 0, 0, 0, 0 };

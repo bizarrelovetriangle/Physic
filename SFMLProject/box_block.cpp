@@ -5,8 +5,8 @@ box_block::box_block(vector2 pos, vector2 size)
 {
 	this->size.x = size.x;
 	this->size.y = size.y;
-	this->position.x = position.x;
-	this->position.y = position.y;
+	this->position.x = pos.x;
+	this->position.y = pos.y;
 
 	update_form();
 
@@ -51,7 +51,7 @@ void box_block::update_form()
 
 void box_block::viscosity_value(double& value)
 {
-	double viscosity_factor = 0.1;
+	double viscosity_factor = 0.01;
 
 	if (std::abs(value) <= viscosity_factor) {
 		value = 0;
