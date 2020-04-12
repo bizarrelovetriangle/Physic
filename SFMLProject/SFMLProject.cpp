@@ -2,31 +2,29 @@
 #include "gjk_functions.h"
 #include "collider_resolver.h"
 #include "mouse_provider.h"
+#include "wall_block.h"
 
 #define screen_width 800
 #define screen_height 800
 
 vector2 center_point(0);
 
+void draw_coordinates(sf::RenderWindow& window);
+
 int main()
 {
-    std::vector<box_block> box_blocks;
+    std::vector<phisic_object*> phisic_objects;
 
-    box_blocks.emplace_back();
-    //box_blocks.emplace_back();
+    box_block* _box = new box_block();
+    _box->size = vector2(100., 100.);
+    _box->position = vector2(-100, -100);
+    _box->angle = 90;
+    _box->velocity.x = 1;
 
-    box_block& _box = box_blocks[0];
-    _box.size = vector2(100., 100.);
-    _box.position = vector2(0, -100);
-    _box.angle = 90;
-    //_box.angle_velocity = 2;
-    //_box.acceleration.y += 0.3;
-    _box.acceleration.y = 0.3;
-    //_box.velocity.y = 1;
+    wall_block* _wall = new wall_block(vector2(100, -100), (100, 100));
 
-    //box_block& _box2 = box_blocks[1];
-    //_box2.size = vector2(100., 200.);
-    //_box2.position = vector2(-55, 80);
+    phisic_objects.emplace_back(_wall);
+    phisic_objects.emplace_back(_box);
 
     sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "SFML works!");
 
@@ -43,7 +41,7 @@ int main()
 
     mouse_provider mouse_provider(200);
     
-    box_block* selected = NULL;
+    phisic_object* selected = NULL;
     vector2 shoulder;
 
     while (window.isOpen())
@@ -59,19 +57,19 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::MouseButtonPressed) {
-                for (auto& box : box_blocks) {
-                    if (gjk.contains_point(box.points, mouse_position)) {
-                        selected = &box;
+                for (auto& box : phisic_objects) {
+                    if (gjk.contains_point(box->points, mouse_position)) {
+                        selected = box;
                         //selected->velocity = vector2(0, 0);
                         //selected->angle_velocity = 0;
-                        shoulder = (mouse_position - box.position).rotate(-selected->angle);
+                        shoulder = (mouse_position - box->position).rotate(-selected->angle);
                         break;
                     }
                 }
             }
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space) {
-                    collider_resolver.apply_impulse(_box, _box.points[0], vector2(0, -5), true);
+                    collider_resolver.apply_impulse(*_box, _box->points[0], vector2(0, -5), true);
                 }
 
                 if (selected != NULL) {
@@ -93,40 +91,44 @@ int main()
 
         window.clear();
 
-        for (auto& box : box_blocks) {
-            box.update_form();
+        for (auto& object : phisic_objects) {
+            object->update_form();
         }
 
-        for (auto& box : box_blocks) {
-             window.draw(box.sfml_shape);
+        for (auto& object : phisic_objects) {
+             object->draw(window);
         }
 
-        collider_resolver.resolve_vector(box_blocks);
+        collider_resolver.resolve_vector(phisic_objects);
 
         if (selected != NULL) {
-            vector2 new_shoulder = shoulder.rotate(selected->angle) + _box.position;
+            vector2 new_shoulder = shoulder.rotate(selected->angle) + _box->position;
             vector2 impulse_vector = mouse_position - new_shoulder;
-            collider_resolver.apply_impulse(_box, new_shoulder, impulse_vector, true);
+            collider_resolver.apply_impulse(*_box, new_shoulder, impulse_vector, true);
         }
 
-        if (_box.position.y > screen_height / 2) {
-            _box.velocity.y = 0;
-            _box.position = vector2(_box.position.x, screen_height / 2 - 0.3);
+        if (_box->position.y > screen_height / 2) {
+            _box->velocity.y = 0;
+            _box->position = vector2(_box->position.x, screen_height / 2 - 0.3);
         }
 
-        sf::Vertex line[4] =
-        {
-            sf::Vertex(vector2(-100, 0), sf::Color::White),
-            sf::Vertex(vector2(100, 0), sf::Color::White),
-            sf::Vertex(vector2(0, 100), sf::Color::White),
-            sf::Vertex(vector2(0, -100), sf::Color::White)
-        };
-
-        window.draw(line, 4, sf::Lines);
+        draw_coordinates(window);
 
         window.display();
         sf::sleep(sf::seconds(0.01f));
     }
 
     return 0;
+}
+
+void draw_coordinates(sf::RenderWindow& window) {
+    sf::Vertex line[4] =
+    {
+        sf::Vertex(vector2(-100, 0), sf::Color::White),
+        sf::Vertex(vector2(100, 0), sf::Color::White),
+        sf::Vertex(vector2(0, 100), sf::Color::White),
+        sf::Vertex(vector2(0, -100), sf::Color::White)
+    };
+
+    window.draw(line, 4, sf::Lines);
 }

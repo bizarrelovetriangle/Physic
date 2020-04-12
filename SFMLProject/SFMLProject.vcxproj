@@ -168,10 +168,12 @@
     <ClCompile Include="minkowski_differens.cpp" />
     <ClCompile Include="minkowski_edge_distance.cpp" />
     <ClCompile Include="mouse_provider.cpp" />
+    <ClCompile Include="phisic_object.cpp" />
     <ClCompile Include="primitives_drawer.cpp" />
     <ClCompile Include="primitives_drawer.h" />
     <ClCompile Include="SFMLProject.cpp" />
     <ClCompile Include="vector2.cpp" />
+    <ClCompile Include="wall_block.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box_block.h" />
@@ -181,7 +183,9 @@
     <ClInclude Include="minkowski_differens.h" />
     <ClInclude Include="minkowski_edge_distance.h" />
     <ClInclude Include="mouse_provider.h" />
+    <ClInclude Include="phisic_object.h" />
     <ClInclude Include="vector2.h" />
+    <ClInclude Include="wall_block.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

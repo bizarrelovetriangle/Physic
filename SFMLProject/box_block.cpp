@@ -1,12 +1,14 @@
 #include "box_block.h"
 
 box_block::box_block(vector2 pos, vector2 size)
-	: sfml_shape(4)
 {
-	this->size.x = size.x;
-	this->size.y = size.y;
-	this->position.x = pos.x;
-	this->position.y = pos.y;
+	this->size = size;
+	this->position = pos;
+	moment_of_inetia = 0.008;
+
+	original_points = std::vector<vector2>{ 0, 0, 0, 0 };
+	points = std::vector<vector2>{ 0, 0, 0, 0 };
+	sfml_shape = sf::ConvexShape(4);
 
 	update_form();
 
@@ -43,10 +45,14 @@ void box_block::update_form()
 	{
 		points[i] = original_points[i] + position;
 	}
+}
 
+void box_block::draw(sf::RenderWindow& window) {
 	for (int i = 0; i < points.size(); i++) {
 		sfml_shape.setPoint(i, points[i]);
 	}
+
+	window.draw(sfml_shape);
 }
 
 void box_block::viscosity_value(double& value)
@@ -67,7 +73,7 @@ void box_block::viscosity_value(double& value)
 
 void box_block::viscosity_vector(vector2& vector)
 {
-	vector2 viscosity_vectro_factor = vector.normalize() * 0.1;
+	vector2 viscosity_vectro_factor = vector.normalize() * 0.001;
 
 	if (vector.length() <= viscosity_vectro_factor.length()) {
 		vector = vector2(0, 0);
