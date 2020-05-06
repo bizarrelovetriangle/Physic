@@ -51,9 +51,6 @@
     <ClCompile Include="box_block.cpp">
       <Filter>Resource Files\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="collider_resolver.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="collision_result.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="wall_block.cpp">
       <Filter>Resource Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="collide_resolver.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,12 +83,6 @@
     <ClInclude Include="box_block.h">
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="collider_resolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_result.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mouse_provider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -97,6 +91,12 @@
     </ClInclude>
     <ClInclude Include="wall_block.h">
       <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_result.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="collide_resolver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,9 +19,9 @@ collision_result gjk_functions::EPA(
 	auto& mink_b = gjk_result.mink_b;
 	auto& mink_c = gjk_result.mink_c;
 
-	drawer->draw_line(mink_a.differens, mink_b.differens, sf::Color::Cyan);
-	drawer->draw_line(mink_b.differens, mink_c.differens, sf::Color::Cyan);
-	drawer->draw_line(mink_c.differens, mink_a.differens, sf::Color::Cyan);
+	//drawer->draw_line(mink_a.differens, mink_b.differens, sf::Color::Cyan);
+	//drawer->draw_line(mink_b.differens, mink_c.differens, sf::Color::Cyan);
+	//drawer->draw_line(mink_c.differens, mink_a.differens, sf::Color::Cyan);
 
 	double a_b_distance_o = line_point_distance_convex(mink_a.differens, mink_b.differens, vector2::zero_vector);
 	double a_c_distance_o = line_point_distance_convex(mink_a.differens, mink_c.differens, vector2::zero_vector);
@@ -40,7 +40,7 @@ collision_result gjk_functions::EPA(
 		auto& nearest_mink_a = nearest_edge.mink_a;
 		auto& nearest_mink_b = nearest_edge.mink_b;
 
-		drawer->draw_line(nearest_mink_a.differens, nearest_mink_b.differens, sf::Color::Magenta);
+		//drawer->draw_line(nearest_mink_a.differens, nearest_mink_b.differens, sf::Color::Magenta);
 
 		auto perpendicular_from_zero = 
 			perpendicular_from_point(nearest_mink_a.differens, nearest_mink_b.differens, vector2::zero_vector);
@@ -49,7 +49,7 @@ collision_result gjk_functions::EPA(
 
 		if (nearest_mink_a == new_mink_point || nearest_mink_b == new_mink_point || i == 10)
 		{
-			drawer->draw_line(nearest_mink_a.differens, nearest_mink_b.differens, sf::Color::Blue);
+			//drawer->draw_line(nearest_mink_a.differens, nearest_mink_b.differens, sf::Color::Blue);
 
 			return get_collider_result(nearest_mink_a, nearest_mink_b);
 		}
@@ -64,8 +64,8 @@ collision_result gjk_functions::EPA(
 		inseart_into_sorted_list(edges_sort_by_distance,
 			minkowski_edge_distance(new_mink_point_nearest_b_distance_o, new_mink_point, nearest_mink_b));
 
-		drawer->draw_line(new_mink_point.differens, nearest_mink_a.differens, sf::Color::Yellow);
-		drawer->draw_line(new_mink_point.differens, nearest_mink_b.differens, sf::Color::Yellow);
+		//drawer->draw_line(new_mink_point.differens, nearest_mink_a.differens, sf::Color::Yellow);
+		//drawer->draw_line(new_mink_point.differens, nearest_mink_b.differens, sf::Color::Yellow);
 	}
 
 	return collision_result();

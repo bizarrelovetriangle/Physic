@@ -4,7 +4,9 @@ box_block::box_block(vector2 pos, vector2 size)
 {
 	this->size = size;
 	this->position = pos;
-	moment_of_inetia = 0.008;
+
+	mass = size.x * size.y * 5 / 10000;
+	moment_of_inetia = 1. / 12 * mass * (pow(size.x, 2) + pow(size.y, 2));
 
 	original_points = std::vector<vector2>{ 0, 0, 0, 0 };
 	points = std::vector<vector2>{ 0, 0, 0, 0 };
@@ -57,7 +59,7 @@ void box_block::draw(sf::RenderWindow& window) {
 
 void box_block::viscosity_value(double& value)
 {
-	double viscosity_factor = 0.01;
+	double viscosity_factor = 0.;
 
 	if (std::abs(value) <= viscosity_factor) {
 		value = 0;
@@ -73,7 +75,7 @@ void box_block::viscosity_value(double& value)
 
 void box_block::viscosity_vector(vector2& vector)
 {
-	vector2 viscosity_vectro_factor = vector.normalize() * 0.001;
+	vector2 viscosity_vectro_factor = vector.normalize() * 0.;
 
 	if (vector.length() <= viscosity_vectro_factor.length()) {
 		vector = vector2(0, 0);

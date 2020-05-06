@@ -24,14 +24,14 @@ vector2::vector2(double x, double y) : sf::Vector2f(x, y) {
 }
 
 vector2 vector2::rotate(double angle) {
-	double radians = angle / 180 * 3.1415;
+	double radians = angle / 180 * 3.14159265359;
 	double _x = x * cos(radians) - y * sin(radians);
 	double _y = x * sin(radians) + y * cos(radians);
 	return vector2(_x, _y);
 }
 
 void vector2::rotate_it(double angle) {
-	double radians = angle / 180 * 3.1415;
+	double radians = angle / 180 * 3.14159265359;
 	double _x = x * cos(radians) - y * sin(radians);
 	double _y = x * sin(radians) + y * cos(radians);
 	x = _x;

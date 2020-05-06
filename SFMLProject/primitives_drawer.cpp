@@ -34,7 +34,7 @@ void primitives_drawer::draw_cross(
 }
 
 void primitives_drawer::draw_number(
-	vector2& pos, sf::RenderWindow& window, int number)
+	vector2 pos, double number)
 {
 	draw_text(pos, std::to_string(number));
 }

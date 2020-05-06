@@ -14,7 +14,7 @@ public:
 		vector2& point, sf::Color color);
 
 	void draw_number(
-		vector2& pos, sf::RenderWindow& window, int number);
+		vector2 pos, double number);
 
 	void draw_text(
 		vector2 pos, std::string str);

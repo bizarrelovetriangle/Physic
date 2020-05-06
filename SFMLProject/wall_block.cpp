@@ -4,6 +4,7 @@ wall_block::wall_block(vector2 a, vector2 b)
 	: a(a), b(b)
 {
 	moment_of_inetia = 0.008;
+	is_infiniti_mass = true;
 
 	original_points = std::vector<vector2>{ 0, 0 };
 	points = std::vector<vector2>{ 0, 0 };
