@@ -7,4 +7,5 @@ public:
 	vector2 collision_normal;
 	double collision_penetration;
 	vector2 collision_penetration_line;
+	bool flip;
 };

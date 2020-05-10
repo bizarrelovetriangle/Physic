@@ -45,13 +45,11 @@ void collide_resolver::resolve_collision(phisic_object* object_1, phisic_object*
 
     vector2 objects_point_velosity_diff = object_1_point_velosity - object_2_point_velosity;
 
-    // Другой баг отчетливо виден если удерживать стенку бокса близко к стене
-    if (objects_point_velosity_diff.dot_product(objects_point_velosity_diff) < 0) {
-        //return;
-    }
+    vector2 objects_pos_vector = object_2->position - object_1->position;
 
-    if (objects_point_velosity_diff.x < 0 && objects_point_velosity_diff.y < 0) {
-        //return;
+    // Другой баг отчетливо виден если удерживать стенку бокса близко к стене
+    if (objects_point_velosity_diff.dot_product(epa_res.collision_normal) > 0 == epa_res.flip) {
+        return;
     }
 
     if (object_1->is_infiniti_mass) {
@@ -87,7 +85,11 @@ void collide_resolver::resolve_collision(phisic_object* object_1, phisic_object*
             (pow(object_1_sholder_vector.cross_product(collision_normal), 2) / object_1->moment_of_inetia) +
             (pow(object_2_sholder_vector.cross_product(collision_normal), 2) / object_2->moment_of_inetia));
 
-    vector2 penetration_vector = objects_point_velosity_diff.normalize() * epa_res.collision_penetration;
+    drawer->draw_number(vector2(-100, -100), epa_res.flip ? 1 : 0);
+    
+    vector2 penetration_vector = epa_res.flip 
+        ? - epa_res.collision_penetration_line
+        : epa_res.collision_penetration_line;
 
     object_1->position -= penetration_vector / 2;
     object_2->position += penetration_vector / 2;
@@ -111,7 +113,7 @@ vector2 collide_resolver::point_velosity(
         (2 * 3.14159265359 * sholder_vector.length() * abs(object.angle_velocity) / 360);
 
     auto angle_point_velosity_by_normal = normal *
-        normal.dot_product(angle_point_velosity);
+        angle_point_velosity.dot_product(normal);
 
     return object.velocity + angle_point_velosity_by_normal;
 }

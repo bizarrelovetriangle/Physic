@@ -83,11 +83,13 @@ collision_result gjk_functions::get_collider_result(minkowski_differens& mink_a,
 		penetration_point = mink_a.point_a;
 		collision_edje_a =  mink_a.point_b;
 		collision_edje_b =  mink_b.point_b; // or mink_a.point_b
+		result.flip = false;
 	}
 	else {
 		penetration_point = mink_a.point_b;
 		collision_edje_a =  mink_a.point_a;
 		collision_edje_b =  mink_b.point_a; // or mink_a.point_a
+		result.flip = true;
 	}
 
 	drawer->draw_line(*collision_edje_a, *collision_edje_b, sf::Color::Blue);
@@ -242,8 +244,7 @@ vector2& gjk_functions::perpendicular_to_point(
 	auto o_a = o - a;
 
 	// negative cross product means that point is clockwise relative b_a
-	if (b_a.is_clockwise(o_a))
-	{
+	if (b_a.is_clockwise(o_a)) {
 		b_a.negate_it();
 	}
 
@@ -260,8 +261,7 @@ vector2& gjk_functions::perpendicular_from_point(
 	auto o_a = o - a;
 
 	// negative cross product means that point is clockwise relative b_a
-	if (!b_a.is_clockwise(o_a))
-	{
+	if (!b_a.is_clockwise(o_a)) {
 		b_a.negate_it();
 	}
 

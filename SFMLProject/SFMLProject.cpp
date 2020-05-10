@@ -4,63 +4,52 @@
 #include "mouse_provider.h"
 #include "wall_block.h"
 
-#define screen_width 800
-#define screen_height 800
+#define screen_width 1400
+#define screen_height 1000
 
 vector2 center_point(0);
 
 void draw_coordinates(sf::RenderWindow& window);
 
+//doto
+// Clipping не поможет при случае когда лишь один угол входит в объект
+// здесь что то другое интресное)
+// Добавить Clipping что ли??
+
 int main()
 {
     std::vector<phisic_object*> phisic_objects;
 
-    //box_block* _box = new box_block();
-    //_box->size = vector2(100., 100.);
-    //_box->position = vector2(-100, 0);
-    ////_box->angle_velocity = - 0.6;
-    ////_box->velocity.x = 2;
-    ////_box->acceleration.y = 0.1;
-    //
-    //box_block* _box2 = new box_block();
-    //_box2->size = vector2(100., 100);
-    //_box2->position = vector2(100, 0);
-    ////_box2->angle = 15;
-    ////_box2->acceleration.y = 0.1;
+    int wall_width = 700;
+    int wall_height = 700;
 
-    //_box2->angle = 45;
-    //_box->velocity.x = 2;
+    vector2 a(-wall_width / 2, wall_height / 2);
+    vector2 b(-wall_width / 2, -wall_height / 2);
+    vector2 c(wall_width / 2, -wall_height / 2);
+    vector2 d(wall_width / 2, wall_height / 2);
 
-    int screen_width2 = 700;
-    int screen_height2 = 700;
-
-    wall_block* left_wall = new wall_block(
-        vector2(-screen_width2 / 2, screen_height2 / 2), vector2(-screen_width2 / 2, -screen_height2 / 2));
-    wall_block* top_wall = new wall_block(
-        vector2(-screen_width2 / 2, -screen_height2 / 2), vector2(screen_width2 / 2, -screen_height2 / 2));
-    wall_block* right_wall = new wall_block(
-        vector2(screen_width2 / 2 + 1, -screen_height2 / 2), vector2(screen_width2 / 2 + 1, screen_height2 / 2));
-    wall_block* borrom_wall = new wall_block(
-        vector2(screen_width2 / 2, screen_height2 / 2 + 1), vector2(-screen_width2 / 2, screen_height2 / 2 + 1));
+    wall_block* left_wall = new wall_block(a, b);
+    wall_block* top_wall = new wall_block(b, c);
+    wall_block* right_wall = new wall_block(c, d);
+    wall_block* borrom_wall = new wall_block(d, a);
 
     phisic_objects.emplace_back(left_wall);
     phisic_objects.emplace_back(top_wall);
     phisic_objects.emplace_back(right_wall);
     phisic_objects.emplace_back(borrom_wall);
 
-    //phisic_objects.emplace_back(_box);
-    //phisic_objects.emplace_back(_box2);
+    for (int i = 0; i < 3; i++) {
+        for (int i2 = 0; i2 < 5; i2++) {
+            box_block* _box = new box_block(
+                vector2(-200. + 101. * i2, 101. * i), 
+                vector2(100., (i * i2 % 2 ? 100. : 70.)));
+            //_box->angle = 45;
+            //_box->angle_velocity = - 0.6;
+            //_box->velocity.x = 1;
+            _box->acceleration.y = 0.1;
 
-    for (int i = 0; i < 2; i++) {
-        box_block* _box = new box_block();
-        _box->size = vector2(200., 50.);
-        _box->position = vector2(0, 55 * i);
-        //_box->angle = 45;
-        //_box->angle_velocity = - 0.6;
-        //_box->velocity.x = 1;
-        _box->acceleration.y = 0.1;
-    
-        phisic_objects.emplace_back(_box);
+            phisic_objects.emplace_back(_box);
+        }
     }
 
     sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "SFML works!");
@@ -84,7 +73,7 @@ int main()
     while (window.isOpen())
     {
         auto pos = sf::Mouse::getPosition(window);
-        vector2 mouse_position = vector2(pos.x - (screen_width / 2), pos.y - (screen_height / 2));
+        vector2 mouse_position = vector2(pos.x - (screen_width / 2.), pos.y - (screen_height / 2.));
         mouse_provider.taking_new_position(mouse_position);
         auto mouse_speed = mouse_provider.filtered_speed();
 

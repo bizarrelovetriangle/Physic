@@ -10,7 +10,21 @@ box_block::box_block(vector2 pos, vector2 size)
 
 	original_points = std::vector<vector2>{ 0, 0, 0, 0 };
 	points = std::vector<vector2>{ 0, 0, 0, 0 };
+
+	original_edges.push_back(std::forward_as_tuple(original_points[0], original_points[1]));
+
 	sfml_shape = sf::ConvexShape(4);
+
+	
+	original_points[0] = vector2(-size.x / 2, size.y / 2);
+	original_points[1] = vector2(size.x / 2, size.y / 2);
+	original_points[2] = vector2(size.x / 2, -size.y / 2);
+	original_points[3] = vector2(-size.x / 2, -size.y / 2);
+	
+	original_edges.push_back(std::forward_as_tuple(original_points[0], original_points[1]));
+	original_edges.push_back(std::forward_as_tuple(original_points[1], original_points[2]));
+	original_edges.push_back(std::forward_as_tuple(original_points[2], original_points[3]));
+	original_edges.push_back(std::forward_as_tuple(original_points[3], original_points[0]));
 
 	update_form();
 
@@ -19,18 +33,6 @@ box_block::box_block(vector2 pos, vector2 size)
 
 void box_block::update_form()
 {
-	original_points[0].x = -size.x / 2;
-	original_points[0].y = size.y / 2;
-
-	original_points[1].x = size.x / 2;
-	original_points[1].y = size.y / 2;
-
-	original_points[2].x = size.x / 2;
-	original_points[2].y = -size.y / 2;
-
-	original_points[3].x = -size.x / 2;
-	original_points[3].y = -size.y / 2;
-
 	velocity += acceleration;
 	position += velocity;
 	angle += angle_velocity;
@@ -40,16 +42,17 @@ void box_block::update_form()
 
 	for (int i = 0; i < original_points.size(); i++)
 	{
-		original_points[i].rotate_it(angle);
+		points[i] = original_points[i].rotate(angle) + position;
 	}
 
-	for (int i = 0; i < points.size(); i++)
-	{
-		points[i] = original_points[i] + position;
-	}
+	edges.push_back(std::forward_as_tuple(points[0], points[1]));
+	edges.push_back(std::forward_as_tuple(points[1], points[2]));
+	edges.push_back(std::forward_as_tuple(points[2], points[3]));
+	edges.push_back(std::forward_as_tuple(points[3], points[0]));
 }
 
-void box_block::draw(sf::RenderWindow& window) {
+void box_block::draw(sf::RenderWindow& window) 
+{
 	for (int i = 0; i < points.size(); i++) {
 		sfml_shape.setPoint(i, points[i]);
 	}
