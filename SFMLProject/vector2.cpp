@@ -5,20 +5,19 @@ vector2 vector2::zero_vector = {0};
 vector2::vector2() 
 	: x(0), y(0)
 {
-
 }
 
-vector2::vector2(double& v) : sf::Vector2f(v, v) {
+vector2::vector2(double& v) : sf::Vector2f((float) v, (float) v) {
 	x = v;
 	y = v;
 }
 
-vector2::vector2(double v) : sf::Vector2f(v, v) {
+vector2::vector2(double v) : sf::Vector2f((float) v, (float) v) {
 	x = v;
 	y = v;
 }
 
-vector2::vector2(double x, double y) : sf::Vector2f(x, y) {
+vector2::vector2(double x, double y) : sf::Vector2f((float) x, (float) y) {
 	this->x = x;
 	this->y = y;
 }
@@ -36,15 +35,15 @@ void vector2::rotate_it(double angle) {
 	double _y = x * sin(radians) + y * cos(radians);
 	x = _x;
 	y = _y;
-	sf::Vector2f::x = _x;
-	sf::Vector2f::y = _y;
+	sf::Vector2f::x = (float) _x;
+	sf::Vector2f::y = (float) _y;
 }
 
 vector2 vector2::normalize() {
 	double length = this->length();
 
 	if (length == 0) {
-		return vector2(0, 0);
+		return vector2(0, -1);
 	}
 
 	return vector2(x / length, y / length);
@@ -55,7 +54,7 @@ double vector2::length() {
 	return std::isnan(_sqrt) ? 0 : _sqrt;
 }
 
-double vector2::distanse(vector2 o) {
+double vector2::distance(vector2 o) {
 	return (*this - o).length();
 }
 			
@@ -64,8 +63,8 @@ auto vector2::negate() {
 }
 
 void vector2::negate_it() {
-	sf::Vector2f::x = -x;
-	sf::Vector2f::y = -y;
+	sf::Vector2f::x = (float) -x;
+	sf::Vector2f::y = (float) -y;
 	x = -x;
 	y = -y;
 }
@@ -94,8 +93,8 @@ void vector2::operator*=(double d)
 {
 	x = x * d;
 	y = y * d;
-	sf::Vector2f::x *= d;
-	sf::Vector2f::y *= d;
+	sf::Vector2f::x *= (float) d;
+	sf::Vector2f::y *= (float) d;
 }
 
 vector2 vector2::operator/(double d) {
@@ -106,8 +105,8 @@ void vector2::operator/=(double d)
 {
 	x = x / d;
 	y = y / d;
-	sf::Vector2f::x /= d;
-	sf::Vector2f::y /= d;
+	sf::Vector2f::x /= (float) d;
+	sf::Vector2f::y /= (float) d;
 }
 
 vector2 vector2::operator+(vector2 v) {
@@ -118,8 +117,8 @@ void vector2::operator+=(vector2 v)
 {
 	x = x + v.x;
 	y = y + v.y;
-	sf::Vector2f::x += v.x;
-	sf::Vector2f::y += v.y;
+	sf::Vector2f::x += (float) v.x;
+	sf::Vector2f::y += (float) v.y;
 }
 
 vector2 vector2::operator-(vector2 v) {
@@ -130,15 +129,15 @@ void vector2::operator-=(vector2 v)
 {
 	x = x - v.x;
 	y = y - v.y;
-	sf::Vector2f::x -= v.x;
-	sf::Vector2f::y -= v.y;
+	sf::Vector2f::x -= (float) v.x;
+	sf::Vector2f::y -= (float) v.y;
 }
 
 void vector2::operator=(vector2 v) {
 	x = v.x;
 	y = v.y;
-	sf::Vector2f::x = v.x;
-	sf::Vector2f::y = v.y;
+	sf::Vector2f::x = (float) v.x;
+	sf::Vector2f::y = (float) v.y;
 }
 
 vector2 vector2::operator-() {

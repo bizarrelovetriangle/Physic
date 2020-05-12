@@ -1,6 +1,7 @@
 #pragma once
 #include "vector2.h"
 #include <vector>
+#include "edge.h"
 
 class phisic_object {
 public:
@@ -17,10 +18,12 @@ public:
 	bool is_infiniti_mass;
 
 	std::vector<vector2> original_points;
-	std::vector<std::tuple<vector2&, vector2&>> original_edges;
+	std::vector<edge> original_edges;
 
 	std::vector<vector2> points;
-	std::vector<std::tuple<vector2&, vector2&>> edges;
+	std::vector<edge> edges;
+
+	std::string name;
 
 	virtual void update_form() = 0;
 	virtual void draw(sf::RenderWindow& window) = 0;

@@ -10,7 +10,6 @@ wall_block::wall_block(vector2 a, vector2 b)
 	this->a = a;
 	this->b = b;
 
-	moment_of_inetia = 0.008;
 	is_infiniti_mass = true;
 
 	original_points = std::vector<vector2>{ 0, 0 };
@@ -18,7 +17,7 @@ wall_block::wall_block(vector2 a, vector2 b)
 
 	original_points[0] = a;
 	original_points[1] = b;
-	original_edges.push_back(std::forward_as_tuple(this->a, this->b));
+	original_edges.emplace_back(this->a, this->b);
 
 	update_form();
 }
@@ -34,13 +33,11 @@ void wall_block::update_form()
 
 	for (int i = 0; i < original_points.size(); i++)
 	{
-		original_points[i].rotate_it(angle);
+		points[i] = original_points[i].rotate(angle) + position;
 	}
 
-	for (int i = 0; i < points.size(); i++)
-	{
-		points[i] = original_points[i] + position;
-	}
+	edges.clear();
+	edges.emplace_back(points[0], points[1]);
 }
 
 void wall_block::draw(sf::RenderWindow& window) {

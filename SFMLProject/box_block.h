@@ -12,9 +12,5 @@ public:
 	void update_form() override;
 	void draw(sf::RenderWindow& window) override;
 
-	void viscosity_value(double& value);
-
-	void viscosity_vector(vector2& vector);
-
 	sf::ConvexShape create_sfml_shape();
 };

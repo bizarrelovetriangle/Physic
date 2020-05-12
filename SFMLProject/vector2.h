@@ -24,7 +24,7 @@ public:
 
 	double length();
 
-	double distanse(vector2 o);
+	double distance(vector2 o);
 			
 	auto negate();
 
