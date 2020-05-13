@@ -41,8 +41,8 @@ void gjk_functions::clipping(
 	vector2 incident_vertices[2] = { incident_edge->a, incident_edge->b };
 	vector2 reference_vertices[2] = { reference_edge->a, reference_edge->b };
 
-	drawer->draw_line(reference_edge->a, reference_edge->b, sf::Color::Magenta);
-	drawer->draw_line(incident_edge->a, incident_edge->b, sf::Color::White);
+	//drawer->draw_line(reference_edge->a, reference_edge->b, sf::Color::Magenta);
+	//drawer->draw_line(incident_edge->a, incident_edge->b, sf::Color::White);
 
 	double incident_edge_a_dot = incident_edge->a.dot_product(reference_edge_nolmalize);
 	double incident_edge_b_dot = incident_edge->b.dot_product(reference_edge_nolmalize);
@@ -74,11 +74,11 @@ void gjk_functions::clipping(
 		
 		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) != 
 				reference_edge_nolmalize.cross_product(epa_result.collision_normal) > 0) {
-			drawer->draw_cross(incident_vertex, sf::Color::Red);
+			//drawer->draw_cross(incident_vertex, sf::Color::Red);
 			contact_points.push_back(incident_vertex);
 		}
 		else {
-			drawer->draw_cross(incident_vertex, sf::Color::Blue); 
+			//drawer->draw_cross(incident_vertex, sf::Color::Blue); 
 		}
 	}
 
@@ -101,8 +101,8 @@ void gjk_functions::clipping(
 	epa_result.collision_penetration = epa_result.collision_penetration_line.length();
 	epa_result.collision_normal = epa_result.collision_penetration_line.normalize();
 
-	drawer->draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
-	drawer->draw_line(epa_result.collision_point, proj_point, sf::Color::Red);
+	//drawer->draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
+	//drawer->draw_line(epa_result.collision_point, proj_point, sf::Color::Red);
 	drawer->draw_cross(epa_result.collision_point, sf::Color::White);
 }
 

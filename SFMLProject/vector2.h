@@ -16,9 +16,9 @@ public:
 
 	vector2(double x, double y);
 
-	vector2 rotate(double angle);
+	vector2 rotate(double radians);
 
-	void rotate_it(double angle);
+	void rotate_it(double radians);
 
 	vector2 normalize();
 

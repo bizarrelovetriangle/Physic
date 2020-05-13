@@ -133,15 +133,13 @@ vector2 collide_resolver::point_velosity(
 
 	vector2 angle_velocity_normal = vector2(-sholder_vector.y, sholder_vector.x).normalize();
 
-	if (object.angle_velocity < 0) {
+	if (object.radians_velocity < 0) {
 		angle_velocity_normal = -angle_velocity_normal;
 	}
 
-	auto angle_point_velosity = angle_velocity_normal *
-		(2 * 3.14159265359 * sholder_vector.length() * abs(object.angle_velocity) / 360);
+	auto angle_point_velosity = angle_velocity_normal * sholder_vector.length() * abs(object.radians_velocity);
 
-	auto angle_point_velosity_by_normal = normal *
-		angle_point_velosity.dot_product(normal);
+	auto angle_point_velosity_by_normal = normal * angle_point_velosity.dot_product(normal);
 
 	return object.velocity + angle_point_velosity_by_normal;
 }
@@ -150,9 +148,7 @@ void collide_resolver::apply_impulse(
 	phisic_object& object, vector2 impulse_point, vector2 impulse_vector) 
 {
 	vector2 sholder_vector = impulse_point - object.position;
-
-	object.angle_velocity += (sholder_vector.cross_product(impulse_vector) / object.moment_of_inetia) 
-		* 180 / 3.14159265359;
+	object.radians_velocity += sholder_vector.cross_product(impulse_vector) / object.moment_of_inetia;
 	object.velocity += impulse_vector / object.mass;
 }
 

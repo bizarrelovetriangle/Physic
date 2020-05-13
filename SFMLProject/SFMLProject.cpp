@@ -104,8 +104,8 @@ int main()
 					if (gjk.contains_point(box->points, mouse_position)) {
 						selected = box;
 						//selected->velocity = vector2(0, 0);
-						//selected->angle_velocity = 0;
-						shoulder = (mouse_position - box->position).rotate(-selected->angle);
+						//selected->radians_velocity = 0;
+						shoulder = (mouse_position - box->position).rotate(-selected->radians);
 						break;
 					}
 				}
@@ -115,22 +115,22 @@ int main()
 
 				if (selected != NULL) {
 					if (event.key.code == sf::Keyboard::Q) {
-						selected->angle_velocity -= 1.25;
+						selected->radians_velocity -= 1.25;
 					}
 					if (event.key.code == sf::Keyboard::E) {
-						selected->angle_velocity += 1.25;
+						selected->radians_velocity += 1.25;
 					}
 					if (event.key.code == sf::Keyboard::Z) {
-						selected->angle -= 2;
+						selected->radians -= 2;
 					}
 					if (event.key.code == sf::Keyboard::X) {
-						selected->angle += 2;
+						selected->radians += 2;
 					}
 					if (event.key.code == sf::Keyboard::R) {
 						selected->position = vector2();
-						selected->angle = 0;
+						selected->radians = 0;
 						selected->velocity = vector2();
-						selected->angle_velocity = 0;
+						selected->radians_velocity = 0;
 					}
 					if (event.key.code == sf::Keyboard::Space) {
 						collider_resolver.apply_impulse(*selected, selected->points[0], vector2(0, -5));
@@ -160,12 +160,12 @@ int main()
 		drawer.draw_number(vector2(-200), collider_resolver.collide_count);
 		//
 		//double kinetic_energy = (_box->velocity * _box->mass).length() +
-		//    _box->angle_velocity * _box->moment_of_inetia;
+		//    _box->radians_velocity * _box->moment_of_inetia;
 		//
 		//drawer.draw_number(vector2(-200, -180), kinetic_energy);
 
 		if (selected != NULL) {
-			vector2 new_shoulder = shoulder.rotate(selected->angle) + selected->position;
+			vector2 new_shoulder = shoulder.rotate(selected->radians) + selected->position;
 			vector2 impulse_vector = mouse_position - new_shoulder;
 			collider_resolver.apply_impulse_by_mouse(*selected, new_shoulder, impulse_vector);
 		}

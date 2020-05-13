@@ -35,11 +35,11 @@ void box_block::update_form()
 {
 	velocity += acceleration;
 	position += velocity;
-	angle += angle_velocity;
+	radians += radians_velocity;
 
 	for (int i = 0; i < original_points.size(); i++)
 	{
-		points[i] = original_points[i].rotate(angle) + position;
+		points[i] = original_points[i].rotate(radians) + position;
 	}
 
 	edges.clear();

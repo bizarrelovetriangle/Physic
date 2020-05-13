@@ -10,8 +10,8 @@ public:
 	vector2 velocity;
 	vector2 acceleration;
 
-	double angle = 0;
-	double angle_velocity = 0;
+	double radians = 0;
+	double radians_velocity = 0;
 	double moment_of_inetia = 1;
 
 	double mass = 1;
