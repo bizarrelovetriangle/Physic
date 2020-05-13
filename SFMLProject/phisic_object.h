@@ -17,10 +17,10 @@ public:
 	double mass = 1;
 	bool is_infiniti_mass;
 
-	std::vector<vector2> original_points;
+	std::vector<vector2> original_vertices;
 	std::vector<edge> original_edges;
 
-	std::vector<vector2> points;
+	std::vector<vector2> vertices;
 	std::vector<edge> edges;
 
 	std::string name;

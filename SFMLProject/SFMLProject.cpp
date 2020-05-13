@@ -4,20 +4,12 @@
 #include "mouse_provider.h"
 #include "wall_block.h"
 
-#define screen_width 1400
-#define screen_height 1000
+constexpr double screen_width = 1400;
+constexpr double screen_height = 1000;
 
 vector2 center_point(0);
 
 void draw_coordinates(sf::RenderWindow& window);
-
-//doto
-// resolve_collision refactoring
-// Remove update from phisic obj ctor
-// collision_result to epa_result
-// rename vectors variable to vertices
-// разобраться с flip)
-// Сначала небольшой рефакторинг, потом трение.
 
 int main()
 {
@@ -99,7 +91,7 @@ int main()
 				window.close();
 			if (event.type == sf::Event::MouseButtonPressed) {
 				for (auto& box : phisic_objects) {
-					if (gjk.contains_point(box->points, mouse_position)) {
+					if (gjk.contains_point(box->vertices, mouse_position)) {
 						selected = box;
 						//selected->velocity = vector2(0, 0);
 						//selected->radians_velocity = 0;
@@ -131,7 +123,7 @@ int main()
 						selected->radians_velocity = 0;
 					}
 					if (event.key.code == sf::Keyboard::Space) {
-						collider_resolver.apply_impulse(*selected, selected->points[0], vector2(0, -5));
+						collider_resolver.apply_impulse(*selected, selected->vertices[0], vector2(0, -5));
 					}
 				}
 			}

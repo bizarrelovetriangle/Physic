@@ -12,9 +12,9 @@ void gjk_functions::clipping(
 	std::vector<edge>& b_edges,
 	epa_result& epa_result) 
 {
-	vector2 normal = epa_result.flip
-		? -epa_result.collision_normal
-		: epa_result.collision_normal;
+	vector2 normal = epa_result.is_object_1_mormal
+		? epa_result.collision_normal
+		: -epa_result.collision_normal;
 
 	auto& a_farthest = farthest_point(a_vectors, normal);
 	auto& b_farthest = farthest_point(b_vectors, -normal);
@@ -25,13 +25,13 @@ void gjk_functions::clipping(
 	edge* reference_edge;
 	edge* incident_edge;
 
-	if (epa_result.flip) {
-		reference_edge = &a_best_edge;
-		incident_edge = &b_best_edge;
-	}
-	else {
+	if (epa_result.is_object_1_mormal) {
 		reference_edge = &b_best_edge;
 		incident_edge = &a_best_edge;
+	}
+	else {
+		reference_edge = &a_best_edge;
+		incident_edge = &b_best_edge;
 	}
 
 	auto incident_a_b = incident_edge->a - incident_edge->b;
@@ -194,13 +194,12 @@ epa_result gjk_functions::get_collider_result(minkowski_differens& mink_a, minko
 		penetration_point = mink_a.point_a;
 		collision_edje_a =  mink_a.point_b;
 		collision_edje_b =  mink_b.point_b; // or mink_a.point_b
-		result.flip = false;
 	}
 	else {
 		penetration_point = mink_a.point_b;
 		collision_edje_a =  mink_a.point_a;
 		collision_edje_b =  mink_b.point_a; // or mink_a.point_a
-		result.flip = true;
+		result.is_object_1_mormal = false;
 	}
 
 	auto proj_point = projection_point(*collision_edje_a, *collision_edje_b, *penetration_point);

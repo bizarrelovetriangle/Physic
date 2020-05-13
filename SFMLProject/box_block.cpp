@@ -8,25 +8,23 @@ box_block::box_block(vector2 pos, vector2 size)
 	mass = size.x * size.y * 5 / 10000;
 	moment_of_inetia = 1. / 12 * mass * (pow(size.x, 2) + pow(size.y, 2));
 
-	original_points = std::vector<vector2>{ 0, 0, 0, 0 };
-	points = std::vector<vector2>{ 0, 0, 0, 0 };
+	original_vertices = std::vector<vector2>{ 0, 0, 0, 0 };
+	vertices = std::vector<vector2>{ 0, 0, 0, 0 };
 
-	original_edges.emplace_back(original_points[0], original_points[1]);
+	original_edges.emplace_back(original_vertices[0], original_vertices[1]);
 
 	sfml_shape = sf::ConvexShape(4);
 
 
-	original_points[0] = vector2(-size.x / 2, -size.y / 2);
-	original_points[1] = vector2(size.x / 2, -size.y / 2);
-	original_points[2] = vector2(size.x / 2, size.y / 2);
-	original_points[3] = vector2(-size.x / 2, size.y / 2);
+	original_vertices[0] = vector2(-size.x / 2, -size.y / 2);
+	original_vertices[1] = vector2(size.x / 2, -size.y / 2);
+	original_vertices[2] = vector2(size.x / 2, size.y / 2);
+	original_vertices[3] = vector2(-size.x / 2, size.y / 2);
 
-	original_edges.emplace_back(original_points[0], original_points[1]);
-	original_edges.emplace_back(original_points[1], original_points[2]);
-	original_edges.emplace_back(original_points[2], original_points[3]);
-	original_edges.emplace_back(original_points[3], original_points[0]);
-
-	update_form();
+	original_edges.emplace_back(original_vertices[0], original_vertices[1]);
+	original_edges.emplace_back(original_vertices[1], original_vertices[2]);
+	original_edges.emplace_back(original_vertices[2], original_vertices[3]);
+	original_edges.emplace_back(original_vertices[3], original_vertices[0]);
 
 	sfml_shape.setFillColor(sf::Color::Green);
 }
@@ -37,22 +35,22 @@ void box_block::update_form()
 	position += velocity;
 	radians += radians_velocity;
 
-	for (int i = 0; i < original_points.size(); i++)
+	for (int i = 0; i < original_vertices.size(); i++)
 	{
-		points[i] = original_points[i].rotate(radians) + position;
+		vertices[i] = original_vertices[i].rotate(radians) + position;
 	}
 
 	edges.clear();
-	edges.emplace_back(points[0], points[1]);
-	edges.emplace_back(points[1], points[2]);
-	edges.emplace_back(points[2], points[3]);
-	edges.emplace_back(points[3], points[0]);
+	edges.emplace_back(vertices[0], vertices[1]);
+	edges.emplace_back(vertices[1], vertices[2]);
+	edges.emplace_back(vertices[2], vertices[3]);
+	edges.emplace_back(vertices[3], vertices[0]);
 }
 
 void box_block::draw(sf::RenderWindow& window) 
 {
-	//for (int i = 0; i < points.size(); i++) {
-	//	sfml_shape.setPoint(i, points[i]);
+	//for (int i = 0; i < vertices.size(); i++) {
+	//	sfml_shape.setPoint(i, vertices[i]);
 	//}
 
 	//window.draw(sfml_shape);
@@ -60,14 +58,14 @@ void box_block::draw(sf::RenderWindow& window)
 
 	sf::Vertex line[8] =
 	{
-		sf::Vertex(points[0], sf::Color::Yellow),
-		sf::Vertex(points[1], sf::Color::Yellow),
-		sf::Vertex(points[1], sf::Color::Yellow),
-		sf::Vertex(points[2], sf::Color::Yellow),
-		sf::Vertex(points[2], sf::Color::Yellow),
-		sf::Vertex(points[3], sf::Color::Yellow),
-		sf::Vertex(points[3], sf::Color::Yellow),
-		sf::Vertex(points[0], sf::Color::Yellow)
+		sf::Vertex(vertices[0], sf::Color::Yellow),
+		sf::Vertex(vertices[1], sf::Color::Yellow),
+		sf::Vertex(vertices[1], sf::Color::Yellow),
+		sf::Vertex(vertices[2], sf::Color::Yellow),
+		sf::Vertex(vertices[2], sf::Color::Yellow),
+		sf::Vertex(vertices[3], sf::Color::Yellow),
+		sf::Vertex(vertices[3], sf::Color::Yellow),
+		sf::Vertex(vertices[0], sf::Color::Yellow)
 	};
 
 	window.draw(line, 8, sf::Lines);
