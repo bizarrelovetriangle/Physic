@@ -12,8 +12,6 @@ vector2 center_point(0);
 void draw_coordinates(sf::RenderWindow& window);
 
 //doto
-// Добавить Clipping что ли??
-// Использовать радианты
 // resolve_collision refactoring
 // Remove update from phisic obj ctor
 // collision_result to epa_result
@@ -158,16 +156,11 @@ int main()
 		collider_resolver.resolve_collision_vector(phisic_objects);
 
 		drawer.draw_number(vector2(-200), collider_resolver.collide_count);
-		//
-		//double kinetic_energy = (_box->velocity * _box->mass).length() +
-		//    _box->radians_velocity * _box->moment_of_inetia;
-		//
-		//drawer.draw_number(vector2(-200, -180), kinetic_energy);
 
 		if (selected != NULL) {
 			vector2 new_shoulder = shoulder.rotate(selected->radians) + selected->position;
 			vector2 impulse_vector = mouse_position - new_shoulder;
-			collider_resolver.apply_impulse_by_mouse(*selected, new_shoulder, impulse_vector);
+			collider_resolver.set_velosity_in_point(*selected, new_shoulder, impulse_vector);
 		}
 
 		draw_coordinates(window);

@@ -341,7 +341,7 @@ vector2& gjk_functions::perpendicular_to_point(
 
 	// negative cross product means that point is clockwise relative b_a
 	if (b_a.is_clockwise(o_a)) {
-		b_a.negate_it();
+		b_a = -b_a;
 	}
 
 	// this method always return non clockwise perpendicular
@@ -358,7 +358,7 @@ vector2& gjk_functions::perpendicular_from_point(
 
 	// negative cross product means that point is clockwise relative b_a
 	if (!b_a.is_clockwise(o_a)) {
-		b_a.negate_it();
+		b_a = -b_a;
 	}
 
 	// this method always return non clockwise perpendicular

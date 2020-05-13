@@ -130,18 +130,9 @@ vector2 collide_resolver::point_velosity(
 	phisic_object& object, vector2 impulse_point, vector2 normal)
 {
 	vector2 sholder_vector = impulse_point - object.position;
-
-	vector2 angle_velocity_normal = vector2(-sholder_vector.y, sholder_vector.x).normalize();
-
-	if (object.radians_velocity < 0) {
-		angle_velocity_normal = -angle_velocity_normal;
-	}
-
-	auto angle_point_velosity = angle_velocity_normal * sholder_vector.length() * abs(object.radians_velocity);
-
-	auto angle_point_velosity_by_normal = normal * angle_point_velosity.dot_product(normal);
-
-	return object.velocity + angle_point_velosity_by_normal;
+	auto angle_point_velosity = sholder_vector.clockwise_perpendicular() * object.radians_velocity;
+	auto radians_point_velosity_by_normal = normal * angle_point_velosity.dot_product(normal);
+	return object.velocity + radians_point_velosity_by_normal;
 }
 
 void collide_resolver::apply_impulse(

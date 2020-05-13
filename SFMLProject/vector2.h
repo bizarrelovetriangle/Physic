@@ -18,17 +18,15 @@ public:
 
 	vector2 rotate(double radians);
 
-	void rotate_it(double radians);
-
 	vector2 normalize();
+
+	vector2 clockwise_perpendicular();
 
 	double length();
 
 	double distance(vector2 o);
 			
 	auto negate();
-
-	void negate_it();
 
 	double dot_product(vector2 o);
 

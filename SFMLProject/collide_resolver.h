@@ -9,7 +9,7 @@ public:
 	primitives_drawer* drawer;
 	gjk_functions gjk;
 	
-	int collide_count;
+	int collide_count = 0;
 
 	collide_resolver(primitives_drawer* drawer);
 	void resolve_collision_vector(std::vector<phisic_object*>& phisic_objects);

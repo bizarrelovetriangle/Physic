@@ -28,15 +28,6 @@ vector2 vector2::rotate(double radians) {
 	return vector2(_x, _y);
 }
 
-void vector2::rotate_it(double radians) {
-	double _x = x * cos(radians) - y * sin(radians);
-	double _y = x * sin(radians) + y * cos(radians);
-	x = _x;
-	y = _y;
-	sf::Vector2f::x = (float) _x;
-	sf::Vector2f::y = (float) _y;
-}
-
 vector2 vector2::normalize() {
 	double length = this->length();
 
@@ -45,6 +36,10 @@ vector2 vector2::normalize() {
 	}
 
 	return vector2(x / length, y / length);
+}
+
+vector2 vector2::clockwise_perpendicular() {
+	return vector2(-y, x);
 }
 
 double vector2::length() {
@@ -58,13 +53,6 @@ double vector2::distance(vector2 o) {
 			
 auto vector2::negate() {
 	return vector2(-x, -y);
-}
-
-void vector2::negate_it() {
-	sf::Vector2f::x = (float) -x;
-	sf::Vector2f::y = (float) -y;
-	x = -x;
-	y = -y;
 }
 
 double vector2::dot_product(vector2 o) {
