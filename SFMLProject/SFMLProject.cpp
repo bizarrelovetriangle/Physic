@@ -10,28 +10,14 @@ constexpr double screen_height = 1000;
 vector2 center_point(0);
 
 void draw_coordinates(sf::RenderWindow& window);
+void create_walls(std::vector<phisic_object*>& phisic_objects);
 
+// refactoring input methods
 int main()
 {
 	std::vector<phisic_object*> phisic_objects;
 
-	int wall_width = 700;
-	int wall_height = 700;
-
-	vector2 a(-wall_width / 2, wall_height / 2);
-	vector2 b(-wall_width / 2, -wall_height / 2);
-	vector2 c(wall_width / 2, -wall_height / 2);
-	vector2 d(wall_width / 2, wall_height / 2);
-
-	wall_block* left_wall = new wall_block(a, b);
-	wall_block* top_wall = new wall_block(b, c);
-	wall_block* right_wall = new wall_block(c, d);
-	wall_block* borrom_wall = new wall_block(d, a);
-
-	phisic_objects.emplace_back(left_wall);
-	phisic_objects.emplace_back(top_wall);
-	phisic_objects.emplace_back(right_wall);
-	phisic_objects.emplace_back(borrom_wall);
+	create_walls(phisic_objects);
 
 	for (int i = 0; i < 4; i++) {
 	    for (int i2 = 0; i2 < 5; i2++) {
@@ -129,7 +115,7 @@ int main()
 			}
 			if (event.type == sf::Event::MouseButtonReleased) {
 				if (selected != NULL) {
-					//selected->velocity = mouse_provider.filtered_speed();
+					selected->velocity = mouse_provider.filtered_speed();
 				}
 				selected = NULL;
 			}
@@ -164,7 +150,29 @@ int main()
 	return 0;
 }
 
-void draw_coordinates(sf::RenderWindow& window) {
+void create_walls(std::vector<phisic_object*>& phisic_objects)
+{
+	int wall_width = 700;
+	int wall_height = 700;
+
+	vector2 a(-wall_width / 2, wall_height / 2);
+	vector2 b(-wall_width / 2, -wall_height / 2);
+	vector2 c(wall_width / 2, -wall_height / 2);
+	vector2 d(wall_width / 2, wall_height / 2);
+
+	wall_block* left_wall = new wall_block(a, b);
+	wall_block* top_wall = new wall_block(b, c);
+	wall_block* right_wall = new wall_block(c, d);
+	wall_block* borrom_wall = new wall_block(d, a);
+
+	phisic_objects.emplace_back(left_wall);
+	phisic_objects.emplace_back(top_wall);
+	phisic_objects.emplace_back(right_wall);
+	phisic_objects.emplace_back(borrom_wall);
+}
+
+void draw_coordinates(sf::RenderWindow& window) 
+{
 	sf::Vertex line[4] =
 	{
 		sf::Vertex(vector2(-10, 0), sf::Color::White),

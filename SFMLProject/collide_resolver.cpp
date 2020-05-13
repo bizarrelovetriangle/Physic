@@ -20,37 +20,39 @@ void collide_resolver::resolve_collision_vector(std::vector<phisic_object*>& phi
 
 			if (gjk_result.is_collide) {
 				auto epa_res = gjk.EPA(object_1->vertices, object_2->vertices, gjk_result);
-				gjk.clipping(object_1->vertices, object_2->vertices, 
+				auto clipping_res = gjk.clipping(object_1->vertices, object_2->vertices,
 					object_1->edges, object_2->edges, epa_res);
 				//continue;
-				resolve_collision(object_1, object_2, epa_res);
+				resolve_collision(object_1, object_2, clipping_res);
 			}
 		}
 	}
 }
 
 void collide_resolver::resolve_collision(
-	phisic_object* object_1, phisic_object* object_2, epa_result& epa_res) 
+	phisic_object* object_1, phisic_object* object_2, clipping_result& clipping_res)
 {
 	double e = 0.4; // 1 - absolutely inelastic
+	
+	collide_count++;
 
 	vector2 object_1_point_velosity = point_velosity(
-		*object_1, epa_res.collision_point, epa_res.collision_normal);
+		*object_1, clipping_res.collision_point, clipping_res.collision_normal);
 	vector2 object_2_point_velosity = point_velosity(
-		*object_2, epa_res.collision_point, epa_res.collision_normal);
+		*object_2, clipping_res.collision_point, clipping_res.collision_normal);
 	vector2 objects_point_velosity_diff = object_1_point_velosity - object_2_point_velosity;
 
-	if (objects_point_velosity_diff.dot_product(epa_res.collision_normal) > 0 != epa_res.is_object_1_mormal) {
+	if (objects_point_velosity_diff.dot_product(clipping_res.collision_normal) > 0 != clipping_res.is_object_1_mormal) {
 		return;
 	}
 
-	vector2 penetration_vector = epa_res.is_object_1_mormal
-		? epa_res.collision_penetration_line
-		: - epa_res.collision_penetration_line;
+	vector2 penetration_vector = clipping_res.is_object_1_mormal
+		? clipping_res.collision_penetration_line
+		: -clipping_res.collision_penetration_line;
 
-	double mass_ratio = object_1->is_infiniti_mass 
-		? 0 : object_2->is_infiniti_mass 
-			? 1 : object_1->mass / (object_1->mass + object_2->mass);
+	double mass_ratio = object_1->is_infiniti_mass
+		? 0 : object_2->is_infiniti_mass
+		? 1 : object_1->mass / (object_1->mass + object_2->mass);
 
 	object_1->position -= penetration_vector * mass_ratio;
 	object_2->position += penetration_vector * (1 - mass_ratio);
@@ -58,25 +60,25 @@ void collide_resolver::resolve_collision(
 	double moment_of_mass = 0;
 
 	if (!object_1->is_infiniti_mass) {
-		vector2 object_1_sholder_vector = epa_res.collision_point - object_1->position;
-		moment_of_mass += (1 / object_1->mass) + 
-			(pow(object_1_sholder_vector.cross_product(epa_res.collision_normal), 2) /
+		vector2 object_1_sholder_vector = clipping_res.collision_point - object_1->position;
+		moment_of_mass += (1 / object_1->mass) +
+			(pow(object_1_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
 				object_1->moment_of_inetia);
 	}
 
 	if (!object_2->is_infiniti_mass) {
-		vector2 object_2_sholder_vector = epa_res.collision_point - object_2->position;
+		vector2 object_2_sholder_vector = clipping_res.collision_point - object_2->position;
 		moment_of_mass += (1 / object_2->mass) +
-			(pow(object_2_sholder_vector.cross_product(epa_res.collision_normal), 2) /
+			(pow(object_2_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
 				object_2->moment_of_inetia);
 	}
 
-	vector2 j = - epa_res.collision_normal *
-		objects_point_velosity_diff.dot_product(epa_res.collision_normal) * (1 + e) /
+	vector2 j = -clipping_res.collision_normal *
+		objects_point_velosity_diff.dot_product(clipping_res.collision_normal) * (1 + e) /
 		moment_of_mass;
 
-	apply_impulse(*object_1, epa_res.collision_point, j);
-	apply_impulse(*object_2, epa_res.collision_point, -j);
+	apply_impulse(*object_1, clipping_res.collision_point, j);
+	apply_impulse(*object_2, clipping_res.collision_point, -j);
 }
 
 vector2 collide_resolver::point_velosity(

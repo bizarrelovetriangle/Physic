@@ -101,5 +101,8 @@
     <ClInclude Include="edge.h">
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="clipping_result.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

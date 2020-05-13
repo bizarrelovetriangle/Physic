@@ -177,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box_block.h" />
+    <ClInclude Include="clipping_result.h" />
     <ClInclude Include="collide_resolver.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="epa_result.h" />

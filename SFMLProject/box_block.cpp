@@ -55,7 +55,6 @@ void box_block::draw(sf::RenderWindow& window)
 
 	//window.draw(sfml_shape);
 
-
 	sf::Vertex line[8] =
 	{
 		sf::Vertex(vertices[0], sf::Color::Yellow),
