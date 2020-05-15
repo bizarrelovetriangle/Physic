@@ -12,7 +12,7 @@ clipping_result gjk_functions::clipping(
 	std::vector<edge>& b_edges,
 	epa_result& epa_result) 
 {
-	vector2 normal = epa_result.is_object_1_mormal
+	vector2 normal = epa_result.is_object_1_normal
 		? epa_result.collision_normal
 		: -epa_result.collision_normal;
 
@@ -25,7 +25,7 @@ clipping_result gjk_functions::clipping(
 	edge* reference_edge;
 	edge* incident_edge;
 
-	if (epa_result.is_object_1_mormal) {
+	if (epa_result.is_object_1_normal) {
 		reference_edge = &b_best_edge;
 		incident_edge = &a_best_edge;
 	}
@@ -94,7 +94,7 @@ clipping_result gjk_functions::clipping(
 	clipping_res.collision_penetration_line = collision_point - proj_point;
 	clipping_res.collision_penetration = clipping_res.collision_penetration_line.length();
 	clipping_res.collision_normal = clipping_res.collision_penetration_line.normalize();
-	clipping_res.is_object_1_mormal = epa_result.is_object_1_mormal;
+	clipping_res.is_object_1_normal = epa_result.is_object_1_normal;
 
 	//drawer.draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
 	//drawer.draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
@@ -174,7 +174,7 @@ epa_result gjk_functions::get_collider_result(minkowski_differens& mink_a, minko
 		penetration_point = mink_a.point_b;
 		collision_edje_a =  mink_a.point_a;
 		collision_edje_b =  mink_b.point_a; // or mink_a.point_a
-		epa_res.is_object_1_mormal = false;
+		epa_res.is_object_1_normal = false;
 	}
 
 	auto proj_point = projection_point(*collision_edje_a, *collision_edje_b, *penetration_point);
