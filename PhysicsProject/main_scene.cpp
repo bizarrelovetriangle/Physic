@@ -1,7 +1,7 @@
 #include "main_scene.h"
 
 main_scene::main_scene() : 
-	window(sf::VideoMode(screen_width, screen_height), "SFML works!"),
+	window(sf::VideoMode(screen_width, screen_height), "PhysicsProject"),
 	drawer(window),
 	gjk(drawer),
 	collider_resolver(drawer),
