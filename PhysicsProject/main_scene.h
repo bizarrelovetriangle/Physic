@@ -8,11 +8,10 @@
 #include "gjk_functions.h"
 #include "collide_resolver.h"
 #include "mouse_picker.h"
+#include "global.h"
 
 class main_scene {
 public:
-	double screen_width = 1400;
-	double screen_height = 1000;
 	main_scene();
 	void start();
 
@@ -21,10 +20,12 @@ protected:
 	primitives_drawer drawer;
 	gjk_functions gjk;
 	collide_resolver collider_resolver;
+	mouse_picker mouse_picker;
 	std::vector<phisic_object*> phisic_objects;
-
+	void scene_update();
+	void scene_draw();
 private:
 	void create_walls();
+	void create_blocks();
 	void draw_coordinates();
-	mouse_picker mouse_picker;
 };

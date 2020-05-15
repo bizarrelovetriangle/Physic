@@ -185,6 +185,7 @@
     <ClInclude Include="edge.h" />
     <ClInclude Include="epa_result.h" />
     <ClInclude Include="gjk_functions.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="main_scene.h" />
     <ClInclude Include="minkowski_differens.h" />
     <ClInclude Include="minkowski_edge_distance.h" />
