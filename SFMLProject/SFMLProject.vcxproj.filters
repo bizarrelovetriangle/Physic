@@ -13,19 +13,28 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Primitives">
+    <Filter Include="Header Files\phisic_objects">
+      <UniqueIdentifier>{eda17554-123a-4199-8c96-2ff7e0f95731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\phisic_objects">
+      <UniqueIdentifier>{c7cc3976-7b87-42b1-b4aa-f630605d7789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\primitives">
+      <UniqueIdentifier>{117b9cc5-0056-40ea-9c7b-be69e9dc5388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\primitives">
       <UniqueIdentifier>{dd1e926d-ab81-4c9e-a896-aac469383c34}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Primitives">
-      <UniqueIdentifier>{117b9cc5-0056-40ea-9c7b-be69e9dc5388}</UniqueIdentifier>
+    <Filter Include="Header Files\models">
+      <UniqueIdentifier>{d5509e44-fefe-4253-9b2a-0e4656dca11b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\models">
+      <UniqueIdentifier>{c0d73bea-9597-4f25-9652-0022244ea5bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SFMLProject.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gjk_result.h">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="primitives_drawer.h">
       <Filter>Header Files</Filter>
@@ -33,75 +42,90 @@
     <ClCompile Include="gjk_functions.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="minkowski_differens.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="minkowski_edge_distance.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="primitives_drawer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="gjk_result.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="vector2.cpp">
-      <Filter>Resource Files\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="box_block.cpp">
-      <Filter>Resource Files\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse_provider.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="phisic_object.cpp">
-      <Filter>Resource Files\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="wall_block.cpp">
-      <Filter>Resource Files\Primitives</Filter>
+      <Filter>Resource Files\primitives</Filter>
     </ClCompile>
     <ClCompile Include="collide_resolver.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="edge.cpp">
-      <Filter>Resource Files\Primitives</Filter>
+      <Filter>Resource Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="box_block.cpp">
+      <Filter>Resource Files\phisic_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="phisic_object.cpp">
+      <Filter>Resource Files\phisic_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="wall_block.cpp">
+      <Filter>Resource Files\phisic_objects</Filter>
+    </ClCompile>
+    <ClCompile Include="minkowski_differens.cpp">
+      <Filter>Resource Files\models</Filter>
+    </ClCompile>
+    <ClCompile Include="minkowski_edge_distance.cpp">
+      <Filter>Resource Files\models</Filter>
+    </ClCompile>
+    <ClCompile Include="gjk_result.cpp">
+      <Filter>Resource Files\models</Filter>
+    </ClCompile>
+    <ClCompile Include="gjk_result.h">
+      <Filter>Header Files\models</Filter>
+    </ClCompile>
+    <ClCompile Include="main_scene.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_picker.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse_filter.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
-      <Filter>Header Files\Primitives</Filter>
+      <Filter>Header Files\primitives</Filter>
     </ClInclude>
     <ClInclude Include="gjk_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="minkowski_differens.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="minkowski_edge_distance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="box_block.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse_provider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="phisic_object.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="wall_block.h">
-      <Filter>Header Files\Primitives</Filter>
+      <Filter>Header Files\primitives</Filter>
     </ClInclude>
     <ClInclude Include="collide_resolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="epa_result.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="phisic_object.h">
+      <Filter>Header Files\phisic_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="box_block.h">
+      <Filter>Header Files\phisic_objects</Filter>
     </ClInclude>
     <ClInclude Include="edge.h">
-      <Filter>Header Files\Primitives</Filter>
+      <Filter>Header Files\phisic_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="minkowski_differens.h">
+      <Filter>Header Files\models</Filter>
+    </ClInclude>
+    <ClInclude Include="minkowski_edge_distance.h">
+      <Filter>Header Files\models</Filter>
+    </ClInclude>
+    <ClInclude Include="epa_result.h">
+      <Filter>Header Files\models</Filter>
     </ClInclude>
     <ClInclude Include="clipping_result.h">
+      <Filter>Header Files\models</Filter>
+    </ClInclude>
+    <ClInclude Include="main_scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_picker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse_filter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #include "collide_resolver.h"
 
-collide_resolver::collide_resolver(primitives_drawer* drawer)
+collide_resolver::collide_resolver(primitives_drawer& drawer)
 	: gjk(drawer), drawer(drawer)
 {
 }
@@ -105,8 +105,8 @@ void collide_resolver::apply_impulse(
 void collide_resolver::set_velosity_in_point(
 	phisic_object& object, vector2 impulse_point, vector2 impulse_vector)
 {
-	drawer->draw_cross(impulse_point, sf::Color::White);
-	drawer->draw_line(object.position, impulse_point, sf::Color::White);
+	drawer.draw_cross(impulse_point, sf::Color::White);
+	drawer.draw_line(object.position, impulse_point, sf::Color::White);
 	vector2 object_point_velosity = point_velosity(object, impulse_point, impulse_vector.normalize());
 	apply_impulse(object, impulse_point, impulse_vector - object_point_velosity);
 }

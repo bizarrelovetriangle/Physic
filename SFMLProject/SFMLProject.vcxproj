@@ -165,9 +165,11 @@
     <ClCompile Include="gjk_functions.cpp" />
     <ClCompile Include="gjk_result.cpp" />
     <ClCompile Include="gjk_result.h" />
+    <ClCompile Include="main_scene.cpp" />
     <ClCompile Include="minkowski_differens.cpp" />
     <ClCompile Include="minkowski_edge_distance.cpp" />
-    <ClCompile Include="mouse_provider.cpp" />
+    <ClCompile Include="mouse_picker.cpp" />
+    <ClCompile Include="mouse_filter.cpp" />
     <ClCompile Include="phisic_object.cpp" />
     <ClCompile Include="primitives_drawer.cpp" />
     <ClCompile Include="primitives_drawer.h" />
@@ -182,9 +184,11 @@
     <ClInclude Include="edge.h" />
     <ClInclude Include="epa_result.h" />
     <ClInclude Include="gjk_functions.h" />
+    <ClInclude Include="main_scene.h" />
     <ClInclude Include="minkowski_differens.h" />
     <ClInclude Include="minkowski_edge_distance.h" />
-    <ClInclude Include="mouse_provider.h" />
+    <ClInclude Include="mouse_picker.h" />
+    <ClInclude Include="mouse_filter.h" />
     <ClInclude Include="phisic_object.h" />
     <ClInclude Include="vector2.h" />
     <ClInclude Include="wall_block.h" />

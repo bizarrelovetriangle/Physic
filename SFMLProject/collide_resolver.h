@@ -6,12 +6,12 @@
 class collide_resolver
 {
 public:
-	primitives_drawer* drawer;
+	primitives_drawer drawer;
 	gjk_functions gjk;
 	
 	int collide_count = 0;
 
-	collide_resolver(primitives_drawer* drawer);
+	collide_resolver(primitives_drawer& drawer);
 	void resolve_collision_vector(std::vector<phisic_object*>& phisic_objects);
 	void resolve_collision(phisic_object* object_1, phisic_object* object_2, clipping_result& clipping_res);
 	vector2 point_velosity(phisic_object& object, vector2 impulse_point, vector2 normal);

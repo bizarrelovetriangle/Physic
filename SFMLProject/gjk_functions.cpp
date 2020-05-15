@@ -1,6 +1,6 @@
 #include "gjk_functions.h"
 
-gjk_functions::gjk_functions(primitives_drawer* drawer)
+gjk_functions::gjk_functions(primitives_drawer& drawer)
 	: drawer{ drawer }
 {
 }
@@ -67,11 +67,11 @@ clipping_result gjk_functions::clipping(
 		
 		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) != 
 				reference_edge_nolmalize.cross_product(epa_result.collision_normal) > 0) {
-			//drawer->draw_cross(incident_vertex, sf::Color::Red);
+			//drawer.draw_cross(incident_vertex, sf::Color::Red);
 			contact_points.push_back(incident_vertex);
 		}
 		else {
-			//drawer->draw_cross(incident_vertex, sf::Color::Blue); 
+			//drawer.draw_cross(incident_vertex, sf::Color::Blue); 
 		}
 	}
 
@@ -96,9 +96,9 @@ clipping_result gjk_functions::clipping(
 	clipping_res.collision_normal = clipping_res.collision_penetration_line.normalize();
 	clipping_res.is_object_1_mormal = epa_result.is_object_1_mormal;
 
-	//drawer->draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
-	//drawer->draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
-	//drawer->draw_cross(clipping_res.collision_point, sf::Color::White);
+	//drawer.draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
+	//drawer.draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
+	drawer.draw_cross(clipping_res.collision_point, sf::Color::White);
 
 	return clipping_res;
 }
