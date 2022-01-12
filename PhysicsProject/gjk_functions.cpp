@@ -109,7 +109,7 @@ epa_result gjk_functions::EPA(
 	gjk_result& gjk_result)
 {
 	if (!gjk_result.is_collide) {
-		return epa_result();;
+		return epa_result();
 	}
 
 	auto& mink_a = gjk_result.mink_a;

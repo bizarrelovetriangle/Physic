@@ -22,6 +22,7 @@ protected:
 	collide_resolver collider_resolver;
 	mouse_picker mouse_picker;
 	std::vector<phisic_object*> phisic_objects;
+	double frame_interval;
 	void scene_update();
 	void scene_draw();
 private:

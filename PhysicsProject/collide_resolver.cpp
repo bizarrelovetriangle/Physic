@@ -22,7 +22,6 @@ void collide_resolver::resolve_collision_vector(std::vector<phisic_object*>& phi
 				auto epa_res = gjk.EPA(object_1->vertices, object_2->vertices, gjk_result);
 				auto clipping_res = gjk.clipping(object_1->vertices, object_2->vertices,
 					object_1->edges, object_2->edges, epa_res);
-				//continue;
 				resolve_collision(object_1, object_2, clipping_res);
 			}
 		}

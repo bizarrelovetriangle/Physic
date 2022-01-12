@@ -22,6 +22,8 @@ public:
 
 	vector2 clockwise_perpendicular();
 
+	bool is_zero();
+
 	double length();
 
 	double distance(vector2 o);

@@ -19,8 +19,11 @@ main_scene::main_scene() :
 
 void main_scene::start() 
 {
+	sf::Clock clock;
 	while (window.isOpen())
 	{
+		frame_interval = clock.restart().asSeconds();
+		
 		scene_update();
 		scene_draw();
 
@@ -28,7 +31,7 @@ void main_scene::start()
 	}
 }
 
-void main_scene::scene_update() 
+void main_scene::scene_update()
 {
 	mouse_picker.update_object();
 
@@ -45,7 +48,7 @@ void main_scene::scene_update()
 	collider_resolver.resolve_collision_vector(phisic_objects);
 
 	for (auto& object : phisic_objects) {
-		object->update_form();
+		object->update_form(frame_interval * 50);
 	}
 }
 
@@ -57,7 +60,8 @@ void main_scene::scene_draw()
 		object->draw(window);
 	}
 
-	//drawer.draw_number(vector2(-200), collider_resolver.collide_count);
+	drawer.draw_text(vector2(-220), "fps");
+	drawer.draw_number(vector2(-200), 1 / frame_interval);
 
 	draw_coordinates();
 	window.display();

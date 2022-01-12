@@ -42,6 +42,10 @@ vector2 vector2::clockwise_perpendicular() {
 	return vector2(-y, x);
 }
 
+bool vector2::is_zero() {
+	return x == 0 || y == 0;
+}
+
 double vector2::length() {
 	double _sqrt = sqrt(x * x + y * y);
 	return std::isnan(_sqrt) ? 0 : _sqrt;

@@ -3,6 +3,6 @@
 
 class edge {
 public:
-	vector2& a, b;
+	vector2 &a, b;
 	edge(vector2& a, vector2& b);
 };

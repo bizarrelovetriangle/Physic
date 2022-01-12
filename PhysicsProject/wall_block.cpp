@@ -20,14 +20,14 @@ wall_block::wall_block(vector2 a, vector2 b)
 	original_edges.emplace_back(this->a, this->b);
 }
 
-void wall_block::update_form()
+void wall_block::update_form(double frame_interval)
 {
 	original_vertices[0] = a;
 	original_vertices[1] = b;
 
-	velocity += acceleration;
-	position += velocity;
-	radians += radians_velocity;
+	velocity += acceleration * frame_interval;
+	position += velocity * frame_interval;
+	radians += radians_velocity * frame_interval;
 
 	for (int i = 0; i < original_vertices.size(); i++)
 	{
