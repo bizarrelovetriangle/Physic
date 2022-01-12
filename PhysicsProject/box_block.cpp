@@ -45,12 +45,6 @@ void box_block::update_form(double frame_interval)
 	{
 		vertices[i] = original_vertices[i].rotate(radians) + position;
 	}
-
-	edges.clear();
-	edges.emplace_back(vertices[0], vertices[1]);
-	edges.emplace_back(vertices[1], vertices[2]);
-	edges.emplace_back(vertices[2], vertices[3]);
-	edges.emplace_back(vertices[3], vertices[0]);
 }
 
 void box_block::draw(sf::RenderWindow& window) 

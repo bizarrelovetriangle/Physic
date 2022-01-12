@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <vector>
+#include <numeric>
 #include "wall_block.h"
 #include "phisic_object.h"
 #include "box_block.h"

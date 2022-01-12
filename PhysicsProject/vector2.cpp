@@ -46,6 +46,10 @@ bool vector2::is_zero() {
 	return x == 0 || y == 0;
 }
 
+bool vector2::is_nan() {
+	return std::isnan(x) || std::isnan(y);
+}
+
 double vector2::length() {
 	double _sqrt = sqrt(x * x + y * y);
 	return std::isnan(_sqrt) ? 0 : _sqrt;

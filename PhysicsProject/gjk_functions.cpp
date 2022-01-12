@@ -253,22 +253,22 @@ bool gjk_functions::contains_point(
 {
 	vector2 direction(1, 0);
 
-	auto& a = farthest_point(vectors, direction);
-	auto& b = farthest_point(vectors, -direction);
+	auto* a = &farthest_point(vectors, direction);
+	auto* b = &farthest_point(vectors, -direction);
 
 	for (int i = 0; i < 10; i++) {
-		direction = perpendicular_to_point(a, b, point);
-		auto& c = farthest_point(vectors, direction);
+		direction = perpendicular_to_point(*a, *b, point);
+		auto* c = &farthest_point(vectors, direction);
 
 		if (a == c || b == c) {
 			return false;
 		}
 
-		if (triangle_contains(a, b, c, point)) {
+		if (triangle_contains(*a, *b, *c, point)) {
 			return true;
 		}
 
-		if (line_point_distance(a, c, point) < line_point_distance(b, c, point)) {
+		if (line_point_distance(*a, *c, point) < line_point_distance(*b, *c, point)) {
 			b = c;
 		}
 		else {
@@ -334,25 +334,23 @@ double gjk_functions::line_point_distance(
 	vector2& a, vector2& b,
 	vector2& o)
 {
-	auto b_a = b - a;
-	auto b_a_normalize = b_a.normalize();
-	auto o_a = o - a;
+	vector2 b_a = b - a;
+	vector2 b_a_normalize = b_a.normalize();
+	vector2 o_a = o - a;
 
 	double proj_length = b_a_normalize.dot_product(o_a);
 
 	vector2 proj_point;
 
 	if (proj_length < 0) {
-		proj_point = a;
+		return a.distance(o);
 	}
 	else if (proj_length > b_a.length()) {
-		proj_point = b;
+		return b.distance(o);
 	}
 	else {
-		proj_point = (b_a_normalize * proj_length) + a;
+		return (b_a_normalize * proj_length + a).distance(o);
 	}
-
-	return proj_point.distance(o);
 }
 
 

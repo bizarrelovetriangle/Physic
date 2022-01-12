@@ -12,19 +12,14 @@ wall_block::wall_block(vector2 a, vector2 b)
 
 	is_infiniti_mass = true;
 
-	original_vertices = std::vector<vector2>{ 0, 0 };
+	original_vertices = std::vector<vector2>{ a, b };
 	vertices = std::vector<vector2>{ 0, 0 };
-
-	original_vertices[0] = a;
-	original_vertices[1] = b;
-	original_edges.emplace_back(this->a, this->b);
+	original_edges = std::vector<edge>{ {this->a, this->b} };
+	edges = std::vector<edge>{ {vertices[0], vertices[1]} };
 }
 
 void wall_block::update_form(double frame_interval)
 {
-	original_vertices[0] = a;
-	original_vertices[1] = b;
-
 	velocity += acceleration * frame_interval;
 	position += velocity * frame_interval;
 	radians += radians_velocity * frame_interval;
@@ -33,9 +28,6 @@ void wall_block::update_form(double frame_interval)
 	{
 		vertices[i] = original_vertices[i].rotate(radians) + position;
 	}
-
-	edges.clear();
-	edges.emplace_back(vertices[0], vertices[1]);
 }
 
 void wall_block::draw(sf::RenderWindow& window) {
