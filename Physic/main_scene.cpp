@@ -87,7 +87,6 @@ void main_scene::create_blocks()
 	//	}
 	//}
 
-	
 	for (int i = 0; i < 7; i++) {
 		for (int i2 = 0; i2 < 11; i2++) {
 			box_block* _box = new box_block(
