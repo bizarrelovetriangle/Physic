@@ -81,7 +81,7 @@
     <ClCompile Include="mouse_filter.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsProject.cpp">
+    <ClCompile Include="Physic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
