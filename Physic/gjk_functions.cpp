@@ -120,26 +120,16 @@ epa_result gjk_functions::EPA(
 epa_result gjk_functions::get_collider_result(
 	const minkowski_difference& mink_a, const minkowski_difference& mink_b)
 {
-	epa_result epa_res;
-	const vector2* penetration_point;
-	const vector2* collision_edge_a;
-	const vector2* collision_edge_b;
-
 	if (mink_a.point_a == mink_b.point_a) {
-		penetration_point = mink_a.point_a; // or mink_b.point_a
-		collision_edge_a = mink_a.point_b;
-		collision_edge_b = mink_b.point_b;
-		epa_res.is_object_1_normal = false;
+		auto normal_from_edge = -perpendicular_to_point(
+			*mink_a.point_b, *mink_b.point_b, *mink_a.point_a).normalize();
+		return epa_result(normal_from_edge, false);
 	}
 	else {
-		penetration_point = mink_a.point_b; // or mink_b.point_b
-		collision_edge_a = mink_a.point_a;
-		collision_edge_b = mink_b.point_a;
+		auto normal_from_edge = -perpendicular_to_point(
+			*mink_a.point_a, *mink_b.point_a, *mink_a.point_b).normalize();
+		return epa_result(normal_from_edge, false);
 	}
-
-	auto proj_point = projection_point(*collision_edge_a, *collision_edge_b, *penetration_point);
-	epa_res.collision_normal = (proj_point - *penetration_point).normalize();
-	return epa_res;
 }
 
 gjk_result gjk_functions::GJK(
