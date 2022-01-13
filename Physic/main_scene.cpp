@@ -52,8 +52,6 @@ void main_scene::scene_update()
 
 void main_scene::scene_draw()
 {
-	window.clear();
-
 	for (auto& object : physic_objects) {
 		object->draw(window);
 	}
@@ -71,6 +69,7 @@ void main_scene::scene_draw()
 
 	draw_coordinates();
 	window.display();
+	window.clear();
 }
 
 void main_scene::create_blocks()
@@ -92,9 +91,9 @@ void main_scene::create_blocks()
 			box_block* _box = new box_block(
 				vector2(-500. + 101. * i2, -200 + 101. * i),
 				vector2(100., (i * i2 % 2 ? 100. : 70.)));
-
+	
 			_box->acceleration.y = 0.1;
-
+	
 			physic_objects.emplace_back(_box);
 		}
 	}
@@ -105,10 +104,11 @@ void main_scene::create_blocks()
 	////_box->acceleration.y = 0.1;
 	////_box->acceleration.x = 0.1;
 	//physic_objects.emplace_back(_box);
-
+	//
 	//box_block* _box2 = new box_block(
 	//	vector2(100., 200.),
 	//	vector2(100., 100.));
+	//_box2->radians = 1;
 	////_box2->acceleration.y = 0.1;
 	//_box2->name = "observable";
 	//physic_objects.emplace_back(_box2);

@@ -38,20 +38,20 @@ void collide_resolver::resolve_collision(
 		object_2, clipping_res.collision_point, clipping_res.collision_normal);
 	vector2 objects_point_velosity_diff = object_1_point_velosity - object_2_point_velosity;
 
-	if (objects_point_velosity_diff.dot_product(clipping_res.collision_normal) > 0 != clipping_res.is_object_1_normal) {
+	if (objects_point_velosity_diff.dot_product(clipping_res.collision_normal) > 0 == clipping_res.is_object_1_normal) {
 		return;
 	}
 
 	vector2 penetration_vector = clipping_res.is_object_1_normal
-		? clipping_res.collision_penetration_line
-		: -clipping_res.collision_penetration_line;
+		? -clipping_res.collision_penetration_line
+		: clipping_res.collision_penetration_line;
 
 	double mass_ratio = object_1.is_infiniti_mass
 		? 0 : object_2.is_infiniti_mass
 		? 1 : object_1.mass / (object_1.mass + object_2.mass);
 
-	object_1.position -= penetration_vector * mass_ratio;
-	object_2.position += penetration_vector * (1 - mass_ratio);
+	apply_impulse(object_1, clipping_res.collision_point, -penetration_vector * mass_ratio);
+	apply_impulse(object_2, clipping_res.collision_point, penetration_vector * (1 - mass_ratio));
 
 	double moment_of_mass = 0;
 

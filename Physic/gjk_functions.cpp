@@ -20,12 +20,12 @@ clipping_result gjk_functions::clipping(
 	auto& b_farthest = farthest_point(b_vertices, -normal);
 
 	auto& a_best_edge = gjk_functions::find_best_edge(a_edges, a_farthest, normal);
-	auto& b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, normal);
+	auto& b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, -normal);
 
 	const edge* reference_edge;
 	const edge* incident_edge;
 
-	if (epa_result.is_object_1_normal) {
+	if (!epa_result.is_object_1_normal) {
 		reference_edge = &b_best_edge;
 		incident_edge = &a_best_edge;
 	}
@@ -35,9 +35,7 @@ clipping_result gjk_functions::clipping(
 	}
 
 	auto incident_a_b = incident_edge->a - incident_edge->b;
-
 	auto reference_edge_nolmalize = (reference_edge->a - reference_edge->b).normalize();
-
 	vector2 incident_vertices[2] = { incident_edge->a, incident_edge->b };
 	vector2 reference_vertices[2] = { reference_edge->a, reference_edge->b };
 
@@ -45,17 +43,16 @@ clipping_result gjk_functions::clipping(
 	double incident_edge_b_dot = incident_edge->b.dot_product(reference_edge_nolmalize);
 
 	for (int i = 0; i < 2; i++) {
-		auto& reference_vertex = reference_vertices[i];
-		double reference_vertex_dot = reference_vertex.dot_product(reference_edge_nolmalize);
+		double reference_vertex_dot = reference_vertices[i].dot_product(reference_edge_nolmalize);
 		
 		for (int i2 = 0; i2 < 2; i2++) {
 			auto& incident_vertex = incident_vertices[i2];
 			double incident_vertex_dot = incident_vertex.dot_product(reference_edge_nolmalize);
 
 			if (incident_vertex_dot > reference_vertex_dot != i) {
-				double d = (reference_vertex_dot - incident_edge_b_dot) / 
+				double ratio = (reference_vertex_dot - incident_edge_b_dot) / 
 					(incident_edge_a_dot - incident_edge_b_dot);
-				incident_vertex = incident_a_b * d + incident_edge->b;
+				incident_vertex = incident_a_b * ratio + incident_edge->b;
 			}
 		}
 	}
@@ -64,14 +61,9 @@ clipping_result gjk_functions::clipping(
 
 	for (int i = 0; i < 2; i++) {
 		auto& incident_vertex = incident_vertices[i];
-		
-		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) != 
-				reference_edge_nolmalize.cross_product(epa_result.collision_normal) > 0) {
-			//drawer.draw_cross(incident_vertex, sf::Color::Red);
+
+		if ((incident_vertex - reference_edge->a).dot_product(epa_result.collision_normal) < 0) {
 			contact_points.push_back(incident_vertex);
-		}
-		else {
-			//drawer.draw_cross(incident_vertex, sf::Color::Blue); 
 		}
 	}
 
@@ -90,14 +82,13 @@ clipping_result gjk_functions::clipping(
 	auto drawing_vector_point = proj_point + epa_result.collision_normal * 100;
 
 	clipping_result clipping_res;
-	clipping_res.collision_point = summ / contact_points.size();
+	clipping_res.collision_point = collision_point;
 	clipping_res.collision_penetration_line = collision_point - proj_point;
 	clipping_res.collision_penetration = clipping_res.collision_penetration_line.length();
 	clipping_res.collision_normal = clipping_res.collision_penetration_line.normalize();
 	clipping_res.is_object_1_normal = epa_result.is_object_1_normal;
 
-	//drawer.draw_line(proj_point, drawing_vector_point, sf::Color::Blue);
-	//drawer.draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
+	drawer.draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
 	drawer.draw_cross(clipping_res.collision_point, sf::Color::White);
 
 	return clipping_res;
@@ -161,16 +152,16 @@ epa_result gjk_functions::get_collider_result(
 		penetration_point = mink_a.point_a; // or mink_b.point_a
 		collision_edge_a = mink_a.point_b;
 		collision_edge_b = mink_b.point_b;
+		epa_res.is_object_1_normal = false;
 	}
 	else {
 		penetration_point = mink_a.point_b; // or mink_b.point_b
 		collision_edge_a = mink_a.point_a;
 		collision_edge_b = mink_b.point_a;
-		epa_res.is_object_1_normal = false;
 	}
 
 	auto proj_point = projection_point(*collision_edge_a, *collision_edge_b, *penetration_point);
-	epa_res.collision_normal = (*penetration_point - proj_point).normalize();
+	epa_res.collision_normal = (proj_point - *penetration_point).normalize();
 	return epa_res;
 }
 

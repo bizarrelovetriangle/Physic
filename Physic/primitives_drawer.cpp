@@ -22,7 +22,7 @@ void primitives_drawer::draw_line(
 void primitives_drawer::draw_cross(
 	const vector2& point, const sf::Color& color)
 {
-	double cross_size = 10;
+	double cross_size = 3;
 
 	vector2 a(point.x - cross_size, point.y - cross_size);
 	vector2 b(point.x + cross_size, point.y + cross_size);
