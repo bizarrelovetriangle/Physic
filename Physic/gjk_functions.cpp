@@ -128,7 +128,7 @@ epa_result gjk_functions::get_collider_result(
 	else {
 		auto normal_from_edge = -perpendicular_to_point(
 			*mink_a.point_a, *mink_b.point_a, *mink_a.point_b).normalize();
-		return epa_result(normal_from_edge, false);
+		return epa_result(normal_from_edge, true);
 	}
 }
 
