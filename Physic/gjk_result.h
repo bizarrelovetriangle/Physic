@@ -1,6 +1,6 @@
 #pragma once
 #include "vector2.h"
-#include "minkowski_differens.h"
+#include "minkowski_difference.h"
 
 class gjk_result {
 public:
@@ -8,11 +8,11 @@ public:
 
 	gjk_result(
 		bool is_collide,
-		minkowski_differens mink_a, minkowski_differens mink_b, minkowski_differens mink_c);
+		minkowski_difference mink_a, minkowski_difference mink_b, minkowski_difference mink_c);
 
-	minkowski_differens mink_a;
-	minkowski_differens mink_b;
-	minkowski_differens mink_c;
+	minkowski_difference mink_a;
+	minkowski_difference mink_b;
+	minkowski_difference mink_c;
 
 	bool is_collide = false;
 };

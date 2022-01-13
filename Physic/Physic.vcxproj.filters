@@ -60,10 +60,7 @@
     <ClCompile Include="wall_block.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
-    <ClCompile Include="minkowski_differens.cpp">
-      <Filter>Resource Files\models</Filter>
-    </ClCompile>
-    <ClCompile Include="minkowski_edge_distance.cpp">
+    <ClCompile Include="minkowski_difference.cpp">
       <Filter>Resource Files\models</Filter>
     </ClCompile>
     <ClCompile Include="gjk_result.cpp">
@@ -104,10 +101,7 @@
     <ClInclude Include="box_block.h">
       <Filter>Header Files\physic_objects</Filter>
     </ClInclude>
-    <ClInclude Include="minkowski_differens.h">
-      <Filter>Header Files\models</Filter>
-    </ClInclude>
-    <ClInclude Include="minkowski_edge_distance.h">
+    <ClInclude Include="minkowski_difference.h">
       <Filter>Header Files\models</Filter>
     </ClInclude>
     <ClInclude Include="epa_result.h">

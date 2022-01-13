@@ -6,8 +6,8 @@ gjk_functions::gjk_functions(primitives_drawer& drawer)
 }
 
 clipping_result gjk_functions::clipping(
-	std::vector<vector2>& a_vectors,
-	std::vector<vector2>& b_vectors,
+	std::vector<vector2>& a_vertices,
+	std::vector<vector2>& b_vertices,
 	std::vector<edge>& a_edges,
 	std::vector<edge>& b_edges,
 	epa_result& epa_result) 
@@ -16,8 +16,8 @@ clipping_result gjk_functions::clipping(
 		? epa_result.collision_normal
 		: -epa_result.collision_normal;
 
-	auto& a_farthest = farthest_point(a_vectors, normal);
-	auto& b_farthest = farthest_point(b_vectors, -normal);
+	auto& a_farthest = farthest_point(a_vertices, normal);
+	auto& b_farthest = farthest_point(b_vertices, -normal);
 
 	auto &a_best_edge = gjk_functions::find_best_edge(a_edges, a_farthest, normal);
 	auto &b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, normal);
@@ -104,55 +104,52 @@ clipping_result gjk_functions::clipping(
 }
 
 epa_result gjk_functions::EPA(
-	std::vector<vector2>& a_vectors,
-	std::vector<vector2>& b_vectors,
+	std::vector<vector2>& a_vertices,
+	std::vector<vector2>& b_vertices,
 	gjk_result& gjk_result)
 {
-	auto& mink_a = gjk_result.mink_a;
-	auto& mink_b = gjk_result.mink_b;
-	auto& mink_c = gjk_result.mink_c;
-
-	double a_b_distance_o = line_point_distance_convex(mink_a.distance, mink_b.distance, vector2::zero_vector);
-	double a_c_distance_o = line_point_distance_convex(mink_a.distance, mink_c.distance, vector2::zero_vector);
-	double b_c_distance_o = line_point_distance_convex(mink_b.distance, mink_c.distance, vector2::zero_vector);
+	double a_b_distance_o = line_point_distance_convex(
+		gjk_result.mink_a.distance, gjk_result.mink_b.distance, vector2::zero_vector);
+	double a_c_distance_o = line_point_distance_convex(
+		gjk_result.mink_a.distance, gjk_result.mink_c.distance, vector2::zero_vector);
+	double b_c_distance_o = line_point_distance_convex(
+		gjk_result.mink_b.distance, gjk_result.mink_c.distance, vector2::zero_vector);
 
 	// create simplex
-	std::map<double, minkowski_edge_distance> edge_map;
-	edge_map.insert({ a_b_distance_o, minkowski_edge_distance(a_b_distance_o, mink_a, mink_b) });
-	edge_map.insert({ a_c_distance_o, minkowski_edge_distance(a_c_distance_o, mink_a, mink_c) });
-	edge_map.insert({ b_c_distance_o, minkowski_edge_distance(b_c_distance_o, mink_b, mink_c) });
+	std::map<double, std::tuple<minkowski_difference, minkowski_difference>> edge_map {
+		{a_b_distance_o, std::make_tuple(gjk_result.mink_a, gjk_result.mink_b)},
+		{a_c_distance_o, std::make_tuple(gjk_result.mink_a, gjk_result.mink_c)},
+		{b_c_distance_o, std::make_tuple(gjk_result.mink_b, gjk_result.mink_c)}
+	};
 
 	for (int i = 0; i < 10; i++) {
 		auto nearest_edge = edge_map.begin()->second;
 		edge_map.erase(edge_map.begin());
-		auto& nearest_mink_a = nearest_edge.mink_a;
-		auto& nearest_mink_b = nearest_edge.mink_b;
+		auto& mink_a = std::get<0>(nearest_edge);
+		auto& mink_b = std::get<1>(nearest_edge);
 
 		auto perpendicular_from_zero = -perpendicular_to_point(
-			nearest_mink_a.distance, nearest_mink_b.distance, vector2::zero_vector);
+			mink_a.distance, mink_b.distance, vector2::zero_vector);
+		auto new_mink = support_function(a_vertices, b_vertices, perpendicular_from_zero);
 
-		auto new_mink = support_function(a_vectors, b_vectors, perpendicular_from_zero);
-
-		if (nearest_mink_a == new_mink || nearest_mink_b == new_mink || i == 10) // contains point function
+		if (mink_a == new_mink || mink_b == new_mink || i == 10) // contains point function
 		{
-			return get_collider_result(nearest_mink_a, nearest_mink_b);
+			return get_collider_result(mink_a, mink_b);
 		}
 
 		// add two new edges to the simplex
-		double new_mink_point_nearest_a_distance_o =
-			line_point_distance_convex(new_mink.distance, nearest_mink_a.distance, vector2::zero_vector);
-		edge_map.insert({ new_mink_point_nearest_a_distance_o,
-			minkowski_edge_distance(new_mink_point_nearest_a_distance_o, new_mink, nearest_mink_a) });
-		double new_mink_point_nearest_b_distance_o =
-			line_point_distance_convex(new_mink.distance, nearest_mink_b.distance, vector2::zero_vector);
-		edge_map.insert({ new_mink_point_nearest_b_distance_o,
-			minkowski_edge_distance(new_mink_point_nearest_b_distance_o, new_mink, nearest_mink_b) });
+		edge_map.insert({
+			line_point_distance_convex(new_mink.distance, mink_a.distance, vector2::zero_vector),
+			std::make_tuple(new_mink, mink_a) });
+		edge_map.insert({
+			line_point_distance_convex(new_mink.distance, mink_b.distance, vector2::zero_vector),
+			std::make_tuple(new_mink, mink_b) });
 	}
 
 	return epa_result();
 }
 
-epa_result gjk_functions::get_collider_result(minkowski_differens& mink_a, minkowski_differens& mink_b)
+epa_result gjk_functions::get_collider_result(minkowski_difference& mink_a, minkowski_difference& mink_b)
 {
 	epa_result epa_res;
 
@@ -180,17 +177,17 @@ epa_result gjk_functions::get_collider_result(minkowski_differens& mink_a, minko
 }
 
 gjk_result gjk_functions::GJK(
-	std::vector<vector2>& a_vectors,
-	std::vector<vector2>& b_vectors)
+	std::vector<vector2>& a_vertices,
+	std::vector<vector2>& b_vertices)
 {
 	vector2 direction(1, 0);
 
-	auto mink_a = support_function(a_vectors, b_vectors, direction);
-	auto mink_b = support_function(a_vectors, b_vectors, - direction);
+	auto mink_a = support_function(a_vertices, b_vertices, direction);
+	auto mink_b = support_function(a_vertices, b_vertices, - direction);
 
 	for (int i = 0; i < 10; i++) {
 		direction = perpendicular_to_point(mink_a.distance, mink_b.distance, vector2::zero_vector);
-		auto mink_c = support_function(a_vectors, b_vectors, direction);
+		auto mink_c = support_function(a_vertices, b_vertices, direction);
 
 		if (mink_a == mink_c || mink_b == mink_c) {
 			return gjk_result(false);
@@ -212,14 +209,14 @@ gjk_result gjk_functions::GJK(
 	return gjk_result(false);
 }
 
-minkowski_differens gjk_functions::support_function(
-	std::vector<vector2>& a_vectors,
-	std::vector<vector2>& b_vectors,
+minkowski_difference gjk_functions::support_function(
+	std::vector<vector2>& a_vertices,
+	std::vector<vector2>& b_vertices,
 	vector2 direction)
 {
-	auto& a = farthest_point(a_vectors, direction);
-	auto& b = farthest_point(b_vectors, -direction);
-	return minkowski_differens(&a, &b, a - b);
+	auto& a = farthest_point(a_vertices, direction);
+	auto& b = farthest_point(b_vertices, -direction);
+	return minkowski_difference(&a, &b, a - b);
 }
 
 bool gjk_functions::contains_point(

@@ -2,8 +2,7 @@
 #include <fstream>  
 #include "gjk_result.h"
 #include <list>
-#include "minkowski_differens.h"
-#include "minkowski_edge_distance.h"
+#include "minkowski_difference.h"
 #include "primitives_drawer.h"
 #include "epa_result.h"
 #include "clipping_result.h"
@@ -18,20 +17,20 @@ public:
 	primitives_drawer drawer;
 
 	clipping_result clipping(
-		std::vector<vector2>& a_vectors,
-		std::vector<vector2>& b_vectors,
+		std::vector<vector2>& a_vertices,
+		std::vector<vector2>& b_vertices,
 		std::vector<edge>& a_edges,
 		std::vector<edge>& b_edges,
 		epa_result& epa_result);
 
 	epa_result EPA(
-		std::vector<vector2>& a_vectors,
-		std::vector<vector2>& b_vectors,
+		std::vector<vector2>& a_vertices,
+		std::vector<vector2>& b_vertices,
 		gjk_result& gjk_result);
 
 	gjk_result GJK(
-		std::vector<vector2>& a_vectors,
-		std::vector<vector2>& b_vectors);
+		std::vector<vector2>& a_vertices,
+		std::vector<vector2>& b_vertices);
 
 	bool contains_point(
 		std::vector<vector2>& vectors,
@@ -39,11 +38,11 @@ public:
 
 private:
 	static epa_result get_collider_result(
-		minkowski_differens& a, minkowski_differens& b);
+		minkowski_difference& a, minkowski_difference& b);
 
-	static minkowski_differens support_function(
-		std::vector<vector2>& a_vectors,
-		std::vector<vector2>& b_vectors,
+	static minkowski_difference support_function(
+		std::vector<vector2>& a_vertices,
+		std::vector<vector2>& b_vertices,
 		vector2 direction);
 
 	static vector2& farthest_point(
