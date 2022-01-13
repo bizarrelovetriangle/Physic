@@ -46,7 +46,7 @@ void primitives_drawer::draw_text(
 	static sf::Font font;
 	if (i == 1 && !font.loadFromFile("arial.ttf"))
 	{
-		throw "error?";
+		throw std::exception("error?");
 	}
 	i = 0;
 

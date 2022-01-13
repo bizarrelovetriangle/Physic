@@ -226,12 +226,10 @@ bool gjk_functions::contains_point(
 			return true;
 		}
 
-		if (line_point_distance(*a, *c, point) < line_point_distance(*b, *c, point)) {
-			b = c;
-		}
-		else {
-			a = c;
-		}
+		auto& replaceble_point = 
+			line_point_distance(*a, *c, point) > line_point_distance(*b, *c, point)
+			? a : b;
+		replaceble_point = c;
 	}
 
 	return false;

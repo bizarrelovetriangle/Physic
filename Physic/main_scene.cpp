@@ -56,17 +56,7 @@ void main_scene::scene_draw()
 		object->draw(window);
 	}
 
-	drawer.draw_text(vector2(-220), "fps");
-	drawer.draw_number(vector2(-200), 1 / frame_interval);
-	static double average_interval = 0;
-	static std::vector<double> intervals;
-	intervals.push_back(1 / frame_interval);
-	if (intervals.size() == 1000) {
-		average_interval = std::reduce(intervals.begin(), intervals.end()) / (double)intervals.size();
-		intervals.clear();
-	}
-	drawer.draw_number(vector2(-180), average_interval);
-
+	draw_info();
 	draw_coordinates();
 	window.display();
 	window.clear();
@@ -117,7 +107,7 @@ void main_scene::create_blocks()
 void main_scene::create_walls()
 {
 	int wall_width = 1300;
-	int wall_height = 980;
+	int wall_height = 950;
 
 	vector2 a(-wall_width / 2, wall_height / 2);
 	vector2 b(-wall_width / 2, -wall_height / 2);
@@ -133,6 +123,25 @@ void main_scene::create_walls()
 	physic_objects.emplace_back(top_wall);
 	physic_objects.emplace_back(right_wall);
 	physic_objects.emplace_back(borrom_wall);
+}
+
+void main_scene::draw_info()
+{
+	static double average_interval = 0;
+	static double update_interval_seconds = 0.5;
+	static double seconds_to_update = update_interval_seconds;
+	static std::vector<double> intervals;
+	intervals.push_back(1 / frame_interval);
+	seconds_to_update -= frame_interval;
+
+	if (seconds_to_update <= 0) {
+		average_interval = std::reduce(intervals.begin(), intervals.end()) / (double)intervals.size();
+		intervals.clear();
+		seconds_to_update = update_interval_seconds;
+	}
+
+	drawer.draw_text(vector2(-global::screen_width / 2 , -global::screen_height / 2),
+		std::string("fps ") + std::to_string(average_interval));
 }
 
 void main_scene::draw_coordinates()

@@ -28,6 +28,7 @@ protected:
 	void scene_draw();
 private:
 	void create_walls();
+	void draw_info();
 	void create_blocks();
 	void draw_coordinates();
 };
