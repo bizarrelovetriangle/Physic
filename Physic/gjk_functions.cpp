@@ -12,32 +12,20 @@ clipping_result gjk_functions::clipping(
 	const std::vector<edge>& b_edges,
 	const epa_result& epa_result) 
 {
-	vector2 normal = epa_result.is_object_1_normal
+	vector2 collision_normal_from_a_to_b = epa_result.is_object_1_normal
 		? epa_result.collision_normal
 		: -epa_result.collision_normal;
+	auto& a_best_edge = gjk_functions::farthest_edge(a_vertices, a_edges, collision_normal_from_a_to_b);
+	auto& b_best_edge = gjk_functions::farthest_edge(b_vertices, b_edges, -collision_normal_from_a_to_b);
 
-	auto& a_farthest = farthest_point(a_vertices, normal);
-	auto& b_farthest = farthest_point(b_vertices, -normal);
-
-	auto& a_best_edge = gjk_functions::find_best_edge(a_edges, a_farthest, normal);
-	auto& b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, -normal);
-
-	const edge* reference_edge;
-	const edge* incident_edge;
-
-	if (!epa_result.is_object_1_normal) {
-		reference_edge = &b_best_edge;
-		incident_edge = &a_best_edge;
-	}
-	else {
-		reference_edge = &a_best_edge;
-		incident_edge = &b_best_edge;
-	}
+	const edge* reference_edge = &a_best_edge;
+	const edge* incident_edge = &b_best_edge;
+	if (!epa_result.is_object_1_normal) std::swap(reference_edge, incident_edge);
 
 	auto incident_a_b = incident_edge->a - incident_edge->b;
 	auto reference_edge_nolmalize = (reference_edge->a - reference_edge->b).normalize();
-	vector2 incident_vertices[2] = { incident_edge->a, incident_edge->b };
-	vector2 reference_vertices[2] = { reference_edge->a, reference_edge->b };
+	std::vector<vector2> incident_vertices = { incident_edge->a, incident_edge->b };
+	std::vector<vector2> reference_vertices = { reference_edge->a, reference_edge->b };
 
 	double incident_edge_a_dot = incident_edge->a.dot_product(reference_edge_nolmalize);
 	double incident_edge_b_dot = incident_edge->b.dot_product(reference_edge_nolmalize);
@@ -59,25 +47,14 @@ clipping_result gjk_functions::clipping(
 
 	std::vector<vector2> contact_points;
 
-	for (int i = 0; i < 2; i++) {
-		auto& incident_vertex = incident_vertices[i];
-
-		if ((incident_vertex - reference_edge->a).dot_product(epa_result.collision_normal) < 0) {
+	for (auto& incident_vertex : incident_vertices) {
+		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) ^
+			reference_edge_nolmalize.is_clockwise(epa_result.collision_normal)) {
 			contact_points.push_back(incident_vertex);
 		}
 	}
 
-	if (contact_points.empty()) {
-		return clipping_result();
-	}
-
-	vector2& summ = contact_points[0];
-	for (int i = 1; i < contact_points.size(); i++)
-	{
-		summ += contact_points[i];
-	}
-
-	auto collision_point = summ / contact_points.size();
+	auto collision_point = std::reduce(contact_points.cbegin(), contact_points.cend()) / contact_points.size();
 	auto proj_point = projection_point(reference_edge->a, reference_edge->b, collision_point);
 	auto drawing_vector_point = proj_point + epa_result.collision_normal * 100;
 
@@ -206,17 +183,17 @@ minkowski_difference gjk_functions::support_function(
 }
 
 bool gjk_functions::contains_point(
-	const std::vector<vector2>& vectors,
+	const std::vector<vector2>& vertices,
 	const vector2& point)
 {
 	vector2 direction(1, 0);
 
-	auto* a = &farthest_point(vectors, direction);
-	auto* b = &farthest_point(vectors, -direction);
+	auto* a = &farthest_point(vertices, direction);
+	auto* b = &farthest_point(vertices, -direction);
 
 	for (int i = 0; i < 10; i++) {
 		direction = perpendicular_to_point(*a, *b, point);
-		auto* c = &farthest_point(vectors, direction);
+		auto* c = &farthest_point(vertices, direction);
 
 		if (a == c || b == c) {
 			return false;
@@ -226,7 +203,7 @@ bool gjk_functions::contains_point(
 			return true;
 		}
 
-		auto& replaceble_point = 
+		auto& replaceble_point =
 			line_point_distance(*a, *c, point) > line_point_distance(*b, *c, point)
 			? a : b;
 		replaceble_point = c;
@@ -235,11 +212,12 @@ bool gjk_functions::contains_point(
 	return false;
 }
 
-const edge& gjk_functions::find_best_edge(
+const edge& gjk_functions::farthest_edge(
+	const std::vector<vector2>& vertices,
 	const std::vector<edge>& edges,
-	const vector2& farthest_point,
 	const vector2& normal)
 {
+	const vector2& farthest_point = gjk_functions::farthest_point(vertices, normal);
 	const edge* best_edge = nullptr;
 	double min_dot_product = std::numeric_limits<double>::max();
 
@@ -260,18 +238,18 @@ const edge& gjk_functions::find_best_edge(
 }
 
 const vector2& gjk_functions::farthest_point(
-	const std::vector<vector2>& vectors,
+	const std::vector<vector2>& vertices,
 	const vector2& direction)
 {
-	const vector2* farthest_point = &vectors[0];
-	double max_dot_product = vectors[0].dot_product(direction);
+	const vector2* farthest_point = &vertices[0];
+	double max_dot_product = vertices[0].dot_product(direction);
 
-	for (int i = 1; i < vectors.size(); i++) {
-		auto dot_product = vectors[i].dot_product(direction);
+	for (int i = 1; i < vertices.size(); i++) {
+		auto dot_product = vertices[i].dot_product(direction);
 
 		if (dot_product > max_dot_product) {
 			max_dot_product = dot_product;
-			farthest_point = &vectors[i];
+			farthest_point = &vertices[i];
 		}
 	}
 

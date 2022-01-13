@@ -33,7 +33,7 @@ public:
 		const std::vector<vector2>& b_vertices);
 
 	bool contains_point(
-		const std::vector<vector2>& vectors,
+		const std::vector<vector2>& vertices,
 		const vector2& point);
 
 private:
@@ -46,12 +46,12 @@ private:
 		const vector2 direction);
 
 	static const vector2& farthest_point(
-		const std::vector<vector2>& vectors,
+		const std::vector<vector2>& vertices,
 		const vector2& direction);
 
-	static const edge& find_best_edge(
+	static const edge& farthest_edge(
+		const std::vector<vector2>& vertices,
 		const std::vector<edge>& edges,
-		const vector2& farthest_point,
 		const vector2& normal);
 
 	static vector2 perpendicular_to_point(

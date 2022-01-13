@@ -135,7 +135,7 @@ void main_scene::draw_info()
 	seconds_to_update -= frame_interval;
 
 	if (seconds_to_update <= 0) {
-		average_interval = std::reduce(intervals.begin(), intervals.end()) / (double)intervals.size();
+		average_interval = std::reduce(intervals.cbegin(), intervals.cend()) / (double)intervals.size();
 		intervals.clear();
 		seconds_to_update = update_interval_seconds;
 	}
