@@ -13,8 +13,7 @@ clipping_result gjk_functions::clipping(
 	const epa_result& epa_result) 
 {
 	vector2 collision_normal_from_a_to_b = epa_result.is_object_1_normal
-		? epa_result.collision_normal
-		: -epa_result.collision_normal;
+		? epa_result.collision_normal : -epa_result.collision_normal;
 	auto& a_best_edge = gjk_functions::farthest_edge(a_vertices, a_edges, collision_normal_from_a_to_b);
 	auto& b_best_edge = gjk_functions::farthest_edge(b_vertices, b_edges, -collision_normal_from_a_to_b);
 
@@ -30,23 +29,24 @@ clipping_result gjk_functions::clipping(
 	double incident_edge_a_dot = incident_edge->a.dot_product(reference_edge_nolmalize);
 	double incident_edge_b_dot = incident_edge->b.dot_product(reference_edge_nolmalize);
 
+	// cut incident_vertices into reference_vertices projection
 	for (int i = 0; i < 2; i++) {
 		double reference_vertex_dot = reference_vertices[i].dot_product(reference_edge_nolmalize);
 		
-		for (int i2 = 0; i2 < 2; i2++) {
-			auto& incident_vertex = incident_vertices[i2];
+		for (auto& incident_vertex : incident_vertices) {
 			double incident_vertex_dot = incident_vertex.dot_product(reference_edge_nolmalize);
 
-			if (incident_vertex_dot > reference_vertex_dot != i) {
-				double ratio = (reference_vertex_dot - incident_edge_b_dot) / 
+			if (incident_vertex_dot > reference_vertex_dot != (i == 1)) {
+				double ratio =
+					(reference_vertex_dot - incident_edge_b_dot) / 
 					(incident_edge_a_dot - incident_edge_b_dot);
 				incident_vertex = incident_a_b * ratio + incident_edge->b;
 			}
 		}
 	}
 
+	// take only points that are penetrate reference_edge relative to the normal
 	std::vector<vector2> contact_points;
-
 	for (auto& incident_vertex : incident_vertices) {
 		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) ^
 			reference_edge_nolmalize.is_clockwise(epa_result.collision_normal)) {
@@ -83,7 +83,7 @@ epa_result gjk_functions::EPA(
 	double b_c_distance_o = line_point_distance_convex(
 		gjk_result.mink_b.distance, gjk_result.mink_c.distance, vector2::zero_vector);
 
-	// create triangular simplex
+	// create a triangular simplex
 	std::map<double, std::tuple<minkowski_difference, minkowski_difference>> edge_map {
 		{a_b_distance_o, std::make_tuple(gjk_result.mink_a, gjk_result.mink_b)},
 		{a_c_distance_o, std::make_tuple(gjk_result.mink_a, gjk_result.mink_c)},
