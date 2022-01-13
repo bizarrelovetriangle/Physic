@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\phisic_objects">
-      <UniqueIdentifier>{eda17554-123a-4199-8c96-2ff7e0f95731}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\phisic_objects">
-      <UniqueIdentifier>{c7cc3976-7b87-42b1-b4aa-f630605d7789}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\primitives">
       <UniqueIdentifier>{117b9cc5-0056-40ea-9c7b-be69e9dc5388}</UniqueIdentifier>
     </Filter>
@@ -30,6 +24,12 @@
     </Filter>
     <Filter Include="Resource Files\models">
       <UniqueIdentifier>{c0d73bea-9597-4f25-9652-0022244ea5bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physic_objects">
+      <UniqueIdentifier>{eda17554-123a-4199-8c96-2ff7e0f95731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\physic_objects">
+      <UniqueIdentifier>{c7cc3976-7b87-42b1-b4aa-f630605d7789}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,13 +52,13 @@
       <Filter>Resource Files\primitives</Filter>
     </ClCompile>
     <ClCompile Include="box_block.cpp">
-      <Filter>Resource Files\phisic_objects</Filter>
+      <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
-    <ClCompile Include="phisic_object.cpp">
-      <Filter>Resource Files\phisic_objects</Filter>
+    <ClCompile Include="phisyc_object.cpp">
+      <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
     <ClCompile Include="wall_block.cpp">
-      <Filter>Resource Files\phisic_objects</Filter>
+      <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
     <ClCompile Include="minkowski_differens.cpp">
       <Filter>Resource Files\models</Filter>
@@ -84,6 +84,9 @@
     <ClCompile Include="Physic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="line.cpp">
+      <Filter>Resource Files\primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -92,20 +95,14 @@
     <ClInclude Include="gjk_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="wall_block.h">
-      <Filter>Header Files\primitives</Filter>
-    </ClInclude>
     <ClInclude Include="collide_resolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="phisic_object.h">
-      <Filter>Header Files\phisic_objects</Filter>
+    <ClInclude Include="physic_object.h">
+      <Filter>Header Files\physic_objects</Filter>
     </ClInclude>
     <ClInclude Include="box_block.h">
-      <Filter>Header Files\phisic_objects</Filter>
-    </ClInclude>
-    <ClInclude Include="edge.h">
-      <Filter>Header Files\phisic_objects</Filter>
+      <Filter>Header Files\physic_objects</Filter>
     </ClInclude>
     <ClInclude Include="minkowski_differens.h">
       <Filter>Header Files\models</Filter>
@@ -130,6 +127,15 @@
     </ClInclude>
     <ClInclude Include="global.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wall_block.h">
+      <Filter>Header Files\physic_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="edge.h">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="line.h">
+      <Filter>Header Files\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

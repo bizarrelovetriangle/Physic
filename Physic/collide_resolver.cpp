@@ -5,12 +5,12 @@ collide_resolver::collide_resolver(primitives_drawer& drawer)
 {
 }
 
-void collide_resolver::resolve_collision_vector(std::vector<phisic_object*>& phisic_objects)
+void collide_resolver::resolve_collision_vector(std::vector<physic_object*>& physic_objects)
 {
-	for (int i = 0; i < phisic_objects.size(); i++) {
-		for (int i2 = i + 1; i2 < phisic_objects.size(); i2++) {
-			phisic_object* object_1 = phisic_objects[i];
-			phisic_object* object_2 = phisic_objects[i2];
+	for (int i = 0; i < physic_objects.size(); i++) {
+		for (int i2 = i + 1; i2 < physic_objects.size(); i2++) {
+			physic_object* object_1 = physic_objects[i];
+			physic_object* object_2 = physic_objects[i2];
 
 			if (object_1->is_infiniti_mass && object_2->is_infiniti_mass) {
 				continue;
@@ -29,7 +29,7 @@ void collide_resolver::resolve_collision_vector(std::vector<phisic_object*>& phi
 }
 
 void collide_resolver::resolve_collision(
-	phisic_object* object_1, phisic_object* object_2, clipping_result& clipping_res)
+	physic_object* object_1, physic_object* object_2, clipping_result& clipping_res)
 {
 	double e = 0.4; // 1 - absolutely inelastic
 	
@@ -81,7 +81,7 @@ void collide_resolver::resolve_collision(
 }
 
 vector2 collide_resolver::point_velosity(
-	phisic_object& object, vector2 impulse_point, vector2 normal)
+	physic_object& object, vector2 impulse_point, vector2 normal)
 {
 	vector2 sholder_vector = impulse_point - object.position;
 	auto angle_point_velosity = sholder_vector.clockwise_perpendicular() * object.radians_velocity;
@@ -90,7 +90,7 @@ vector2 collide_resolver::point_velosity(
 }
 
 void collide_resolver::apply_impulse(
-	phisic_object& object, vector2 impulse_point, vector2 impulse_vector) 
+	physic_object& object, vector2 impulse_point, vector2 impulse_vector) 
 {
 	if (object.is_infiniti_mass) {
 		return;
@@ -102,7 +102,7 @@ void collide_resolver::apply_impulse(
 }
 
 void collide_resolver::set_velosity_in_point(
-	phisic_object& object, vector2 impulse_point, vector2 impulse_vector)
+	physic_object& object, vector2 impulse_point, vector2 impulse_vector)
 {
 	drawer.draw_cross(impulse_point, sf::Color::White);
 	drawer.draw_line(object.position, impulse_point, sf::Color::White);

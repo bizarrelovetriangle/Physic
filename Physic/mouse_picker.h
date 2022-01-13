@@ -1,6 +1,6 @@
 #pragma once
 #include "vector2.h"
-#include "phisic_object.h"
+#include "physic_object.h"
 #include "gjk_functions.h"
 #include "mouse_filter.h"
 #include "collide_resolver.h"
@@ -8,14 +8,14 @@
 
 class mouse_picker {
 public:
-	std::vector<phisic_object*>& phisic_objects;
+	std::vector<physic_object*>& physic_objects;
 	void update_object();
 	void control_object(sf::Event event);
 	mouse_picker(sf::RenderWindow& window, 
-		std::vector<phisic_object*>& phisic_objects, gjk_functions& gjk, collide_resolver& collider_resolver);
+		std::vector<physic_object*>& physic_objects, gjk_functions& gjk, collide_resolver& collider_resolver);
 
 private:
-	phisic_object* selected = nullptr;
+	physic_object* selected = nullptr;
 	vector2 shoulder;
 	sf::RenderWindow& window;
 	gjk_functions& gjk;

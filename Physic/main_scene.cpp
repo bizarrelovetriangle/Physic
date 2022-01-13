@@ -5,7 +5,7 @@ main_scene::main_scene() :
 	drawer(window),
 	gjk(drawer),
 	collider_resolver(drawer),
-	mouse_picker(window, phisic_objects, gjk, collider_resolver)
+	mouse_picker(window, physic_objects, gjk, collider_resolver)
 {
 	sf::View view;
 	vector2 center(-global::screen_width / 2, -global::screen_height / 2);
@@ -43,9 +43,9 @@ void main_scene::scene_update()
 		}
 	}
 
-	collider_resolver.resolve_collision_vector(phisic_objects);
+	collider_resolver.resolve_collision_vector(physic_objects);
 
-	for (auto& object : phisic_objects) {
+	for (auto& object : physic_objects) {
 		object->update_form(frame_interval * 50);
 	}
 }
@@ -54,7 +54,7 @@ void main_scene::scene_draw()
 {
 	window.clear();
 
-	for (auto& object : phisic_objects) {
+	for (auto& object : physic_objects) {
 		object->draw(window);
 	}
 
@@ -83,7 +83,7 @@ void main_scene::create_blocks()
 	//
 	//		_box->acceleration.y = 0.1;
 	//
-	//		phisic_objects.emplace_back(_box);
+	//		physic_objects.emplace_back(_box);
 	//	}
 	//}
 
@@ -95,7 +95,7 @@ void main_scene::create_blocks()
 
 			_box->acceleration.y = 0.1;
 
-			phisic_objects.emplace_back(_box);
+			physic_objects.emplace_back(_box);
 		}
 	}
 
@@ -104,14 +104,14 @@ void main_scene::create_blocks()
 	//	vector2(100., 100.));
 	////_box->acceleration.y = 0.1;
 	////_box->acceleration.x = 0.1;
-	//phisic_objects.emplace_back(_box);
+	//physic_objects.emplace_back(_box);
 
 	//box_block* _box2 = new box_block(
 	//	vector2(100., 200.),
 	//	vector2(100., 100.));
 	////_box2->acceleration.y = 0.1;
 	//_box2->name = "observable";
-	//phisic_objects.emplace_back(_box2);
+	//physic_objects.emplace_back(_box2);
 }
 
 void main_scene::create_walls()
@@ -129,10 +129,10 @@ void main_scene::create_walls()
 	wall_block* right_wall = new wall_block(c, d);
 	wall_block* borrom_wall = new wall_block(d, a);
 
-	phisic_objects.emplace_back(left_wall);
-	phisic_objects.emplace_back(top_wall);
-	phisic_objects.emplace_back(right_wall);
-	phisic_objects.emplace_back(borrom_wall);
+	physic_objects.emplace_back(left_wall);
+	physic_objects.emplace_back(top_wall);
+	physic_objects.emplace_back(right_wall);
+	physic_objects.emplace_back(borrom_wall);
 }
 
 void main_scene::draw_coordinates()

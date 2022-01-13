@@ -3,7 +3,7 @@
 #include <vector>
 #include <numeric>
 #include "wall_block.h"
-#include "phisic_object.h"
+#include "physic_object.h"
 #include "box_block.h"
 #include "primitives_drawer.h"
 #include "gjk_functions.h"
@@ -22,7 +22,7 @@ protected:
 	gjk_functions gjk;
 	collide_resolver collider_resolver;
 	mouse_picker mouse_picker;
-	std::vector<phisic_object*> phisic_objects;
+	std::vector<physic_object*> physic_objects;
 	double frame_interval;
 	void scene_update();
 	void scene_draw();

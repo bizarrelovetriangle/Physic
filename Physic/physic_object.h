@@ -3,7 +3,7 @@
 #include <vector>
 #include "edge.h"
 
-class phisic_object {
+class physic_object {
 public:
 	vector2 size;
 	vector2 position;

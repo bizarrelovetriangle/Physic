@@ -8,6 +8,7 @@
 #include "epa_result.h"
 #include "clipping_result.h"
 #include "edge.h"
+#include "line.h"
 #include "numeric"
 
 class gjk_functions {
@@ -39,10 +40,6 @@ public:
 private:
 	static epa_result get_collider_result(
 		minkowski_differens& a, minkowski_differens& b);
-	
-	static void inseart_into_sorted_list(
-		std::list<minkowski_edge_distance>& edges_sort_by_distance,
-		minkowski_edge_distance&& new_edge_distance);
 
 	static minkowski_differens support_function(
 		std::vector<vector2>& a_vectors,

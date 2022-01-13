@@ -1,7 +1,7 @@
 #pragma once
-#include "phisic_object.h"
+#include "physic_object.h"
 
-class wall_block : public phisic_object {
+class wall_block : public physic_object {
 public:
 	vector2 a, b;
 

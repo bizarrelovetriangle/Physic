@@ -1,9 +1,9 @@
 #pragma once
 #include "vector2.h"
-#include "phisic_object.h"
+#include "physic_object.h"
 #include <vector>
 
-class box_block : public phisic_object {
+class box_block : public physic_object {
 public:
 	box_block(vector2 pos = {}, vector2 size = { 100., 100. });
 

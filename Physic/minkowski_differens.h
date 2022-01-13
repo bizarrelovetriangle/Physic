@@ -10,7 +10,7 @@ public:
 
 	vector2* point_a;
 	vector2* point_b;
-	vector2 differens;
+	vector2 distance;
 
 	bool operator==(minkowski_differens& result);
 };

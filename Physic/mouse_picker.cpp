@@ -2,18 +2,18 @@
 
 mouse_picker::mouse_picker(
 	sf::RenderWindow& window, 
-	std::vector<phisic_object*>& phisic_objects, gjk_functions& gjk, collide_resolver& collider_resolver)
+	std::vector<physic_object*>& physic_objects, gjk_functions& gjk, collide_resolver& collider_resolver)
 	: window(window), 
-	phisic_objects(phisic_objects), gjk(gjk), collider_resolver(collider_resolver), mouse_filter(2)
+	physic_objects(physic_objects), gjk(gjk), collider_resolver(collider_resolver), mouse_filter(2)
 {
 }
 
 void mouse_picker::take_object()
 {
-	for (auto& phisic_object : phisic_objects) {
-		if (gjk.contains_point(phisic_object->vertices, mouse_filter.position)) {
-			selected = phisic_object;
-			shoulder = (mouse_filter.filtered_position() - phisic_object->position).rotate(-selected->radians);
+	for (auto& physic_object : physic_objects) {
+		if (gjk.contains_point(physic_object->vertices, mouse_filter.position)) {
+			selected = physic_object;
+			shoulder = (mouse_filter.filtered_position() - physic_object->position).rotate(-selected->radians);
 			break;
 		}
 	}

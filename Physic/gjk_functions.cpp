@@ -108,50 +108,45 @@ epa_result gjk_functions::EPA(
 	std::vector<vector2>& b_vectors,
 	gjk_result& gjk_result)
 {
-	if (!gjk_result.is_collide) {
-		return epa_result();
-	}
-
 	auto& mink_a = gjk_result.mink_a;
 	auto& mink_b = gjk_result.mink_b;
 	auto& mink_c = gjk_result.mink_c;
 
-	double a_b_distance_o = line_point_distance_convex(mink_a.differens, mink_b.differens, vector2::zero_vector);
-	double a_c_distance_o = line_point_distance_convex(mink_a.differens, mink_c.differens, vector2::zero_vector);
-	double b_c_distance_o = line_point_distance_convex(mink_b.differens, mink_c.differens, vector2::zero_vector);
+	double a_b_distance_o = line_point_distance_convex(mink_a.distance, mink_b.distance, vector2::zero_vector);
+	double a_c_distance_o = line_point_distance_convex(mink_a.distance, mink_c.distance, vector2::zero_vector);
+	double b_c_distance_o = line_point_distance_convex(mink_b.distance, mink_c.distance, vector2::zero_vector);
 
-	std::list<minkowski_edge_distance> edges_sort_by_distance;
-
-	inseart_into_sorted_list(edges_sort_by_distance, minkowski_edge_distance(a_b_distance_o, mink_a, mink_b));
-	inseart_into_sorted_list(edges_sort_by_distance, minkowski_edge_distance(a_c_distance_o, mink_a, mink_c));
-	inseart_into_sorted_list(edges_sort_by_distance, minkowski_edge_distance(b_c_distance_o, mink_b, mink_c));
+	// create simplex
+	std::map<double, minkowski_edge_distance> edge_map;
+	edge_map.insert({ a_b_distance_o, minkowski_edge_distance(a_b_distance_o, mink_a, mink_b) });
+	edge_map.insert({ a_c_distance_o, minkowski_edge_distance(a_c_distance_o, mink_a, mink_c) });
+	edge_map.insert({ b_c_distance_o, minkowski_edge_distance(b_c_distance_o, mink_b, mink_c) });
 
 	for (int i = 0; i < 10; i++) {
-		auto nearest_edge = *edges_sort_by_distance.begin();
-		edges_sort_by_distance.pop_front();
-
+		auto nearest_edge = edge_map.begin()->second;
+		edge_map.erase(edge_map.begin());
 		auto& nearest_mink_a = nearest_edge.mink_a;
 		auto& nearest_mink_b = nearest_edge.mink_b;
 
-		auto perpendicular_from_zero = - perpendicular_to_point(
-			nearest_mink_a.differens, nearest_mink_b.differens, vector2::zero_vector);
+		auto perpendicular_from_zero = -perpendicular_to_point(
+			nearest_mink_a.distance, nearest_mink_b.distance, vector2::zero_vector);
 
-		auto new_mink_point = support_function(a_vectors, b_vectors, perpendicular_from_zero);
+		auto new_mink = support_function(a_vectors, b_vectors, perpendicular_from_zero);
 
-		if (nearest_mink_a == new_mink_point || nearest_mink_b == new_mink_point || i == 10)
+		if (nearest_mink_a == new_mink || nearest_mink_b == new_mink || i == 10) // contains point function
 		{
 			return get_collider_result(nearest_mink_a, nearest_mink_b);
 		}
 
+		// add two new edges to the simplex
 		double new_mink_point_nearest_a_distance_o =
-			line_point_distance_convex(new_mink_point.differens, nearest_mink_a.differens, vector2::zero_vector);
+			line_point_distance_convex(new_mink.distance, nearest_mink_a.distance, vector2::zero_vector);
+		edge_map.insert({ new_mink_point_nearest_a_distance_o,
+			minkowski_edge_distance(new_mink_point_nearest_a_distance_o, new_mink, nearest_mink_a) });
 		double new_mink_point_nearest_b_distance_o =
-			line_point_distance_convex(new_mink_point.differens, nearest_mink_b.differens, vector2::zero_vector);
-
-		inseart_into_sorted_list(edges_sort_by_distance,
-			minkowski_edge_distance(new_mink_point_nearest_a_distance_o, new_mink_point, nearest_mink_a));
-		inseart_into_sorted_list(edges_sort_by_distance,
-			minkowski_edge_distance(new_mink_point_nearest_b_distance_o, new_mink_point, nearest_mink_b));
+			line_point_distance_convex(new_mink.distance, nearest_mink_b.distance, vector2::zero_vector);
+		edge_map.insert({ new_mink_point_nearest_b_distance_o,
+			minkowski_edge_distance(new_mink_point_nearest_b_distance_o, new_mink, nearest_mink_b) });
 	}
 
 	return epa_result();
@@ -184,26 +179,6 @@ epa_result gjk_functions::get_collider_result(minkowski_differens& mink_a, minko
 	return epa_res;
 }
 
-void gjk_functions::inseart_into_sorted_list(
-	std::list<minkowski_edge_distance>& edges_sort_by_distance,
-	minkowski_edge_distance&& new_edge_distance)
-{
-	if (edges_sort_by_distance.empty() ||
-		new_edge_distance.distance > edges_sort_by_distance.back().distance)
-	{
-		edges_sort_by_distance.push_back(new_edge_distance);
-		return;
-	}
-
-	auto position = std::find_if(edges_sort_by_distance.begin(), edges_sort_by_distance.end(),
-		[&new_edge_distance](auto edge_distance)
-		{
-			return new_edge_distance.distance < edge_distance.distance;
-		});
-
-	edges_sort_by_distance.emplace(position, new_edge_distance);
-}
-
 gjk_result gjk_functions::GJK(
 	std::vector<vector2>& a_vectors,
 	std::vector<vector2>& b_vectors)
@@ -214,19 +189,19 @@ gjk_result gjk_functions::GJK(
 	auto mink_b = support_function(a_vectors, b_vectors, - direction);
 
 	for (int i = 0; i < 10; i++) {
-		direction = perpendicular_to_point(mink_a.differens, mink_b.differens, vector2::zero_vector);
+		direction = perpendicular_to_point(mink_a.distance, mink_b.distance, vector2::zero_vector);
 		auto mink_c = support_function(a_vectors, b_vectors, direction);
 
 		if (mink_a == mink_c || mink_b == mink_c) {
 			return gjk_result(false);
 		}
 
-		if (triangle_contains(mink_a.differens, mink_b.differens, mink_c.differens, vector2::zero_vector)) {
+		if (triangle_contains(mink_a.distance, mink_b.distance, mink_c.distance, vector2::zero_vector)) {
 			return gjk_result(true, mink_a, mink_b, mink_c);
 		}
 
-		if (line_point_distance(mink_a.differens, mink_c.differens, vector2::zero_vector) <
-			line_point_distance(mink_b.differens, mink_c.differens, vector2::zero_vector)) {
+		if (line_point_distance(mink_a.distance, mink_c.distance, vector2::zero_vector) <
+			line_point_distance(mink_b.distance, mink_c.distance, vector2::zero_vector)) {
 			mink_b = mink_c;
 		}
 		else {
