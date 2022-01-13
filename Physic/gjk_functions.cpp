@@ -1,7 +1,7 @@
 #include "gjk_functions.h"
 
 gjk_functions::gjk_functions(primitives_drawer& drawer)
-	: drawer{ drawer }
+	: drawer(drawer)
 {
 }
 
@@ -19,8 +19,8 @@ clipping_result gjk_functions::clipping(
 	auto& a_farthest = farthest_point(a_vertices, normal);
 	auto& b_farthest = farthest_point(b_vertices, -normal);
 
-	auto &a_best_edge = gjk_functions::find_best_edge(a_edges, a_farthest, normal);
-	auto &b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, normal);
+	auto& a_best_edge = gjk_functions::find_best_edge(a_edges, a_farthest, normal);
+	auto& b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, normal);
 
 	const edge* reference_edge;
 	const edge* incident_edge;
@@ -115,7 +115,7 @@ epa_result gjk_functions::EPA(
 	double b_c_distance_o = line_point_distance_convex(
 		gjk_result.mink_b.distance, gjk_result.mink_c.distance, vector2::zero_vector);
 
-	// create simplex
+	// create triangular simplex
 	std::map<double, std::tuple<minkowski_difference, minkowski_difference>> edge_map {
 		{a_b_distance_o, std::make_tuple(gjk_result.mink_a, gjk_result.mink_b)},
 		{a_c_distance_o, std::make_tuple(gjk_result.mink_a, gjk_result.mink_c)},
@@ -132,7 +132,7 @@ epa_result gjk_functions::EPA(
 			mink_a.distance, mink_b.distance, vector2::zero_vector);
 		auto mink_c = support_function(a_vertices, b_vertices, perpendicular_from_zero);
 
-		if (mink_a == mink_c || mink_b == mink_c || i == 10) // contains point function
+		if (mink_a == mink_c || mink_b == mink_c || i == 10)
 		{
 			return get_collider_result(mink_a, mink_b);
 		}
@@ -159,13 +159,13 @@ epa_result gjk_functions::get_collider_result(
 
 	if (mink_a.point_a == mink_b.point_a) {
 		penetration_point = mink_a.point_a; // or mink_b.point_a
-		collision_edge_a =  mink_a.point_b;
-		collision_edge_b =  mink_b.point_b;
+		collision_edge_a = mink_a.point_b;
+		collision_edge_b = mink_b.point_b;
 	}
 	else {
 		penetration_point = mink_a.point_b; // or mink_b.point_b
-		collision_edge_a =  mink_a.point_a;
-		collision_edge_b =  mink_b.point_a;
+		collision_edge_a = mink_a.point_a;
+		collision_edge_b = mink_b.point_a;
 		epa_res.is_object_1_normal = false;
 	}
 
@@ -179,9 +179,8 @@ gjk_result gjk_functions::GJK(
 	const std::vector<vector2>& b_vertices)
 {
 	vector2 direction(1, 0);
-
 	auto mink_a = support_function(a_vertices, b_vertices, direction);
-	auto mink_b = support_function(a_vertices, b_vertices, - direction);
+	auto mink_b = support_function(a_vertices, b_vertices, -direction);
 
 	for (int i = 0; i < 10; i++) {
 		direction = perpendicular_to_point(mink_a.distance, mink_b.distance, vector2::zero_vector);
@@ -195,13 +194,11 @@ gjk_result gjk_functions::GJK(
 			return gjk_result(true, mink_a, mink_b, mink_c);
 		}
 
-		if (line_point_distance(mink_a.distance, mink_c.distance, vector2::zero_vector) <
-			line_point_distance(mink_b.distance, mink_c.distance, vector2::zero_vector)) {
-			mink_b = mink_c;
-		}
-		else {
-			mink_a = mink_c;
-		}
+		auto& replaceable_mink =
+			line_point_distance(mink_a.distance, mink_c.distance, vector2::zero_vector) >
+			line_point_distance(mink_b.distance, mink_c.distance, vector2::zero_vector)
+			? mink_a : mink_b;
+		replaceable_mink = mink_c;
 	}
 
 	return gjk_result(false);
@@ -257,7 +254,9 @@ const edge& gjk_functions::find_best_edge(
 	const edge* best_edge = nullptr;
 	double min_dot_product = std::numeric_limits<double>::max();
 
-	for (auto& edge : edges) {
+	for (int i = 0; i < edges.size(); i++) {
+		auto& edge = edges[i];
+
 		if (edge.a == farthest_point || edge.b == farthest_point) {
 			double dot_product = abs((edge.a - edge.b).dot_product(normal));
 
@@ -275,11 +274,12 @@ const vector2& gjk_functions::farthest_point(
 	const std::vector<vector2>& vectors,
 	const vector2& direction)
 {
-	const vector2* farthest_point = nullptr;
-	double max_dot_product = -std::numeric_limits<double>::max();
+	const vector2* farthest_point = &vectors[0];
+	double max_dot_product = vectors[0].dot_product(direction);
 
-	for (int i = 0; i < vectors.size(); i++) {
+	for (int i = 1; i < vectors.size(); i++) {
 		auto dot_product = vectors[i].dot_product(direction);
+
 		if (dot_product > max_dot_product) {
 			max_dot_product = dot_product;
 			farthest_point = &vectors[i];
@@ -306,10 +306,7 @@ double gjk_functions::line_point_distance(
 	vector2 b_a = b - a;
 	vector2 b_a_normalize = b_a.normalize();
 	vector2 o_a = o - a;
-
 	double proj_length = b_a_normalize.dot_product(o_a);
-
-	vector2 proj_point;
 
 	if (proj_length < 0) {
 		return a.distance(o);

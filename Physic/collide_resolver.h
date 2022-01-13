@@ -13,8 +13,8 @@ public:
 
 	collide_resolver(primitives_drawer& drawer);
 	void resolve_collision_vector(std::vector<physic_object*>& physic_objects);
-	void resolve_collision(physic_object* object_1, physic_object* object_2, clipping_result& clipping_res);
-	vector2 point_velosity(physic_object& object, vector2 impulse_point, vector2 normal);
-	void apply_impulse(physic_object& object, vector2 impulse_point, vector2 impulse_vector);
-	void set_velosity_in_point(physic_object& object, vector2 impulse_point, vector2 impulse_vector);
+	void resolve_collision(physic_object& object_1, physic_object& object_2, clipping_result& clipping_res);
+	void apply_impulse(physic_object& object, const vector2& impulse_point, const vector2& impulse_vector);
+	void set_velosity_in_point(physic_object& object, const vector2& impulse_point, const vector2& impulse_vector);
+	vector2 point_velosity(const physic_object& object, const vector2& impulse_point, const vector2& normal);
 };

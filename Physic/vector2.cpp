@@ -1,28 +1,23 @@
 #include "vector2.h"
 
-vector2 vector2::zero_vector = {0};
+vector2 vector2::zero_vector(0);
 
 vector2::vector2() 
 	: x(0), y(0)
 {
 }
 
-vector2::vector2(double& v) : sf::Vector2f((float) v, (float) v) {
+vector2::vector2(const double& v) : sf::Vector2f((float) v, (float) v) {
 	x = v;
 	y = v;
 }
 
-vector2::vector2(double v) : sf::Vector2f((float) v, (float) v) {
-	x = v;
-	y = v;
-}
-
-vector2::vector2(double x, double y) : sf::Vector2f((float) x, (float) y) {
+vector2::vector2(const double& x, const double& y) : sf::Vector2f((float) x, (float) y) {
 	this->x = x;
 	this->y = y;
 }
 
-vector2 vector2::rotate(double radians) const {
+vector2 vector2::rotate(const double& radians) const {
 	double _x = x * cos(radians) - y * sin(radians);
 	double _y = x * sin(radians) + y * cos(radians);
 	return vector2(_x, _y);
@@ -55,7 +50,7 @@ double vector2::length() const {
 	return std::isnan(_sqrt) ? 0 : _sqrt;
 }
 
-double vector2::distance(vector2 o) const {
+double vector2::distance(const vector2& o) const {
 	return (*this - o).length();
 }
 			
@@ -63,27 +58,27 @@ auto vector2::negate() const {
 	return vector2(-x, -y);
 }
 
-double vector2::dot_product(vector2 o) const {
+double vector2::dot_product(const vector2& o) const {
 	return x * o.x + y * o.y;
 }
 
-double vector2::cross_product(vector2 o) const {
+double vector2::cross_product(const vector2& o) const {
 	return x * o.y - y * o.x;
 }
 
-bool vector2::is_clockwise(vector2 o) const {
+bool vector2::is_clockwise(const vector2& o) const {
 	return cross_product(o) < 0;
 }
 
-bool vector2::is_clockwise(vector2 o, vector2 relative) const {
+bool vector2::is_clockwise(const vector2& o, const vector2& relative) const {
 	return (*this - relative).cross_product(o - relative) < 0;
 }
 
-vector2 vector2::operator*(double d) const {
+vector2 vector2::operator*(const double& d) const {
 	return vector2(x * d, y * d);
 }
 
-void vector2::operator*=(double d)
+void vector2::operator*=(const double& d)
 {
 	x = x * d;
 	y = y * d;
@@ -91,11 +86,11 @@ void vector2::operator*=(double d)
 	sf::Vector2f::y *= (float) d;
 }
 
-vector2 vector2::operator/(double d) {
+vector2 vector2::operator/(const double& d) const {
 	return vector2(x / d, y / d);
 }
 
-void vector2::operator/=(double d)
+void vector2::operator/=(const double& d)
 {
 	x = x / d;
 	y = y / d;
@@ -103,11 +98,11 @@ void vector2::operator/=(double d)
 	sf::Vector2f::y /= (float) d;
 }
 
-vector2 vector2::operator+(vector2 v) {
+vector2 vector2::operator+(const vector2& v) const {
 	return vector2(x + v.x, y + v.y);
 }
 
-void vector2::operator+=(vector2 v)
+void vector2::operator+=(const vector2& v)
 {
 	x = x + v.x;
 	y = y + v.y;
@@ -115,11 +110,11 @@ void vector2::operator+=(vector2 v)
 	sf::Vector2f::y += (float) v.y;
 }
 
-vector2 vector2::operator-(vector2 v) const {
+vector2 vector2::operator-(const vector2& v) const {
 	return vector2(x - v.x, y - v.y);
 }
 
-void vector2::operator-=(vector2 v)
+void vector2::operator-=(const vector2& v)
 {
 	x = x - v.x;
 	y = y - v.y;
@@ -127,7 +122,7 @@ void vector2::operator-=(vector2 v)
 	sf::Vector2f::y -= (float) v.y;
 }
 
-void vector2::operator=(vector2 v) {
+void vector2::operator=(const vector2& v) {
 	x = v.x;
 	y = v.y;
 	sf::Vector2f::x = (float) v.x;
@@ -138,6 +133,6 @@ vector2 vector2::operator-() const {
 	return vector2(-x, -y);
 }
 
-bool vector2::operator==(vector2 a) {
+bool vector2::operator==(const vector2& a) {
 	return x == a.x && y == a.y;
 }

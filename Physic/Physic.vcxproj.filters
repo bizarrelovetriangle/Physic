@@ -84,6 +84,9 @@
     <ClCompile Include="line.cpp">
       <Filter>Resource Files\primitives</Filter>
     </ClCompile>
+    <ClCompile Include="epa_result.cpp">
+      <Filter>Resource Files\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">

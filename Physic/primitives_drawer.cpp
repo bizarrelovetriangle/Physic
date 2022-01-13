@@ -9,7 +9,7 @@ primitives_drawer::primitives_drawer(sf::RenderWindow& window)
 sf::RenderWindow* window;
 
 void primitives_drawer::draw_line(
-	vector2 a, vector2 b, sf::Color color)
+	const vector2& a, const vector2& b, const sf::Color& color)
 {
 	sf::Vertex line[2] =
 	{
@@ -20,7 +20,7 @@ void primitives_drawer::draw_line(
 }
 
 void primitives_drawer::draw_cross(
-	vector2& point, sf::Color color)
+	const vector2& point, const sf::Color& color)
 {
 	double cross_size = 10;
 
@@ -34,13 +34,13 @@ void primitives_drawer::draw_cross(
 }
 
 void primitives_drawer::draw_number(
-	vector2 pos, double number)
+	const vector2& pos, double number)
 {
 	draw_text(pos, std::to_string(number));
 }
 
 void primitives_drawer::draw_text(
-	vector2 pos, std::string str)
+	const vector2& pos, std::string str)
 {
 	static int i = 1;
 	static sf::Font font;
