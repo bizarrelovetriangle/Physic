@@ -6,11 +6,11 @@ gjk_functions::gjk_functions(primitives_drawer& drawer)
 }
 
 clipping_result gjk_functions::clipping(
-	std::vector<vector2>& a_vertices,
-	std::vector<vector2>& b_vertices,
-	std::vector<edge>& a_edges,
-	std::vector<edge>& b_edges,
-	epa_result& epa_result) 
+	const std::vector<vector2>& a_vertices,
+	const std::vector<vector2>& b_vertices,
+	const std::vector<edge>& a_edges,
+	const std::vector<edge>& b_edges,
+	const epa_result& epa_result) 
 {
 	vector2 normal = epa_result.is_object_1_normal
 		? epa_result.collision_normal
@@ -22,8 +22,8 @@ clipping_result gjk_functions::clipping(
 	auto &a_best_edge = gjk_functions::find_best_edge(a_edges, a_farthest, normal);
 	auto &b_best_edge = gjk_functions::find_best_edge(b_edges, b_farthest, normal);
 
-	edge* reference_edge;
-	edge* incident_edge;
+	const edge* reference_edge;
+	const edge* incident_edge;
 
 	if (epa_result.is_object_1_normal) {
 		reference_edge = &b_best_edge;
@@ -104,9 +104,9 @@ clipping_result gjk_functions::clipping(
 }
 
 epa_result gjk_functions::EPA(
-	std::vector<vector2>& a_vertices,
-	std::vector<vector2>& b_vertices,
-	gjk_result& gjk_result)
+	const std::vector<vector2>& a_vertices,
+	const std::vector<vector2>& b_vertices,
+	const gjk_result& gjk_result)
 {
 	double a_b_distance_o = line_point_distance_convex(
 		gjk_result.mink_a.distance, gjk_result.mink_b.distance, vector2::zero_vector);
@@ -130,55 +130,53 @@ epa_result gjk_functions::EPA(
 
 		auto perpendicular_from_zero = -perpendicular_to_point(
 			mink_a.distance, mink_b.distance, vector2::zero_vector);
-		auto new_mink = support_function(a_vertices, b_vertices, perpendicular_from_zero);
+		auto mink_c = support_function(a_vertices, b_vertices, perpendicular_from_zero);
 
-		if (mink_a == new_mink || mink_b == new_mink || i == 10) // contains point function
+		if (mink_a == mink_c || mink_b == mink_c || i == 10) // contains point function
 		{
 			return get_collider_result(mink_a, mink_b);
 		}
 
 		// add two new edges to the simplex
 		edge_map.insert({
-			line_point_distance_convex(new_mink.distance, mink_a.distance, vector2::zero_vector),
-			std::make_tuple(new_mink, mink_a) });
+			line_point_distance_convex(mink_c.distance, mink_a.distance, vector2::zero_vector),
+			std::make_tuple(mink_c, mink_a) });
 		edge_map.insert({
-			line_point_distance_convex(new_mink.distance, mink_b.distance, vector2::zero_vector),
-			std::make_tuple(new_mink, mink_b) });
+			line_point_distance_convex(mink_c.distance, mink_b.distance, vector2::zero_vector),
+			std::make_tuple(mink_c, mink_b) });
 	}
 
 	return epa_result();
 }
 
-epa_result gjk_functions::get_collider_result(minkowski_difference& mink_a, minkowski_difference& mink_b)
+epa_result gjk_functions::get_collider_result(
+	const minkowski_difference& mink_a, const minkowski_difference& mink_b)
 {
 	epa_result epa_res;
-
-	vector2* penetration_point;
-	vector2* collision_edje_a;
-	vector2* collision_edje_b;
+	const vector2* penetration_point;
+	const vector2* collision_edge_a;
+	const vector2* collision_edge_b;
 
 	if (mink_a.point_a == mink_b.point_a) {
-		penetration_point = mink_a.point_a;
-		collision_edje_a =  mink_a.point_b;
-		collision_edje_b =  mink_b.point_b; // or mink_a.point_b
+		penetration_point = mink_a.point_a; // or mink_b.point_a
+		collision_edge_a =  mink_a.point_b;
+		collision_edge_b =  mink_b.point_b;
 	}
 	else {
-		penetration_point = mink_a.point_b;
-		collision_edje_a =  mink_a.point_a;
-		collision_edje_b =  mink_b.point_a; // or mink_a.point_a
+		penetration_point = mink_a.point_b; // or mink_b.point_b
+		collision_edge_a =  mink_a.point_a;
+		collision_edge_b =  mink_b.point_a;
 		epa_res.is_object_1_normal = false;
 	}
 
-	auto proj_point = projection_point(*collision_edje_a, *collision_edje_b, *penetration_point);
-
+	auto proj_point = projection_point(*collision_edge_a, *collision_edge_b, *penetration_point);
 	epa_res.collision_normal = (*penetration_point - proj_point).normalize();
-
 	return epa_res;
 }
 
 gjk_result gjk_functions::GJK(
-	std::vector<vector2>& a_vertices,
-	std::vector<vector2>& b_vertices)
+	const std::vector<vector2>& a_vertices,
+	const std::vector<vector2>& b_vertices)
 {
 	vector2 direction(1, 0);
 
@@ -210,9 +208,9 @@ gjk_result gjk_functions::GJK(
 }
 
 minkowski_difference gjk_functions::support_function(
-	std::vector<vector2>& a_vertices,
-	std::vector<vector2>& b_vertices,
-	vector2 direction)
+	const std::vector<vector2>& a_vertices,
+	const std::vector<vector2>& b_vertices,
+	const vector2 direction)
 {
 	auto& a = farthest_point(a_vertices, direction);
 	auto& b = farthest_point(b_vertices, -direction);
@@ -220,8 +218,8 @@ minkowski_difference gjk_functions::support_function(
 }
 
 bool gjk_functions::contains_point(
-	std::vector<vector2>& vectors,
-	vector2 point)
+	const std::vector<vector2>& vectors,
+	const vector2& point)
 {
 	vector2 direction(1, 0);
 
@@ -251,12 +249,12 @@ bool gjk_functions::contains_point(
 	return false;
 }
 
-edge& gjk_functions::find_best_edge(
-	std::vector<edge>& edges,
-	vector2& farthest_point,
-	vector2& normal)
+const edge& gjk_functions::find_best_edge(
+	const std::vector<edge>& edges,
+	const vector2& farthest_point,
+	const vector2& normal)
 {
-	edge* best_edge = nullptr;
+	const edge* best_edge = nullptr;
 	double min_dot_product = std::numeric_limits<double>::max();
 
 	for (auto& edge : edges) {
@@ -273,16 +271,15 @@ edge& gjk_functions::find_best_edge(
 	return *best_edge;
 }
 
-vector2& gjk_functions::farthest_point(
-	std::vector<vector2>& vectors,
-	vector2 direction)
+const vector2& gjk_functions::farthest_point(
+	const std::vector<vector2>& vectors,
+	const vector2& direction)
 {
-	vector2* farthest_point = nullptr;
-	double max_dot_product = - std::numeric_limits<double>::max();
+	const vector2* farthest_point = nullptr;
+	double max_dot_product = -std::numeric_limits<double>::max();
 
 	for (int i = 0; i < vectors.size(); i++) {
 		auto dot_product = vectors[i].dot_product(direction);
-
 		if (dot_product > max_dot_product) {
 			max_dot_product = dot_product;
 			farthest_point = &vectors[i];
@@ -293,8 +290,8 @@ vector2& gjk_functions::farthest_point(
 }
 
 vector2 gjk_functions::perpendicular_to_point(
-	vector2& a, vector2& b,
-	vector2& o)
+	const vector2& a, const vector2& b,
+	const vector2& o)
 {
 	return b.is_clockwise(o, a)
 		? - (b - a).clockwise_perpendicular()
@@ -303,8 +300,8 @@ vector2 gjk_functions::perpendicular_to_point(
 
 // for convex and non convex shape
 double gjk_functions::line_point_distance(
-	vector2& a, vector2& b,
-	vector2& o)
+	const vector2& a, const vector2& b,
+	const vector2& o)
 {
 	vector2 b_a = b - a;
 	vector2 b_a_normalize = b_a.normalize();
@@ -325,27 +322,26 @@ double gjk_functions::line_point_distance(
 	}
 }
 
-
 // for convex shape
 double gjk_functions::line_point_distance_convex(
-	vector2& a, vector2& b,
-	vector2& o)
+	const vector2& a, const vector2& b,
+	const vector2& o)
 {
 	vector2 proj_point = projection_point(a, b, o);
 	return proj_point.distance(o);
 }
 
 vector2 gjk_functions::projection_point(
-	vector2& a, vector2& b,
-	vector2& o) 
+	const vector2& a, const vector2& b,
+	const vector2& o)
 {
 	auto b_a_normalize = (b - a).normalize();
 	return b_a_normalize * b_a_normalize.dot_product(o - a) + a;
 }
 
 bool gjk_functions::triangle_contains(
-	vector2& a, vector2& b, vector2& c,
-	vector2& o)
+	const vector2& a, const vector2& b, const vector2& c,
+	const vector2& o)
 {
 	bool b_a_cw = b.is_clockwise(o, a);
 	bool c_b_cw = c.is_clockwise(o, b);
