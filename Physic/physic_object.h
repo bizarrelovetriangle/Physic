@@ -1,5 +1,6 @@
 #pragma once
 #include "vector2.h"
+#include "matrix3x3.h"
 #include <vector>
 #include "edge.h"
 
@@ -17,6 +18,8 @@ public:
 	double mass = 1;
 	bool is_infiniti_mass;
 
+	matrix3x3 model_matrix;
+
 	std::vector<vector2> original_vertices;
 	std::vector<edge> original_edges;
 
@@ -25,6 +28,6 @@ public:
 
 	std::string name;
 
-	virtual void update_form(double frame_interval) = 0;
+	void update_form(double frame_interval);
 	virtual void draw(sf::RenderWindow& window) = 0;
 };

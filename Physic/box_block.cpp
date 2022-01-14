@@ -35,18 +35,6 @@ box_block::box_block(vector2 pos, vector2 size)
 	sfml_shape.setFillColor(sf::Color::Green);
 }
 
-void box_block::update_form(double frame_interval)
-{
-	velocity += acceleration * frame_interval;
-	position += velocity * frame_interval;
-	radians += radians_velocity * frame_interval;
-
-	for (int i = 0; i < original_vertices.size(); i++)
-	{
-		vertices[i] = original_vertices[i].rotate(radians) + position;
-	}
-}
-
 void box_block::draw(sf::RenderWindow& window) 
 {
 	//for (int i = 0; i < vertices.size(); i++) {

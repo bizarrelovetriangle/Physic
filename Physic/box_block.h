@@ -9,7 +9,6 @@ public:
 
 	sf::ConvexShape sfml_shape;
 
-	void update_form(double frame_interval) override;
 	void draw(sf::RenderWindow& window) override;
 
 	sf::ConvexShape create_sfml_shape();

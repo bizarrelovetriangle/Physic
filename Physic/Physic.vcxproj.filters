@@ -54,7 +54,7 @@
     <ClCompile Include="box_block.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
-    <ClCompile Include="phisyc_object.cpp">
+    <ClCompile Include="phisic_object.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
     <ClCompile Include="wall_block.cpp">
@@ -86,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="epa_result.cpp">
       <Filter>Resource Files\models</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix3x3.cpp">
+      <Filter>Resource Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="vector3.cpp">
+      <Filter>Resource Files\primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +138,12 @@
       <Filter>Header Files\primitives</Filter>
     </ClInclude>
     <ClInclude Include="line.h">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix3x3.h">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="vector3.h">
       <Filter>Header Files\primitives</Filter>
     </ClInclude>
   </ItemGroup>
