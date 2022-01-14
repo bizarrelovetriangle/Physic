@@ -6,7 +6,7 @@ vector3::vector3()
 
 }
 
-double vector3::dot_product(const vector2& v, const double& z)
+double vector3::dot_product(const vector2& v, const double& z) const
 {
 	return this->x * v.x + this->y * v.y + this->z * z;
 }

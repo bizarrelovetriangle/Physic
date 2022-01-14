@@ -5,85 +5,92 @@ collide_resolver::collide_resolver(primitives_drawer& drawer)
 {
 }
 
-void collide_resolver::resolve_collision_vector(std::vector<physic_object*>& physic_objects)
+void collide_resolver::resolve_collisions(std::vector<physic_object*>& physic_objects)
 {
 	for (int i = 0; i < physic_objects.size(); i++) {
 		for (int i2 = i + 1; i2 < physic_objects.size(); i2++) {
-			physic_object& object_1 = *physic_objects[i];
-			physic_object& object_2 = *physic_objects[i2];
-			if (object_1.is_infiniti_mass && object_2.is_infiniti_mass) continue;
+			physic_object& object_a = *physic_objects[i];
+			physic_object& object_b = *physic_objects[i2];
+			if (object_a.is_infiniti_mass && object_b.is_infiniti_mass) continue;
+			narrow_phase_detection(object_a, object_b);
+		}
+	}
+}
 
-			auto gjk_result = gjk.GJK(object_1.vertices, object_2.vertices);
+void collide_resolver::narrow_phase_detection(
+	physic_object& object_a, physic_object& object_b)
+{
+	for (auto& convex_shape_a : object_a.convex_shapes) {
+		for (auto& convex_shape_b : object_b.convex_shapes) {
+			auto gjk_result = gjk.GJK(convex_shape_a.vertices, convex_shape_b.vertices);
 
 			if (gjk_result.is_collide) {
-				auto epa_res = gjk.EPA(object_1.vertices, object_2.vertices, gjk_result);
-				auto clipping_res = gjk.clipping(object_1.vertices, object_2.vertices,
-					object_1.edges, object_2.edges, epa_res);
-				resolve_collision(object_1, object_2, clipping_res);
+				auto epa_res = gjk.EPA(convex_shape_a.vertices, convex_shape_b.vertices, gjk_result);
+				auto clipping_res = gjk.clipping(convex_shape_a.vertices, convex_shape_b.vertices,
+					convex_shape_a.edges, convex_shape_b.edges, epa_res);
+				resolve_collision(object_a, object_b, clipping_res);
 			}
 		}
 	}
 }
 
 void collide_resolver::resolve_collision(
-	physic_object& object_1, physic_object& object_2, clipping_result& clipping_res)
+	physic_object& object_a, physic_object& object_b, clipping_result& clipping_res)
 {
 	double e = 0.4; // 1 - absolutely inelastic
 	
 	collide_count++;
 
-	vector2 object_1_point_velosity = point_velosity(
-		object_1, clipping_res.collision_point, clipping_res.collision_normal);
-	vector2 object_2_point_velosity = point_velosity(
-		object_2, clipping_res.collision_point, clipping_res.collision_normal);
-	vector2 objects_point_velosity_diff = object_1_point_velosity - object_2_point_velosity;
+	vector2 object_a_point_velosity = point_velosity(
+		object_a, clipping_res.collision_point, clipping_res.collision_normal);
+	vector2 object_b_point_velosity = point_velosity(
+		object_b, clipping_res.collision_point, clipping_res.collision_normal);
+	vector2 objects_point_velosity_diff = object_a_point_velosity - object_b_point_velosity;
 
-	if (objects_point_velosity_diff.dot_product(clipping_res.collision_normal) > 0 == clipping_res.is_object_1_normal) {
+	if (objects_point_velosity_diff.dot_product(clipping_res.collision_normal) > 0 ==
+		clipping_res.is_object_a_normal) {
 		return;
 	}
 
-	vector2 penetration_vector = clipping_res.is_object_1_normal
+	vector2 penetration_vector = clipping_res.is_object_a_normal
 		? -clipping_res.collision_penetration_line
 		: clipping_res.collision_penetration_line;
 
-	double mass_ratio = object_1.is_infiniti_mass
-		? 0 : object_2.is_infiniti_mass
-		? 1 : object_1.mass / (object_1.mass + object_2.mass);
+	double mass_ratio = object_a.is_infiniti_mass
+		? 0 : object_b.is_infiniti_mass
+		? 1 : object_a.mass / (object_a.mass + object_b.mass);
 
-	apply_impulse(object_1, clipping_res.collision_point, -penetration_vector * mass_ratio);
-	apply_impulse(object_2, clipping_res.collision_point, penetration_vector * (1 - mass_ratio));
+	apply_impulse(object_a, clipping_res.collision_point, -penetration_vector * mass_ratio);
+	apply_impulse(object_b, clipping_res.collision_point, penetration_vector * (1 - mass_ratio));
 
 	double moment_of_mass = 0;
 
-	if (!object_1.is_infiniti_mass) {
-		vector2 object_1_sholder_vector = clipping_res.collision_point - object_1.position;
-		moment_of_mass += (1 / object_1.mass) +
-			(pow(object_1_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
-				object_1.moment_of_inetia);
+	if (!object_a.is_infiniti_mass) {
+		vector2 object_a_sholder_vector = clipping_res.collision_point - object_a.position;
+		moment_of_mass += (1 / object_a.mass) +
+			(pow(object_a_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
+				object_a.moment_of_inetia);
 	}
 
-	if (!object_2.is_infiniti_mass) {
-		vector2 object_2_sholder_vector = clipping_res.collision_point - object_2.position;
-		moment_of_mass += (1 / object_2.mass) +
-			(pow(object_2_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
-				object_2.moment_of_inetia);
+	if (!object_b.is_infiniti_mass) {
+		vector2 object_b_sholder_vector = clipping_res.collision_point - object_b.position;
+		moment_of_mass += (1 / object_b.mass) +
+			(pow(object_b_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
+				object_b.moment_of_inetia);
 	}
 
 	vector2 j = -clipping_res.collision_normal *
 		objects_point_velosity_diff.dot_product(clipping_res.collision_normal) * (1 + e) /
 		moment_of_mass;
 
-	apply_impulse(object_1, clipping_res.collision_point, j);
-	apply_impulse(object_2, clipping_res.collision_point, -j);
+	apply_impulse(object_a, clipping_res.collision_point, j);
+	apply_impulse(object_b, clipping_res.collision_point, -j);
 }
 
 void collide_resolver::apply_impulse(
 	physic_object& object, const vector2& impulse_point, const vector2& impulse_vector)
 {
-	if (object.is_infiniti_mass) {
-		return;
-	}
-	
+	if (object.is_infiniti_mass) return;
 	vector2 sholder_vector = impulse_point - object.position;
 	object.radians_velocity += sholder_vector.cross_product(impulse_vector) / object.moment_of_inetia;
 	object.velocity += impulse_vector / object.mass;

@@ -3,6 +3,7 @@
 #include "matrix3x3.h"
 #include <vector>
 #include "edge.h"
+#include "convex_shape.h"
 
 class physic_object {
 public:
@@ -19,15 +20,10 @@ public:
 	bool is_infiniti_mass;
 
 	matrix3x3 model_matrix;
-
-	std::vector<vector2> original_vertices;
-	std::vector<edge> original_edges;
-
-	std::vector<vector2> vertices;
-	std::vector<edge> edges;
+	std::vector<convex_shape> convex_shapes;
 
 	std::string name;
 
-	void update_form(double frame_interval);
+	void update(double frame_interval);
 	virtual void draw(sf::RenderWindow& window) = 0;
 };

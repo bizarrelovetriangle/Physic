@@ -11,7 +11,9 @@ mouse_picker::mouse_picker(
 void mouse_picker::take_object()
 {
 	for (auto& physic_object : physic_objects) {
-		if (gjk.contains_point(physic_object->vertices, mouse_filter.position)) {
+		if (std::any_of(physic_object->convex_shapes.cbegin(), physic_object->convex_shapes.cend(),
+			[&](auto& convex_shape){ return gjk.contains_point(convex_shape.vertices, mouse_filter.position);}))
+		{
 			selected = physic_object;
 			shoulder = (mouse_filter.filtered_position() - physic_object->position).rotate(-selected->radians);
 			break;
@@ -73,9 +75,6 @@ void mouse_picker::key_control(sf::Event::KeyEvent key_event)
 		selected->radians = 0;
 		selected->radians_velocity = 0;
 		shoulder = vector2::zero_vector;
-		break;
-	case sf::Keyboard::Space:
-		collider_resolver.apply_impulse(*selected, selected->vertices[0], vector2(0, -5));
 		break;
 	}
 }

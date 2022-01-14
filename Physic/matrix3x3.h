@@ -7,7 +7,7 @@ class matrix3x3
 public:
 	vector3 i, j, k;
 	matrix3x3();
-	vector2 multiply(const vector2& v, const double& z);
+	vector2 multiply(const vector2& v, const double& z) const;
 	void rotate(const double& radians);
 	void transfer(const vector2& v);
 };

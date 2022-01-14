@@ -12,10 +12,11 @@ wall_block::wall_block(vector2 a, vector2 b)
 
 	is_infiniti_mass = true;
 
-	original_vertices = std::vector<vector2>{ a, b };
-	vertices = std::vector<vector2>{ 0, 0 };
-	original_edges = std::vector<edge>{ {this->a, this->b} };
-	edges = std::vector<edge>{ {vertices[0], vertices[1]} };
+	convex_shape& convex_shape = convex_shapes.emplace_back();
+	convex_shape.original_vertices = std::vector<vector2>{ a, b };
+	convex_shape.vertices = std::vector<vector2>{ 0, 0 };
+	convex_shape.original_edges = std::vector<edge>{ {this->a, this->b} };
+	convex_shape.edges = std::vector<edge>{ {convex_shape.vertices[0], convex_shape.vertices[1]} };
 }
 
 void wall_block::draw(sf::RenderWindow& window) {

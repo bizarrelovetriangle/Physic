@@ -7,7 +7,7 @@ matrix3x3::matrix3x3()
 	k.z = 1;
 }
 
-vector2 matrix3x3::multiply(const vector2& v, const double& z)
+vector2 matrix3x3::multiply(const vector2& v, const double& z) const
 {
 	return vector2(i.dot_product(v, z), j.dot_product(v, z));
 }

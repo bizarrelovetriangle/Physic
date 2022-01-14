@@ -93,6 +93,9 @@
     <ClCompile Include="vector3.cpp">
       <Filter>Resource Files\primitives</Filter>
     </ClCompile>
+    <ClCompile Include="convex_shape.cpp">
+      <Filter>Resource Files\physic_objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="vector3.h">
       <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="convex_shape.h">
+      <Filter>Header Files\physic_objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

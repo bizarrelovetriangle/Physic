@@ -43,10 +43,10 @@ void main_scene::scene_update()
 		}
 	}
 
-	collider_resolver.resolve_collision_vector(physic_objects);
+	collider_resolver.resolve_collisions(physic_objects);
 
 	for (auto& object : physic_objects) {
-		object->update_form(frame_interval * 50);
+		object->update(frame_interval * 50);
 	}
 }
 

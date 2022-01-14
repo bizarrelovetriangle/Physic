@@ -1,6 +1,6 @@
 #include "physic_object.h"
 
-void physic_object::update_form(double frame_interval)
+void physic_object::update(double frame_interval)
 {
 	velocity += acceleration * frame_interval;
 	position += velocity * frame_interval;
@@ -10,8 +10,7 @@ void physic_object::update_form(double frame_interval)
 	model_matrix.rotate(radians);
 	model_matrix.transfer(position);
 
-	for (int i = 0; i < original_vertices.size(); i++)
-	{
-		vertices[i] = model_matrix.multiply(original_vertices[i], 1);
+	for (auto& convex_shape : convex_shapes) {
+		convex_shape.update(model_matrix);
 	}
 }

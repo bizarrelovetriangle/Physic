@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="box_block.cpp" />
     <ClCompile Include="collide_resolver.cpp" />
+    <ClCompile Include="convex_shape.cpp" />
     <ClCompile Include="edge.cpp" />
     <ClCompile Include="epa_result.cpp" />
     <ClCompile Include="gjk_functions.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="box_block.h" />
     <ClInclude Include="clipping_result.h" />
     <ClInclude Include="collide_resolver.h" />
+    <ClInclude Include="convex_shape.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="epa_result.h" />
     <ClInclude Include="gjk_functions.h" />

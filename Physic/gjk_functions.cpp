@@ -21,6 +21,8 @@ clipping_result gjk_functions::clipping(
 	const edge* incident_edge = &b_best_edge;
 	if (!epa_result.is_object_1_normal) std::swap(reference_edge, incident_edge);
 
+	//return clipping_result();
+
 	auto incident_a_b = incident_edge->a - incident_edge->b;
 	auto reference_edge_nolmalize = (reference_edge->a - reference_edge->b).normalize();
 	std::vector<vector2> incident_vertices = { incident_edge->a, incident_edge->b };
@@ -63,7 +65,7 @@ clipping_result gjk_functions::clipping(
 	clipping_res.collision_penetration_line = collision_point - proj_point;
 	clipping_res.collision_penetration = clipping_res.collision_penetration_line.length();
 	clipping_res.collision_normal = clipping_res.collision_penetration_line.normalize();
-	clipping_res.is_object_1_normal = epa_result.is_object_1_normal;
+	clipping_res.is_object_a_normal = epa_result.is_object_1_normal;
 
 	drawer.draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
 	drawer.draw_cross(clipping_res.collision_point, sf::Color::White);
