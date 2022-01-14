@@ -21,8 +21,6 @@ clipping_result gjk_functions::clipping(
 	const edge* incident_edge = &b_best_edge;
 	if (!epa_result.is_object_1_normal) std::swap(reference_edge, incident_edge);
 
-	//return clipping_result();
-
 	auto incident_a_b = incident_edge->a - incident_edge->b;
 	auto reference_edge_nolmalize = (reference_edge->a - reference_edge->b).normalize();
 	std::vector<vector2> incident_vertices = { incident_edge->a, incident_edge->b };
@@ -47,11 +45,12 @@ clipping_result gjk_functions::clipping(
 		}
 	}
 
-	// take only points that are penetrate reference_edge relative to the normal
+	// take only points that are penetrate into reference_edge relative to the normal
 	std::vector<vector2> contact_points;
 	for (auto& incident_vertex : incident_vertices) {
 		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) ^
-			reference_edge_nolmalize.is_clockwise(epa_result.collision_normal)) {
+			reference_edge_nolmalize.is_clockwise(epa_result.collision_normal))
+		{
 			contact_points.push_back(incident_vertex);
 		}
 	}

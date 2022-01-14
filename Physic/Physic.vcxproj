@@ -180,6 +180,7 @@
     <ClCompile Include="primitives_drawer.cpp" />
     <ClCompile Include="primitives_drawer.h" />
     <ClCompile Include="Physic.cpp" />
+    <ClCompile Include="star.cpp" />
     <ClCompile Include="vector2.cpp" />
     <ClCompile Include="vector3.cpp" />
     <ClCompile Include="wall_block.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="mouse_picker.h" />
     <ClInclude Include="mouse_filter.h" />
     <ClInclude Include="physic_object.h" />
+    <ClInclude Include="star.h" />
     <ClInclude Include="vector2.h" />
     <ClInclude Include="vector3.h" />
     <ClInclude Include="wall_block.h" />

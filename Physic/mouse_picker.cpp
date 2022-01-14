@@ -28,8 +28,8 @@ void mouse_picker::update_object()
 	}
 
 	vector2 new_shoulder = shoulder.rotate(selected->radians) + selected->position;
-	vector2 impulse_vector = mouse_filter.filtered_position() - new_shoulder;
-	collider_resolver.set_velosity_in_point(*selected, new_shoulder, impulse_vector);
+	vector2 velocity = mouse_filter.filtered_position() - new_shoulder;
+	collider_resolver.set_velocity_in_point(*selected, new_shoulder, velocity);
 }
 
 void mouse_picker::control_object(sf::Event event) 

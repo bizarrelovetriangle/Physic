@@ -39,11 +39,9 @@ void collide_resolver::resolve_collision(
 {
 	double e = 0.4; // 1 - absolutely inelastic
 	
-	collide_count++;
-
-	vector2 object_a_point_velosity = point_velosity(
+	vector2 object_a_point_velosity = point_velocity(
 		object_a, clipping_res.collision_point, clipping_res.collision_normal);
-	vector2 object_b_point_velosity = point_velosity(
+	vector2 object_b_point_velosity = point_velocity(
 		object_b, clipping_res.collision_point, clipping_res.collision_normal);
 	vector2 objects_point_velosity_diff = object_a_point_velosity - object_b_point_velosity;
 
@@ -51,17 +49,20 @@ void collide_resolver::resolve_collision(
 		clipping_res.is_object_a_normal) {
 		return;
 	}
+	
+	collide_count++;
 
-	vector2 penetration_vector = clipping_res.is_object_a_normal
+	vector2 penetration_from_a_to_b = clipping_res.is_object_a_normal
 		? -clipping_res.collision_penetration_line
 		: clipping_res.collision_penetration_line;
+	penetration_from_a_to_b /= 4;
 
 	double mass_ratio = object_a.is_infiniti_mass
 		? 0 : object_b.is_infiniti_mass
 		? 1 : object_a.mass / (object_a.mass + object_b.mass);
 
-	apply_impulse(object_a, clipping_res.collision_point, -penetration_vector * mass_ratio);
-	apply_impulse(object_b, clipping_res.collision_point, penetration_vector * (1 - mass_ratio));
+	apply_impulse(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio);
+	apply_impulse(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio));
 
 	double moment_of_mass = 0;
 
@@ -96,16 +97,17 @@ void collide_resolver::apply_impulse(
 	object.velocity += impulse_vector / object.mass;
 }
 
-void collide_resolver::set_velosity_in_point(
-	physic_object& object, const vector2& impulse_point, const vector2& impulse_vector)
+void collide_resolver::set_velocity_in_point(
+	physic_object& object, const vector2& impulse_point, const vector2& velocity)
 {
 	drawer.draw_cross(impulse_point, sf::Color::White);
 	drawer.draw_line(object.position, impulse_point, sf::Color::White);
-	vector2 object_point_velosity = point_velosity(object, impulse_point, impulse_vector.normalize());
-	apply_impulse(object, impulse_point, impulse_vector - object_point_velosity);
+	vector2 object_point_velocity = point_velocity(object, impulse_point, velocity.normalize());
+	vector2 impulse_vector = (velocity - object_point_velocity) * object.mass / 5;
+	apply_impulse(object, impulse_point, impulse_vector);
 }
 
-vector2 collide_resolver::point_velosity(
+vector2 collide_resolver::point_velocity(
 	const physic_object& object, const vector2& impulse_point, const vector2& normal)
 {
 	vector2 sholder_vector = impulse_point - object.position;

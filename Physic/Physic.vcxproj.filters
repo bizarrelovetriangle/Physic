@@ -96,6 +96,9 @@
     <ClCompile Include="convex_shape.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
+    <ClCompile Include="star.cpp">
+      <Filter>Resource Files\physic_objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -150,6 +153,9 @@
       <Filter>Header Files\primitives</Filter>
     </ClInclude>
     <ClInclude Include="convex_shape.h">
+      <Filter>Header Files\physic_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="star.h">
       <Filter>Header Files\physic_objects</Filter>
     </ClInclude>
   </ItemGroup>

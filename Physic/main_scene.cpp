@@ -1,4 +1,5 @@
 #include "main_scene.h"
+#include "star.h"
 
 main_scene::main_scene() : 
 	window(sf::VideoMode(global::screen_width, global::screen_height), "PhysicsProject"),
@@ -26,6 +27,7 @@ void main_scene::start()
 		
 		scene_update();
 		scene_draw();
+		//sf::sleep(sf::seconds(0.05f));
 	}
 }
 
@@ -64,23 +66,11 @@ void main_scene::scene_draw()
 
 void main_scene::create_blocks()
 {
-	//for (int i = 0; i < 4; i++) {
-	//	for (int i2 = 0; i2 < 5; i2++) {
-	//		box_block* _box = new box_block(
-	//			vector2(-200. + 101. * i2, -100 + 101. * i),
-	//			vector2(100., (i * i2 % 2 ? 100. : 70.)));
-	//
-	//		_box->acceleration.y = 0.1;
-	//
-	//		physic_objects.emplace_back(_box);
-	//	}
-	//}
-
-	for (int i = 0; i < 7; i++) {
-		for (int i2 = 0; i2 < 11; i2++) {
-			box_block* _box = new box_block(
-				vector2(-500. + 101. * i2, -200 + 101. * i),
-				vector2(100., (i * i2 % 2 ? 100. : 70.)));
+	for (int i = 0; i < 8; i++) {
+		for (int i2 = 0; i2 < 5; i2++) {
+			star* _box = new star(
+				vector2(-200. + 101. * i2, -100 + 101. * i),
+				i * i2 % 2 ? 100 : 70);
 	
 			_box->acceleration.y = 0.1;
 	
@@ -88,13 +78,33 @@ void main_scene::create_blocks()
 		}
 	}
 
-	//box_block* _box = new box_block(
-	//	vector2(0., 200),
-	//	vector2(100., 100.));
-	////_box->acceleration.y = 0.1;
-	////_box->acceleration.x = 0.1;
-	//physic_objects.emplace_back(_box);
+	//for (int i = 0; i < 7; i++) {
+	//	for (int i2 = 0; i2 < 11; i2++) {
+	//		star* _box = new star(
+	//			vector2(-500. + 101. * i2, -200 + 101. * i), i * i2 % 2 ? 100 : 70);
 	//
+	//		_box->acceleration.y = -0.1;
+	//
+	//		physic_objects.emplace_back(_box);
+	//	}
+	//}
+
+	star* _star = new star(vector2(0., 200));
+	_star->acceleration.y = 0.1;
+	physic_objects.emplace_back(_star);
+
+	star* _star2 = new star(vector2(200., 200));
+	_star2->acceleration.y = 0.1;
+	_star2->velocity.x = -1;
+	physic_objects.emplace_back(_star2);
+	 
+	box_block* _box = new box_block(
+		vector2(-200., -200),
+		vector2(50., 200.));
+	//_box->acceleration.y = 0.1;
+	//_box->acceleration.x = 0.1;
+	physic_objects.emplace_back(_box);
+	
 	//box_block* _box2 = new box_block(
 	//	vector2(100., 200.),
 	//	vector2(100., 100.));
@@ -141,7 +151,8 @@ void main_scene::draw_info()
 	}
 
 	drawer.draw_text(vector2(-global::screen_width / 2 , -global::screen_height / 2),
-		std::string("fps ") + std::to_string(average_interval));
+		std::string("fps: ") + std::to_string(average_interval) + std::string("\n") +
+		std::string("collisions: ") + std::to_string(collider_resolver.collide_count));
 }
 
 void main_scene::draw_coordinates()
