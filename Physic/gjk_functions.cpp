@@ -252,8 +252,8 @@ vector2 gjk_functions::perpendicular_to_point(
 	const vector2& o)
 {
 	return b.is_clockwise(o, a)
-		? - (b - a).clockwise_perpendicular()
-		: (b - a).clockwise_perpendicular();
+		? (b - a).clockwise_perpendicular()
+		: -(b - a).clockwise_perpendicular();
 }
 
 // for convex and non convex shape

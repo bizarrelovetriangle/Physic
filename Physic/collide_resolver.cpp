@@ -111,7 +111,7 @@ vector2 collide_resolver::point_velocity(
 	const physic_object& object, const vector2& impulse_point, const vector2& normal)
 {
 	vector2 sholder_vector = impulse_point - object.position;
-	auto angle_point_velosity = sholder_vector.clockwise_perpendicular() * object.radians_velocity;
+	auto angle_point_velosity = -sholder_vector.clockwise_perpendicular() * object.radians_velocity;
 	auto radians_point_velosity_by_normal = normal * angle_point_velosity.dot_product(normal);
 	return object.velocity + radians_point_velosity_by_normal;
 }

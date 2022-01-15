@@ -34,7 +34,7 @@ vector2 vector2::normalize() const {
 }
 
 vector2 vector2::clockwise_perpendicular() const {
-	return vector2(-y, x);
+	return vector2(y, -x);
 }
 
 bool vector2::is_zero() const {
