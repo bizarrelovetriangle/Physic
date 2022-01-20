@@ -21,6 +21,7 @@ public:
 
 	matrix3x3 model_matrix;
 	std::vector<convex_shape> convex_shapes;
+	std::vector<sf::ConvexShape> sfml_shapes;
 
 	std::string name;
 

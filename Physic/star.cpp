@@ -55,10 +55,15 @@ star::star(vector2 pos, double size)
 	convex_shape& convex_shape_c = convex_shapes.emplace_back();
 	
 	convex_shape_c.original_vertices = std::vector<vector2>{
-		vector2(-0.356344, -0.115783) * size,
-		vector2(0, -0.374682) * size,
+		vector2(0, 1) * size,
+		vector2(0.3648, -0.118531) * size,
 		vector2(-0.587785, -0.809017) * size,
 	};
+
+	//vector2(0, 1) * size,
+	//vector2(0.3648, -0.118531) * size,
+	//vector2(-0.587785, -0.809017) * size,
+
 	
 	convex_shape_c.vertices = std::vector<vector2>{ 0, 0, 0 };
 	
@@ -74,29 +79,21 @@ star::star(vector2 pos, double size)
 		{convex_shape_c.vertices[2], convex_shape_c.vertices[0]}
 	};
 
-	sfml_shape = sf::ConvexShape(4);
-	sfml_shape.setFillColor(sf::Color::Green);
+	for (auto& convex_shape : convex_shapes) {
+		auto& sfml_shape = sfml_shapes.emplace_back(convex_shape.vertices.size());
+		sfml_shape.setFillColor(sf::Color::Transparent);
+		sfml_shape.setOutlineColor(sf::Color::Yellow);
+		sfml_shape.setOutlineThickness(1);
+	}
 }
 
 void star::draw(sf::RenderWindow& window)
 {
-	//for (int i = 0; i < vertices.size(); i++) {
-	//	sfml_shape.setPoint(i, vertices[i]);
-	//}
+	for (int i = 0; i < convex_shapes.size(); i++) {
+		for (int j = 0; j < convex_shapes[i].vertices.size(); j++) {
+			sfml_shapes[i].setPoint(j, convex_shapes[i].vertices[j]);
+		}
 
-	//window.draw(sfml_shape);
-
-	for (auto& convex_shape : convex_shapes) {
-		sf::Vertex line[6] =
-		{
-			sf::Vertex(convex_shape.vertices[0], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[1], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[1], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[2], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[2], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[0], sf::Color::Yellow),
-		};
-
-		window.draw(line, 6, sf::Lines);
+		window.draw(sfml_shapes[i]);
 	}
 }

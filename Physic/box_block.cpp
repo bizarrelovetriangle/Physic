@@ -33,31 +33,21 @@ box_block::box_block(vector2 pos, vector2 size)
 		{convex_shape.vertices[3], convex_shape.vertices[0]}
 	};
 
-	sfml_shape = sf::ConvexShape(4);
-	sfml_shape.setFillColor(sf::Color::Green);
+	for (auto& convex_shape : convex_shapes) {
+		auto& sfml_shape = sfml_shapes.emplace_back(convex_shape.vertices.size());
+		sfml_shape.setFillColor(sf::Color::Transparent);
+		sfml_shape.setOutlineColor(sf::Color::Green);
+		sfml_shape.setOutlineThickness(1);
+	}
 }
 
 void box_block::draw(sf::RenderWindow& window) 
 {
-	//for (int i = 0; i < vertices.size(); i++) {
-	//	sfml_shape.setPoint(i, vertices[i]);
-	//}
+	for (int i = 0; i < convex_shapes.size(); i++) {
+		for (int j = 0; j < convex_shapes[i].vertices.size(); j++) {
+			sfml_shapes[i].setPoint(j, convex_shapes[i].vertices[j]);
+		}
 
-	//window.draw(sfml_shape);
-
-	for (auto& convex_shape : convex_shapes) {
-		sf::Vertex line[8] =
-		{
-			sf::Vertex(convex_shape.vertices[0], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[1], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[1], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[2], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[2], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[3], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[3], sf::Color::Yellow),
-			sf::Vertex(convex_shape.vertices[0], sf::Color::Yellow)
-		};
-
-		window.draw(line, 8, sf::Lines);
+		window.draw(sfml_shapes[i]);
 	}
 }

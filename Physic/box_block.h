@@ -6,10 +6,5 @@
 class box_block : public physic_object {
 public:
 	box_block(vector2 pos = {}, vector2 size = { 100., 100. });
-
-	sf::ConvexShape sfml_shape;
-
 	void draw(sf::RenderWindow& window) override;
-
-	sf::ConvexShape create_sfml_shape();
 };
