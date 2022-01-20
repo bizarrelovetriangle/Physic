@@ -74,6 +74,18 @@ bool vector2::is_clockwise(const vector2& o, const vector2& relative) const {
 	return (*this - relative).cross_product(o - relative) < 0;
 }
 
+vector2 vector2::projection_to(const vector2& v) const
+{
+	auto v_normalize = v.normalize();
+	return v_normalize * v_normalize.dot_product(*this);
+}
+
+vector2 vector2::projection_to(const vector2& a, const vector2& b) const
+{
+	auto a_b_normalize = (a - b).normalize();
+	return a_b_normalize * a_b_normalize.dot_product(*this - b) + b;
+}
+
 vector2 vector2::operator*(const double& d) const {
 	return vector2(x * d, y * d);
 }

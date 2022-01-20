@@ -38,31 +38,28 @@ void collide_resolver::resolve_collision(
 	physic_object& object_a, physic_object& object_b, clipping_result& clipping_res)
 {
 	double e = 0.4; // 1 - absolutely inelastic
-	
-	vector2 object_a_point_velosity = point_velocity(
-		object_a, clipping_res.collision_point, clipping_res.collision_normal);
-	vector2 object_b_point_velosity = point_velocity(
-		object_b, clipping_res.collision_point, clipping_res.collision_normal);
+
+	vector2 object_a_point_velosity = point_velocity(object_a, clipping_res.collision_point);
+	vector2 object_b_point_velosity = point_velocity(object_b, clipping_res.collision_point);
 	vector2 objects_point_velosity_diff = object_a_point_velosity - object_b_point_velosity;
 
 	if (objects_point_velosity_diff.dot_product(clipping_res.collision_normal) > 0 ==
 		clipping_res.is_object_a_normal) {
 		return;
 	}
-	
+
 	collide_count++;
 
 	vector2 penetration_from_a_to_b = clipping_res.is_object_a_normal
 		? -clipping_res.collision_penetration_line
 		: clipping_res.collision_penetration_line;
-	penetration_from_a_to_b /= 4;
 
 	double mass_ratio = object_a.is_infiniti_mass
 		? 0 : object_b.is_infiniti_mass
 		? 1 : object_a.mass / (object_a.mass + object_b.mass);
 
-	apply_impulse(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio);
-	apply_impulse(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio));
+	apply_velocity(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio);
+	apply_velocity(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio));
 
 	double moment_of_mass = 0;
 
@@ -70,14 +67,14 @@ void collide_resolver::resolve_collision(
 		vector2 object_a_sholder_vector = clipping_res.collision_point - object_a.position;
 		moment_of_mass += (1 / object_a.mass) +
 			(pow(object_a_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
-				object_a.moment_of_inetia);
+				object_a.moment_of_inertia);
 	}
 
 	if (!object_b.is_infiniti_mass) {
 		vector2 object_b_sholder_vector = clipping_res.collision_point - object_b.position;
 		moment_of_mass += (1 / object_b.mass) +
 			(pow(object_b_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
-				object_b.moment_of_inetia);
+				object_b.moment_of_inertia);
 	}
 
 	vector2 j = -clipping_res.collision_normal *
@@ -89,29 +86,46 @@ void collide_resolver::resolve_collision(
 }
 
 void collide_resolver::apply_impulse(
-	physic_object& object, const vector2& impulse_point, const vector2& impulse_vector)
+	physic_object& object, const vector2& point, const vector2& impulse)
 {
 	if (object.is_infiniti_mass) return;
-	vector2 sholder_vector = impulse_point - object.position;
-	object.radians_velocity += sholder_vector.cross_product(impulse_vector) / object.moment_of_inetia;
-	object.velocity += impulse_vector / object.mass;
+	vector2 sholder_vector = point - object.position;
+	object.radians_velocity += sholder_vector.cross_product(impulse) / object.moment_of_inertia;
+	object.velocity += impulse / object.mass;
+}
+
+
+void collide_resolver::apply_velocity(
+	physic_object& object, const vector2& point, const vector2& velocity)
+{
+	if (object.is_infiniti_mass) return;
+	vector2 sholder_vector = point - object.position;
+	vector2 sholder_perpendicular = -sholder_vector.clockwise_perpendicular();
+
+	// The linear algebra magic. Here we able to find impulse required to get a certain velocity in point
+	double ratio = pow(sholder_perpendicular.length(), 2) * object.mass / object.moment_of_inertia;
+	vector2 velocity_change_ratio = velocity * object.mass * ratio / (1 + (ratio - 1) / 2);
+	vector2 impulse = velocity * object.mass - (velocity_change_ratio / 2).projection_to(sholder_perpendicular);
+	
+	// Should be equal to velocity_change
+	// vector2 actual_velocity_impact = impulse / object.mass +
+	// 	-sholder_vector.clockwise_perpendicular() * sholder_vector.cross_product(impulse) / object.moment_of_inertia;
+
+	apply_impulse(object, point, impulse / 3);
 }
 
 void collide_resolver::set_velocity_in_point(
-	physic_object& object, const vector2& impulse_point, const vector2& velocity)
+	physic_object& object, const vector2& point, const vector2& velocity)
 {
-	drawer.draw_cross(impulse_point, sf::Color::White);
-	drawer.draw_line(object.position, impulse_point, sf::Color::White);
-	vector2 object_point_velocity = point_velocity(object, impulse_point, velocity.normalize());
-	vector2 impulse_vector = (velocity - object_point_velocity) * object.mass / 5;
-	apply_impulse(object, impulse_point, impulse_vector);
+	vector2 object_point_velocity = point_velocity(object, point);
+	vector2 velocity_change = velocity - object_point_velocity;
+	apply_velocity(object, point, velocity_change);
 }
 
 vector2 collide_resolver::point_velocity(
-	const physic_object& object, const vector2& impulse_point, const vector2& normal)
+	const physic_object& object, const vector2& point)
 {
-	vector2 sholder_vector = impulse_point - object.position;
+	vector2 sholder_vector = point - object.position;
 	auto angle_point_velosity = -sholder_vector.clockwise_perpendicular() * object.radians_velocity;
-	auto radians_point_velosity_by_normal = normal * angle_point_velosity.dot_product(normal);
-	return object.velocity + radians_point_velosity_by_normal;
+	return object.velocity + angle_point_velosity;
 }

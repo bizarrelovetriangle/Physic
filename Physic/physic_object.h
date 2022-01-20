@@ -14,7 +14,7 @@ public:
 
 	double radians = 0;
 	double radians_velocity = 0;
-	double moment_of_inetia = 1;
+	double moment_of_inertia = 1;
 
 	double mass = 1;
 	bool is_infiniti_mass;

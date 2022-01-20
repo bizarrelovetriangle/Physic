@@ -6,7 +6,7 @@ box_block::box_block(vector2 pos, vector2 size)
 	this->position = pos;
 
 	mass = size.x * size.y * 5 / 10000;
-	moment_of_inetia = mass * 2000;
+	moment_of_inertia = mass * 2000;
 
 	convex_shape& convex_shape = convex_shapes.emplace_back();
 

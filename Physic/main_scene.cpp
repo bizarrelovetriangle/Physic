@@ -1,12 +1,12 @@
 #include "main_scene.h"
 #include "star.h"
 
-main_scene::main_scene() : 
+main_scene::main_scene() :
 	window(sf::VideoMode(global::screen_width, global::screen_height), "PhysicsProject"),
 	drawer(window),
 	gjk(drawer),
 	collider_resolver(drawer),
-	mouse_picker(window, physic_objects, gjk, collider_resolver)
+	mouse_picker(window, physic_objects, gjk, collider_resolver, drawer)
 {
 	sf::View view;
 	vector2 center(-global::screen_width / 2, -global::screen_height / 2);
@@ -67,13 +67,37 @@ void main_scene::scene_draw()
 void main_scene::create_blocks()
 {
 	for (int i = 0; i < 8; i++) {
-		for (int i2 = 0; i2 < 5; i2++) {
+		for (int i2 = 0; i2 < 3; i2++) {
 			star* _box = new star(
 				vector2(-200. + 101. * i2, -100 + 101. * i),
 				i * i2 % 2 ? 100 : 70);
-	
+
 			_box->acceleration.y = 0.1;
-	
+
+			physic_objects.emplace_back(_box);
+		}
+	}
+
+	for (int i = 0; i < 8; i++) {
+		for (int i2 = 0; i2 < 2; i2++) {
+			box_block* _box = new box_block(
+				vector2( + 101. * i2, -100 + 101. * i),
+				i * i2 % 2 ? 100 : 70);
+
+			_box->acceleration.y = 0.1;
+
+			physic_objects.emplace_back(_box);
+		}
+	}
+
+	for (int i = 0; i < 8; i++) {
+		for (int i2 = 0; i2 < 1; i2++) {
+			box_block* _box = new box_block(
+				vector2(200 + 101. * i2, -100 + 101. * i),
+				vector2(i % 2 ? 120 : 70, 30));
+
+			_box->acceleration.y = 0.1;
+
 			physic_objects.emplace_back(_box);
 		}
 	}
@@ -89,18 +113,20 @@ void main_scene::create_blocks()
 	//	}
 	//}
 
-	star* _star = new star(vector2(0., 200));
-	_star->acceleration.y = 0.1;
-	physic_objects.emplace_back(_star);
-
-	star* _star2 = new star(vector2(200., 200));
-	_star2->acceleration.y = 0.1;
-	_star2->velocity.x = -1;
-	physic_objects.emplace_back(_star2);
+	//star* _star = new star(vector2(0., 200));
+	//_star->acceleration.y = 0.1;
+	//physic_objects.emplace_back(_star);
+	//
+	//star* _star2 = new star(vector2(200., 200));
+	//_star2->acceleration.y = 0.1;
+	//_star2->velocity.x = -1;
+	//physic_objects.emplace_back(_star2);
 	 
 	box_block* _box = new box_block(
 		vector2(-200., -200),
 		vector2(50., 200.));
+	_box->velocity = vector2(0, 2);
+	_box->radians_velocity = 0.1;
 	//_box->acceleration.y = 0.1;
 	//_box->acceleration.x = 0.1;
 	physic_objects.emplace_back(_box);

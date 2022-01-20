@@ -51,7 +51,7 @@ clipping_result gjk_functions::clipping(
 	}
 
 	auto collision_point = std::reduce(contact_points.cbegin(), contact_points.cend()) / contact_points.size();
-	auto proj_point = projection_point(reference_edge->a, reference_edge->b, collision_point);
+	auto proj_point = collision_point.projection_to(reference_edge->a, reference_edge->b);
 	auto drawing_vector_point = proj_point + epa_result.collision_normal * 100;
 
 	clipping_result clipping_res;
@@ -277,16 +277,8 @@ double gjk_functions::line_point_distance_convex(
 	const vector2& a, const vector2& b,
 	const vector2& o)
 {
-	vector2 proj_point = projection_point(a, b, o);
+	vector2 proj_point = o.projection_to(a, b);
 	return proj_point.distance(o);
-}
-
-vector2 gjk_functions::projection_point(
-	const vector2& a, const vector2& b,
-	const vector2& o)
-{
-	auto b_a_normalize = (b - a).normalize();
-	return b_a_normalize * b_a_normalize.dot_product(o - a) + a;
 }
 
 bool gjk_functions::triangle_contains(

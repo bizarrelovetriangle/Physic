@@ -6,7 +6,7 @@ star::star(vector2 pos, double size)
 	this->position = pos;
 
 	mass = size * size * 3 / 10000;
-	moment_of_inetia = mass * 2000;
+	moment_of_inertia = mass * 2000;
 
 	convex_shape& convex_shape_a = convex_shapes.emplace_back();
 

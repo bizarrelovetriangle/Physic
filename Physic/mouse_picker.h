@@ -11,8 +11,12 @@ public:
 	std::vector<physic_object*>& physic_objects;
 	void update_object();
 	void control_object(sf::Event event);
-	mouse_picker(sf::RenderWindow& window, 
-		std::vector<physic_object*>& physic_objects, gjk_functions& gjk, collide_resolver& collider_resolver);
+	mouse_picker(
+		sf::RenderWindow& window, 
+		std::vector<physic_object*>& physic_objects,
+		gjk_functions& gjk,
+		collide_resolver& collider_resolver,
+		primitives_drawer& drawer);
 
 private:
 	physic_object* selected = nullptr;
@@ -20,6 +24,7 @@ private:
 	sf::RenderWindow& window;
 	gjk_functions& gjk;
 	collide_resolver& collider_resolver;
+	primitives_drawer& drawer;
 	mouse_filter mouse_filter;
 	void take_object();
 	void release_object();

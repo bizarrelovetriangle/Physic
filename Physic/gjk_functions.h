@@ -66,10 +66,6 @@ private:
 		const vector2& a, const vector2& b,
 		const vector2& o);
 
-	static vector2 projection_point(
-		const vector2& a, const vector2& b,
-		const vector2& o);
-
 	static bool triangle_contains(
 		const vector2& a, const vector2& b, const vector2& c,
 		const vector2& o);

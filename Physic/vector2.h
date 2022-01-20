@@ -21,6 +21,8 @@ public:
 	double cross_product(const vector2& o) const;
 	bool is_clockwise(const vector2& o) const;
 	bool is_clockwise(const vector2& o, const vector2& relative) const;
+	vector2 projection_to(const vector2& v) const;
+	vector2 projection_to(const vector2& a, const vector2& b) const;
 	vector2 operator*(const double& d) const;
 	void operator*=(const double& d);
 	vector2 operator/(const double& d) const;

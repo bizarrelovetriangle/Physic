@@ -2,9 +2,12 @@
 
 mouse_picker::mouse_picker(
 	sf::RenderWindow& window, 
-	std::vector<physic_object*>& physic_objects, gjk_functions& gjk, collide_resolver& collider_resolver)
-	: window(window), 
-	physic_objects(physic_objects), gjk(gjk), collider_resolver(collider_resolver), mouse_filter(2)
+	std::vector<physic_object*>& physic_objects,
+	gjk_functions& gjk,
+	collide_resolver& collider_resolver,
+	primitives_drawer& drawer)
+	: window(window), physic_objects(physic_objects), gjk(gjk),
+	collider_resolver(collider_resolver), drawer(drawer), mouse_filter(2)
 {
 }
 
@@ -15,7 +18,7 @@ void mouse_picker::take_object()
 			[&](auto& convex_shape){ return gjk.contains_point(convex_shape.vertices, mouse_filter.position);}))
 		{
 			selected = physic_object;
-			shoulder = (mouse_filter.filtered_position() - physic_object->position).rotate(-selected->radians);
+			shoulder = (mouse_filter.position - physic_object->position).rotate(-selected->radians);
 			break;
 		}
 	}
@@ -23,12 +26,11 @@ void mouse_picker::take_object()
 
 void mouse_picker::update_object()
 {
-	if (selected == NULL) {
-		return;
-	}
-
+	if (selected == nullptr) return;
 	vector2 new_shoulder = shoulder.rotate(selected->radians) + selected->position;
-	vector2 velocity = mouse_filter.filtered_position() - new_shoulder;
+	vector2 velocity = mouse_filter.position - new_shoulder;
+	drawer.draw_cross(new_shoulder, sf::Color::White);
+	drawer.draw_line(selected->position, new_shoulder, sf::Color::White);
 	collider_resolver.set_velocity_in_point(*selected, new_shoulder, velocity);
 }
 
