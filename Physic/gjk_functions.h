@@ -12,9 +12,9 @@
 
 class gjk_functions {
 public:
-	gjk_functions(primitives_drawer& drawer);
+	gjk_functions(const primitives_drawer& drawer);
 
-	primitives_drawer& drawer;
+	const primitives_drawer& drawer;
 
 	clipping_result clipping(
 		const std::vector<vector2>& a_vertices,

@@ -1,7 +1,8 @@
 #include "collide_resolver.h"
+#include "main_scene.h"
 
-collide_resolver::collide_resolver(primitives_drawer& drawer)
-	: gjk(drawer), drawer(drawer)
+collide_resolver::collide_resolver(const primitives_drawer& drawer, const main_scene& scene)
+	: gjk(drawer), drawer(drawer), scene(scene)
 {
 }
 
@@ -54,12 +55,14 @@ void collide_resolver::resolve_collision(
 		? -clipping_res.collision_penetration_line
 		: clipping_res.collision_penetration_line;
 
-	double mass_ratio = object_a.is_infiniti_mass
-		? 0 : object_b.is_infiniti_mass
-		? 1 : object_a.mass / (object_a.mass + object_b.mass);
-
-	apply_velocity(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio);
-	apply_velocity(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio));
+	if (!object_a.is_infiniti_mass && !object_b.is_infiniti_mass) {
+		double mass_ratio = object_a.mass / (object_a.mass + object_b.mass);
+		apply_velocity(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio / 3);
+		apply_velocity(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio) / 3);
+	}
+	
+	if (object_a.is_infiniti_mass) object_b.position += penetration_from_a_to_b;
+	if (object_b.is_infiniti_mass) object_a.position -= penetration_from_a_to_b;
 
 	double moment_of_mass = 0;
 
@@ -108,10 +111,10 @@ void collide_resolver::apply_velocity(
 	vector2 impulse = velocity * object.mass - (velocity_change_ratio / 2).projection_to(sholder_perpendicular);
 	
 	// Should be equal to velocity_change
-	// vector2 actual_velocity_impact = impulse / object.mass +
+	//vector2 actual_velocity_impact = impulse / object.mass +
 	// 	-sholder_vector.clockwise_perpendicular() * sholder_vector.cross_product(impulse) / object.moment_of_inertia;
 
-	apply_impulse(object, point, impulse / 3);
+	apply_impulse(object, point, impulse);
 }
 
 void collide_resolver::set_velocity_in_point(
@@ -119,7 +122,7 @@ void collide_resolver::set_velocity_in_point(
 {
 	vector2 object_point_velocity = point_velocity(object, point);
 	vector2 velocity_change = velocity - object_point_velocity;
-	apply_velocity(object, point, velocity_change);
+	apply_velocity(object, point, velocity_change / 3);
 }
 
 vector2 collide_resolver::point_velocity(

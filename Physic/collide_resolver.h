@@ -3,15 +3,18 @@
 #include "physic_object.h"
 #include "gjk_functions.h"
 
+class main_scene;
+
 class collide_resolver
 {
 public:
-	primitives_drawer drawer;
+	const primitives_drawer& drawer;
 	gjk_functions gjk;
+	const main_scene& scene;
 	
 	int collide_count = 0;
 
-	collide_resolver(primitives_drawer& drawer);
+	collide_resolver(const primitives_drawer& drawer, const main_scene& scene);
 	void resolve_collisions(std::vector<physic_object*>& physic_objects);
 	void narrow_phase_detection(physic_object& object_a, physic_object& object_b);
 	void resolve_collision(physic_object& object_a, physic_object& object_b, clipping_result& clipping_res);

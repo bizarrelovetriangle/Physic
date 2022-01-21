@@ -1,6 +1,6 @@
 #include "gjk_functions.h"
 
-gjk_functions::gjk_functions(primitives_drawer& drawer)
+gjk_functions::gjk_functions(const primitives_drawer& drawer)
 	: drawer(drawer)
 {
 }

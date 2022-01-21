@@ -15,6 +15,7 @@ class main_scene {
 public:
 	main_scene();
 	void start();
+	double frame_interval;
 
 protected:
 	sf::RenderWindow window;
@@ -23,9 +24,9 @@ protected:
 	collide_resolver collider_resolver;
 	mouse_picker mouse_picker;
 	std::vector<physic_object*> physic_objects;
-	double frame_interval;
 	void scene_update();
 	void scene_draw();
+
 private:
 	void create_walls();
 	void draw_info();

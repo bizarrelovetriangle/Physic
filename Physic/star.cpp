@@ -60,11 +60,6 @@ star::star(vector2 pos, double size)
 		vector2(-0.587785, -0.809017) * size,
 	};
 
-	//vector2(0, 1) * size,
-	//vector2(0.3648, -0.118531) * size,
-	//vector2(-0.587785, -0.809017) * size,
-
-	
 	convex_shape_c.vertices = std::vector<vector2>{ 0, 0, 0 };
 	
 	convex_shape_c.original_edges = std::vector<edge>{
