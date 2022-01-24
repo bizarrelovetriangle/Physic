@@ -73,6 +73,11 @@ void main_scene::scene_draw()
 
 void main_scene::create_blocks()
 {
+	//auto box1 = new box_block(0, 200);
+	//auto box2 = new box_block(50, 200);
+	//physic_objects.emplace_back(box1);
+	//physic_objects.emplace_back(box2);
+
 	for (int i = 0; i < 7; i++) {
 		for (int i2 = 0; i2 < 2; i2++) {
 			star* star_block = new star(
@@ -84,28 +89,27 @@ void main_scene::create_blocks()
 			physic_objects.emplace_back(star_block);
 		}
 	}
-
+	
 	for (int i = 0; i < 10; i++) {
-		//for (int i = 9; i >= 0; i--) {
 		for (int i2 = 0; i2 < 2; i2++) {
 			box_block* _box = new box_block(
 				vector2(+131. * i2, -400 + 101. * i),
 				i * i2 % 2 ? 100 : 70);
-
+	
 			_box->acceleration.y = 0.5;
-
+	
 			physic_objects.emplace_back(_box);
 		}
 	}
-
+	
 	for (int i = 0; i < 20; i++) {
 		for (int i2 = 0; i2 < 1; i2++) {
 			box_block* _box = new box_block(
 				vector2(300 + 131. * i2, -300 + 35. * i),
 				vector2(i % 2 ? 120 : 70, 30));
-
+	
 			_box->acceleration.y = 0.5;
-
+	
 			physic_objects.emplace_back(_box);
 		}
 	}

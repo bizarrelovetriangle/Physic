@@ -26,6 +26,9 @@ clipping_result gjk_functions::clipping(
 	std::vector<vector2> incident_vertices = { incident_edge->a, incident_edge->b };
 	std::vector<vector2> reference_vertices = { reference_edge->a, reference_edge->b };
 
+	double incident_edge_a_dot = incident_edge->a.dot_product(reference_edge_nolmalize);
+	double incident_edge_b_dot = incident_edge->b.dot_product(reference_edge_nolmalize);
+
 	// cut incident_vertices into reference_vertices projection
 	for (int i = 0; i < 2; i++) {
 		double reference_vertex_dot = reference_vertices[i].dot_product(reference_edge_nolmalize);
@@ -34,8 +37,8 @@ clipping_result gjk_functions::clipping(
 			double incident_vertex_dot = incident_vertex.dot_product(reference_edge_nolmalize);
 
 			if (incident_vertex_dot > reference_vertex_dot != (i == 1)) {
-				double ratio = (reference_vertices[i] - incident_edge->b).dot_product(incident_edge_normalize);
-				incident_vertex = incident_edge_normalize * ratio + incident_edge->b;
+				double d = (reference_vertex_dot - incident_edge_b_dot) / (incident_edge_a_dot - incident_edge_b_dot);
+				incident_vertex = (incident_edge->a - incident_edge->b) * d + incident_edge->b;
 			}
 		}
 	}
