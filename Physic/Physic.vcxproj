@@ -164,7 +164,7 @@
   <ItemGroup>
     <ClCompile Include="box_block.cpp" />
     <ClCompile Include="clipping_result.cpp" />
-    <ClCompile Include="collide_resolver.cpp" />
+    <ClCompile Include="collition_resolver.cpp" />
     <ClCompile Include="convex_shape.cpp" />
     <ClCompile Include="edge.cpp" />
     <ClCompile Include="epa_result.cpp" />
@@ -177,7 +177,7 @@
     <ClCompile Include="minkowski_difference.cpp" />
     <ClCompile Include="mouse_picker.cpp" />
     <ClCompile Include="mouse_filter.cpp" />
-    <ClCompile Include="phisic_object.cpp" />
+    <ClCompile Include="physic_object.cpp" />
     <ClCompile Include="primitives_drawer.cpp" />
     <ClCompile Include="primitives_drawer.h" />
     <ClCompile Include="Physic.cpp" />
@@ -189,7 +189,7 @@
   <ItemGroup>
     <ClInclude Include="box_block.h" />
     <ClInclude Include="clipping_result.h" />
-    <ClInclude Include="collide_resolver.h" />
+    <ClInclude Include="collition_resolver.h" />
     <ClInclude Include="convex_shape.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="epa_result.h" />

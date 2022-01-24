@@ -4,7 +4,7 @@ mouse_picker::mouse_picker(
 	sf::RenderWindow& window, 
 	std::vector<physic_object*>& physic_objects,
 	gjk_functions& gjk,
-	collide_resolver& collider_resolver,
+	collition_resolver& collider_resolver,
 	primitives_drawer& drawer)
 	: window(window), physic_objects(physic_objects), gjk(gjk),
 	collider_resolver(collider_resolver), drawer(drawer), mouse_filter(2)

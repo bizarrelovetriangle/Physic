@@ -7,7 +7,7 @@
 #include "box_block.h"
 #include "primitives_drawer.h"
 #include "gjk_functions.h"
-#include "collide_resolver.h"
+#include "collition_resolver.h"
 #include "mouse_picker.h"
 #include "global.h"
 
@@ -22,7 +22,7 @@ protected:
 	sf::RenderWindow window;
 	primitives_drawer drawer;
 	gjk_functions gjk;
-	collide_resolver collider_resolver;
+	collition_resolver collider_resolver;
 	mouse_picker mouse_picker;
 	std::vector<physic_object*> physic_objects;
 	void scene_update();

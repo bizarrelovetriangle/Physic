@@ -3,7 +3,7 @@
 #include "physic_object.h"
 #include "gjk_functions.h"
 #include "mouse_filter.h"
-#include "collide_resolver.h"
+#include "collition_resolver.h"
 #include "global.h"
 
 class mouse_picker {
@@ -15,7 +15,7 @@ public:
 		sf::RenderWindow& window, 
 		std::vector<physic_object*>& physic_objects,
 		gjk_functions& gjk,
-		collide_resolver& collider_resolver,
+		collition_resolver& collider_resolver,
 		primitives_drawer& drawer);
 
 private:
@@ -23,7 +23,7 @@ private:
 	vector2 shoulder;
 	sf::RenderWindow& window;
 	gjk_functions& gjk;
-	collide_resolver& collider_resolver;
+	collition_resolver& collider_resolver;
 	primitives_drawer& drawer;
 	mouse_filter mouse_filter;
 	void take_object();

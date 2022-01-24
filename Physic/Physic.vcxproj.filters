@@ -45,7 +45,7 @@
     <ClCompile Include="vector2.cpp">
       <Filter>Resource Files\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="collide_resolver.cpp">
+    <ClCompile Include="collition_resolver.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="edge.cpp">
@@ -54,7 +54,7 @@
     <ClCompile Include="box_block.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
-    <ClCompile Include="phisic_object.cpp">
+    <ClCompile Include="physic_object.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
     <ClCompile Include="wall_block.cpp">
@@ -110,7 +110,7 @@
     <ClInclude Include="gjk_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="collide_resolver.h">
+    <ClInclude Include="collition_resolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="physic_object.h">

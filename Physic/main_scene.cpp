@@ -124,12 +124,12 @@ void main_scene::create_walls()
 	wall_block* left_wall = new wall_block(a, b);
 	wall_block* top_wall = new wall_block(b, c);
 	wall_block* right_wall = new wall_block(c, d);
-	wall_block* borrom_wall = new wall_block(d, a);
+	wall_block* bottom_wall = new wall_block(d, a);
 
 	physic_objects.emplace_back(left_wall);
 	physic_objects.emplace_back(top_wall);
 	physic_objects.emplace_back(right_wall);
-	physic_objects.emplace_back(borrom_wall);
+	physic_objects.emplace_back(bottom_wall);
 }
 
 void main_scene::draw_info()

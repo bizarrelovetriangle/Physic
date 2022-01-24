@@ -5,7 +5,7 @@
 
 class main_scene;
 
-class collide_resolver
+class collition_resolver
 {
 public:
 	const primitives_drawer& drawer;
@@ -14,7 +14,7 @@ public:
 	
 	int collide_count = 0;
 
-	collide_resolver(const primitives_drawer& drawer, const main_scene& scene);
+	collition_resolver(const primitives_drawer& drawer, const main_scene& scene);
 	void resolve_collisions(std::vector<physic_object*>& physic_objects);
 	void narrow_phase_detection(physic_object& object_a, physic_object& object_b,
 		std::vector<std::tuple<physic_object*, physic_object*, clipping_result>>& penetrationMap);

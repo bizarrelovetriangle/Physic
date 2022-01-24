@@ -1,12 +1,12 @@
-#include "collide_resolver.h"
+#include "collition_resolver.h"
 #include "main_scene.h"
 
-collide_resolver::collide_resolver(const primitives_drawer& drawer, const main_scene& scene)
+collition_resolver::collition_resolver(const primitives_drawer& drawer, const main_scene& scene)
 	: gjk(drawer), drawer(drawer), scene(scene)
 {
 }
 
-void collide_resolver::resolve_collisions(std::vector<physic_object*>& physic_objects)
+void collition_resolver::resolve_collisions(std::vector<physic_object*>& physic_objects)
 {
 	std::vector<std::tuple<physic_object*, physic_object*, clipping_result>> penetrationMap;
 
@@ -28,7 +28,7 @@ void collide_resolver::resolve_collisions(std::vector<physic_object*>& physic_ob
 	}
 }
 
-void collide_resolver::narrow_phase_detection(
+void collition_resolver::narrow_phase_detection(
 	physic_object& object_a, physic_object& object_b,
 	std::vector<std::tuple<physic_object*, physic_object*, clipping_result>>& penetrationMap)
 {
@@ -52,7 +52,7 @@ void collide_resolver::narrow_phase_detection(
 	}
 }
 
-void collide_resolver::resolve_collision(
+void collition_resolver::resolve_collision(
 	physic_object& object_a, physic_object& object_b, clipping_result& clipping_res)
 {
 	double e = 0.4; // 1 - absolutely inelastic
@@ -93,7 +93,7 @@ void collide_resolver::resolve_collision(
 }
 
 
-void collide_resolver::resolve_penetration(
+void collition_resolver::resolve_penetration(
 	physic_object& object_a, physic_object& object_b, clipping_result& clipping_res)
 {
 	vector2 penetration_from_a_to_b = clipping_res.is_object_a_normal
@@ -111,7 +111,7 @@ void collide_resolver::resolve_penetration(
 	if (object_b.is_infiniti_mass) object_a.position -= penetration_from_a_to_b;
 }
 
-void collide_resolver::apply_impulse(
+void collition_resolver::apply_impulse(
 	physic_object& object, const vector2& point, const vector2& impulse)
 {
 	if (object.is_infiniti_mass) return;
@@ -121,7 +121,7 @@ void collide_resolver::apply_impulse(
 }
 
 
-void collide_resolver::apply_velocity(
+void collition_resolver::apply_velocity(
 	physic_object& object, const vector2& point, const vector2& velocity)
 {
 	if (object.is_infiniti_mass) return;
@@ -140,7 +140,7 @@ void collide_resolver::apply_velocity(
 	apply_impulse(object, point, impulse);
 }
 
-void collide_resolver::set_velocity_in_point(
+void collition_resolver::set_velocity_in_point(
 	physic_object& object, const vector2& point, const vector2& velocity)
 {
 	vector2 object_point_velocity = point_velocity(object, point);
@@ -148,7 +148,7 @@ void collide_resolver::set_velocity_in_point(
 	apply_velocity(object, point, velocity_change / 3);
 }
 
-vector2 collide_resolver::point_velocity(
+vector2 collition_resolver::point_velocity(
 	const physic_object& object, const vector2& point)
 {
 	vector2 sholder_vector = point - object.position;
