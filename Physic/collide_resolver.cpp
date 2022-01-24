@@ -8,19 +8,31 @@ collide_resolver::collide_resolver(const primitives_drawer& drawer, const main_s
 
 void collide_resolver::resolve_collisions(std::vector<physic_object*>& physic_objects)
 {
+	std::vector<std::tuple<physic_object*, physic_object*, clipping_result>> penetrationMap;
+
 	for (int i = 0; i < physic_objects.size(); i++) {
 		for (int i2 = i + 1; i2 < physic_objects.size(); i2++) {
 			physic_object& object_a = *physic_objects[i];
 			physic_object& object_b = *physic_objects[i2];
 			if (object_a.is_infiniti_mass && object_b.is_infiniti_mass) continue;
-			narrow_phase_detection(object_a, object_b);
+			narrow_phase_detection(object_a, object_b, penetrationMap);
 		}
+	}
+
+	for (auto& penetration : penetrationMap) {
+		resolve_collision(*std::get<0>(penetration), *std::get<1>(penetration), std::get<2>(penetration));
+	}
+
+	for (auto& penetration : penetrationMap) {
+		resolve_penetration(*std::get<0>(penetration), *std::get<1>(penetration), std::get<2>(penetration));
 	}
 }
 
 void collide_resolver::narrow_phase_detection(
-	physic_object& object_a, physic_object& object_b)
+	physic_object& object_a, physic_object& object_b,
+	std::vector<std::tuple<physic_object*, physic_object*, clipping_result>>& penetrationMap)
 {
+	std::vector<clipping_result> clipping_results;
 	for (auto& convex_shape_a : object_a.convex_shapes) {
 		for (auto& convex_shape_b : object_b.convex_shapes) {
 			auto gjk_result = gjk.GJK(convex_shape_a.vertices, convex_shape_b.vertices);
@@ -29,9 +41,14 @@ void collide_resolver::narrow_phase_detection(
 				auto epa_res = gjk.EPA(convex_shape_a.vertices, convex_shape_b.vertices, gjk_result);
 				auto clipping_res = gjk.clipping(convex_shape_a.vertices, convex_shape_b.vertices,
 					convex_shape_a.edges, convex_shape_b.edges, epa_res);
-				resolve_collision(object_a, object_b, clipping_res);
+				clipping_results.emplace_back(clipping_res);
 			}
 		}
+	}
+
+	if (!clipping_results.empty()) {
+		auto clipping_res = std::reduce(clipping_results.cbegin(), clipping_results.cend()) / clipping_results.size();
+		penetrationMap.emplace_back(std::make_tuple(&object_a, &object_b, clipping_res));
 	}
 }
 
@@ -50,19 +67,6 @@ void collide_resolver::resolve_collision(
 	}
 
 	collide_count++;
-
-	vector2 penetration_from_a_to_b = clipping_res.is_object_a_normal
-		? -clipping_res.collision_penetration_line
-		: clipping_res.collision_penetration_line;
-
-	if (!object_a.is_infiniti_mass && !object_b.is_infiniti_mass) {
-		double mass_ratio = object_a.mass / (object_a.mass + object_b.mass);
-		apply_velocity(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio / 3);
-		apply_velocity(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio) / 3);
-	}
-	
-	if (object_a.is_infiniti_mass) object_b.position += penetration_from_a_to_b;
-	if (object_b.is_infiniti_mass) object_a.position -= penetration_from_a_to_b;
 
 	double moment_of_mass = 0;
 
@@ -86,6 +90,25 @@ void collide_resolver::resolve_collision(
 
 	apply_impulse(object_a, clipping_res.collision_point, j);
 	apply_impulse(object_b, clipping_res.collision_point, -j);
+}
+
+
+void collide_resolver::resolve_penetration(
+	physic_object& object_a, physic_object& object_b, clipping_result& clipping_res)
+{
+	vector2 penetration_from_a_to_b = clipping_res.is_object_a_normal
+		? -clipping_res.collision_penetration_line
+		: clipping_res.collision_penetration_line;
+
+	if (!object_a.is_infiniti_mass && !object_b.is_infiniti_mass) {
+		double mass_ratio = object_a.mass / (object_a.mass + object_b.mass);
+		penetration_from_a_to_b *= scene.delta;
+		apply_velocity(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio);
+		apply_velocity(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio));
+	}
+
+	if (object_a.is_infiniti_mass) object_b.position += penetration_from_a_to_b;
+	if (object_b.is_infiniti_mass) object_a.position -= penetration_from_a_to_b;
 }
 
 void collide_resolver::apply_impulse(

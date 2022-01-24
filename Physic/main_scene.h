@@ -16,6 +16,7 @@ public:
 	main_scene();
 	void start();
 	double frame_interval;
+	double delta;
 
 protected:
 	sf::RenderWindow window;

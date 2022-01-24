@@ -2,7 +2,7 @@
 #include "star.h"
 
 main_scene::main_scene() :
-	window(sf::VideoMode(global::screen_width, global::screen_height), "PhysicsProject"),
+	window(sf::VideoMode(global::screen_width, global::screen_height), "Physic"),
 	drawer(window),
 	gjk(drawer),
 	collider_resolver(drawer, *this),
@@ -18,16 +18,23 @@ main_scene::main_scene() :
 	create_blocks();
 }
 
-void main_scene::start() 
+void main_scene::start()
 {
 	sf::Clock clock;
+
 	while (window.isOpen())
 	{
-		frame_interval = clock.restart().asSeconds();
-		
 		scene_update();
 		scene_draw();
-		//sf::sleep(sf::seconds(0.02f));
+
+		int fps = 60;
+		double time = clock.getElapsedTime().asSeconds();
+		if (1. / fps > time) sf::sleep(sf::seconds(1. / fps - time));
+
+		frame_interval = clock.restart().asSeconds();
+		frame_interval = 1. / 60;
+
+		delta = frame_interval * 50;
 	}
 }
 
@@ -48,7 +55,7 @@ void main_scene::scene_update()
 	collider_resolver.resolve_collisions(physic_objects);
 
 	for (auto& object : physic_objects) {
-		object->update(frame_interval * 50);
+		object->update(delta);
 	}
 }
 
@@ -66,22 +73,23 @@ void main_scene::scene_draw()
 
 void main_scene::create_blocks()
 {
-	for (int i = 0; i < 6; i++) {
-		for (int i2 = 0; i2 < 3; i2++) {
-			star* _box = new star(
-				vector2(-550. + 171. * i2, -300 + 131. * i),
+	for (int i = 0; i < 7; i++) {
+		for (int i2 = 0; i2 < 2; i2++) {
+			star* star_block = new star(
+				vector2(-550. + 171. * i2, -400 + 131. * i),
 				i * i2 % 2 ? 100 : 70);
 	
-			_box->acceleration.y = 0.5;
+			star_block->acceleration.y = 0.5;
 	
-			physic_objects.emplace_back(_box);
+			physic_objects.emplace_back(star_block);
 		}
 	}
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 10; i++) {
+		//for (int i = 9; i >= 0; i--) {
 		for (int i2 = 0; i2 < 2; i2++) {
 			box_block* _box = new box_block(
-				vector2( + 131. * i2, -300 + 131. * i),
+				vector2(+131. * i2, -400 + 101. * i),
 				i * i2 % 2 ? 100 : 70);
 
 			_box->acceleration.y = 0.5;
@@ -90,10 +98,10 @@ void main_scene::create_blocks()
 		}
 	}
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 20; i++) {
 		for (int i2 = 0; i2 < 1; i2++) {
 			box_block* _box = new box_block(
-				vector2(300 + 131. * i2, -300 + 131. * i),
+				vector2(300 + 131. * i2, -300 + 35. * i),
 				vector2(i % 2 ? 120 : 70, 30));
 
 			_box->acceleration.y = 0.5;
@@ -101,43 +109,6 @@ void main_scene::create_blocks()
 			physic_objects.emplace_back(_box);
 		}
 	}
-
-	//for (int i = 0; i < 7; i++) {
-	//	for (int i2 = 0; i2 < 11; i2++) {
-	//		star* _box = new star(
-	//			vector2(-500. + 101. * i2, -200 + 101. * i), i * i2 % 2 ? 100 : 70);
-	//
-	//		_box->acceleration.y = -0.1;
-	//
-	//		physic_objects.emplace_back(_box);
-	//	}
-	//}
-
-	//star* _star = new star(vector2(0., 200));
-	//_star->acceleration.y = 0.1;
-	//physic_objects.emplace_back(_star);
-	//
-	//star* _star2 = new star(vector2(200., 200));
-	//_star2->acceleration.y = 0.1;
-	//_star2->velocity.x = -1;
-	//physic_objects.emplace_back(_star2);
-	 
-	//box_block* _box = new box_block(
-	//	vector2(-90., -200),
-	//	vector2(50., 200.));
-	//_box->velocity = vector2(0, 2);
-	//_box->radians_velocity = 0.1;
-	////_box->acceleration.y = 0.1;
-	////_box->acceleration.x = 0.1;
-	//physic_objects.emplace_back(_box);
-	
-	//box_block* _box2 = new box_block(
-	//	vector2(100., 200.),
-	//	vector2(100., 100.));
-	//_box2->radians = 1;
-	////_box2->acceleration.y = 0.1;
-	//_box2->name = "observable";
-	//physic_objects.emplace_back(_box2);
 }
 
 void main_scene::create_walls()
@@ -176,9 +147,10 @@ void main_scene::draw_info()
 		seconds_to_update = update_interval_seconds;
 	}
 
-	drawer.draw_text(vector2(-global::screen_width / 2 , -global::screen_height / 2),
+	drawer.draw_text(vector2(-global::screen_width / 2, -global::screen_height / 2),
 		std::string("fps: ") + std::to_string(average_interval) + std::string("\n") +
-		std::string("collisions: ") + std::to_string(collider_resolver.collide_count));
+		std::string("collisions: ") + std::to_string(collider_resolver.collide_count) + std::string("\n")
+	);
 }
 
 void main_scene::draw_coordinates()

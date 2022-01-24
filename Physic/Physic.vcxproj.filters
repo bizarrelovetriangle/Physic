@@ -99,6 +99,9 @@
     <ClCompile Include="star.cpp">
       <Filter>Resource Files\physic_objects</Filter>
     </ClCompile>
+    <ClCompile Include="clipping_result.cpp">
+      <Filter>Resource Files\models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">

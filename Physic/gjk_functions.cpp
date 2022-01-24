@@ -57,7 +57,6 @@ clipping_result gjk_functions::clipping(
 	clipping_result clipping_res;
 	clipping_res.collision_point = collision_point;
 	clipping_res.collision_penetration_line = collision_point - proj_point;
-	clipping_res.collision_penetration = clipping_res.collision_penetration_line.length();
 	clipping_res.collision_normal = clipping_res.collision_penetration_line.normalize();
 	clipping_res.is_object_a_normal = epa_result.is_object_1_normal;
 

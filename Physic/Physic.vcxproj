@@ -163,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="box_block.cpp" />
+    <ClCompile Include="clipping_result.cpp" />
     <ClCompile Include="collide_resolver.cpp" />
     <ClCompile Include="convex_shape.cpp" />
     <ClCompile Include="edge.cpp" />
