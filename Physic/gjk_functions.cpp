@@ -37,6 +37,7 @@ clipping_result gjk_functions::clipping(
 			double incident_vertex_dot = incident_vertex.dot_product(reference_edge_nolmalize);
 
 			if (incident_vertex_dot > reference_vertex_dot != (i == 1)) {
+				// finding the projection of the reference point on the incident edge
 				double d = (reference_vertex_dot - incident_edge_b_dot) / (incident_edge_a_dot - incident_edge_b_dot);
 				incident_vertex = (incident_edge->a - incident_edge->b) * d + incident_edge->b;
 			}
@@ -53,17 +54,24 @@ clipping_result gjk_functions::clipping(
 		}
 	}
 
-	auto collision_point = std::reduce(contact_points.cbegin(), contact_points.cend()) / contact_points.size();
-	auto proj_point = collision_point.projection_to(reference_edge->a, reference_edge->b);
-	auto drawing_vector_point = proj_point + epa_result.collision_normal * 100;
+	if (contact_points.empty()) {
+		return clipping_result();
+	}
+
+	auto central_point = std::reduce(contact_points.cbegin(), contact_points.cend()) / contact_points.size();
+	auto central_proj_point = central_point.projection_to(reference_edge->a, reference_edge->b);
+	auto& deepest_point = farthest_point(contact_points, central_point - central_proj_point);
+	auto deepest_proj_point = deepest_point.projection_to(reference_edge->a, reference_edge->b);
 
 	clipping_result clipping_res;
-	clipping_res.collision_point = collision_point;
-	clipping_res.collision_penetration_line = collision_point - proj_point;
+	clipping_res.collision_point = (central_point + central_proj_point) / 2;
+	clipping_res.collision_penetration_line = deepest_point - deepest_proj_point;
 	clipping_res.collision_normal = clipping_res.collision_penetration_line.normalize();
 	clipping_res.is_object_a_normal = epa_result.is_object_1_normal;
 
-	drawer.draw_line(clipping_res.collision_point, proj_point, sf::Color::Red);
+	drawer.draw_line(deepest_point, deepest_proj_point, sf::Color::Cyan);
+	drawer.draw_cross(deepest_point, sf::Color::Cyan);
+	drawer.draw_line(clipping_res.collision_point, central_proj_point, sf::Color::Red);
 	drawer.draw_cross(clipping_res.collision_point, sf::Color::White);
 
 	return clipping_res;
@@ -116,7 +124,8 @@ epa_result gjk_functions::EPA(
 }
 
 epa_result gjk_functions::get_collider_result(
-	const minkowski_difference& mink_a, const minkowski_difference& mink_b)
+	const minkowski_difference& mink_a,
+	const minkowski_difference& mink_b)
 {
 	if (mink_a.point_a == mink_b.point_a) {
 		auto normal_from_edge = -perpendicular_to_point(
@@ -143,10 +152,17 @@ gjk_result gjk_functions::GJK(
 		auto mink_c = support_function(a_vertices, b_vertices, direction);
 
 		if (mink_a == mink_c || mink_b == mink_c) {
-			return gjk_result(false);
+			break;
 		}
 
 		if (triangle_contains(mink_a.distance, mink_b.distance, mink_c.distance, vector2::zero_vector)) {
+			// perpendicular_from_zero can't be calculated if nearest edge cross vector2::zero_vector
+			if ((vector2::zero_vector - mink_b.distance).cross_product(mink_a.distance - mink_b.distance) == 0 ||
+				(vector2::zero_vector - mink_c.distance).cross_product(mink_a.distance - mink_c.distance) == 0 ||
+				(vector2::zero_vector - mink_c.distance).cross_product(mink_b.distance - mink_c.distance) == 0) {
+				break;
+			}
+
 			return gjk_result(true, mink_a, mink_b, mink_c);
 		}
 

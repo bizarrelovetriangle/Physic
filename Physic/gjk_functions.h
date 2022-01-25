@@ -38,7 +38,8 @@ public:
 
 private:
 	static epa_result get_collider_result(
-		const minkowski_difference& a, const minkowski_difference& b);
+		const minkowski_difference& a,
+		const minkowski_difference& b);
 
 	static minkowski_difference support_function(
 		const std::vector<vector2>& a_vertices,
