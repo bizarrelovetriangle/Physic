@@ -2,7 +2,6 @@
 #include "vector2.h"
 #include "physic_object.h"
 #include "gjk_functions.h"
-#include "mouse_filter.h"
 #include "collition_resolver.h"
 #include "global.h"
 
@@ -25,7 +24,7 @@ private:
 	gjk_functions& gjk;
 	collition_resolver& collider_resolver;
 	primitives_drawer& drawer;
-	mouse_filter mouse_filter;
+	vector2 position;
 	void take_object();
 	void release_object();
 	void key_control(sf::Event::KeyEvent key_event);

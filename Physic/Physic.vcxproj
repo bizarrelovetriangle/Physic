@@ -176,7 +176,6 @@
     <ClCompile Include="matrix3x3.cpp" />
     <ClCompile Include="minkowski_difference.cpp" />
     <ClCompile Include="mouse_picker.cpp" />
-    <ClCompile Include="mouse_filter.cpp" />
     <ClCompile Include="physic_object.cpp" />
     <ClCompile Include="primitives_drawer.cpp" />
     <ClCompile Include="primitives_drawer.h" />
@@ -200,7 +199,6 @@
     <ClInclude Include="matrix3x3.h" />
     <ClInclude Include="minkowski_difference.h" />
     <ClInclude Include="mouse_picker.h" />
-    <ClInclude Include="mouse_filter.h" />
     <ClInclude Include="physic_object.h" />
     <ClInclude Include="star.h" />
     <ClInclude Include="vector2.h" />
