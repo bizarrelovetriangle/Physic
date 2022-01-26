@@ -13,4 +13,3 @@ public:
 	std::vector<edge> edges;
 	void update(const matrix3x3& model_matrix);
 };
-

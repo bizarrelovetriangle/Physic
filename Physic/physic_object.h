@@ -25,6 +25,8 @@ public:
 
 	std::string name;
 
-	void update(double frame_interval);
+	void apply_acceleration(double frame_interval);
+	void apply_velocity(double frame_interval);
+	void update_form();
 	virtual void draw(sf::RenderWindow& window) = 0;
 };

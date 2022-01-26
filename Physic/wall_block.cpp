@@ -19,7 +19,8 @@ wall_block::wall_block(vector2 a, vector2 b)
 	convex_shape.edges = std::vector<edge>{ {convex_shape.vertices[0], convex_shape.vertices[1]} };
 }
 
-void wall_block::draw(sf::RenderWindow& window) {
+void wall_block::draw(sf::RenderWindow& window)
+{
 	sf::Vertex line[2] =
 	{
 		sf::Vertex(a + position, sf::Color::White),

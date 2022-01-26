@@ -19,8 +19,10 @@ void collition_resolver::resolve_collisions(std::vector<physic_object*>& physic_
 		}
 	}
 
-	for (auto& penetration : penetrationMap) {
-		resolve_collision(*std::get<0>(penetration), *std::get<1>(penetration), std::get<2>(penetration));
+	for (int i = 0; i < resolve_collision_iterations; i++) {
+		for (auto& penetration : penetrationMap) {
+			resolve_collision(*std::get<0>(penetration), *std::get<1>(penetration), std::get<2>(penetration));
+		}
 	}
 
 	for (auto& penetration : penetrationMap) {
@@ -102,9 +104,9 @@ void collition_resolver::resolve_penetration(
 
 	if (!object_a.is_infiniti_mass && !object_b.is_infiniti_mass) {
 		double mass_ratio = object_a.mass / (object_a.mass + object_b.mass);
-		penetration_from_a_to_b *= scene.delta;
-		apply_velocity(object_a, clipping_res.collision_point, -penetration_from_a_to_b * mass_ratio);
-		apply_velocity(object_b, clipping_res.collision_point, penetration_from_a_to_b * (1 - mass_ratio));
+		penetration_from_a_to_b *= 0.5;
+		object_a.position -= penetration_from_a_to_b * mass_ratio;
+		object_b.position += penetration_from_a_to_b * (1 - mass_ratio);
 	}
 
 	if (object_a.is_infiniti_mass) object_b.position += penetration_from_a_to_b;
