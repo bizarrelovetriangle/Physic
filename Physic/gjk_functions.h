@@ -21,20 +21,20 @@ public:
 		const std::vector<vector2>& b_vertices,
 		const std::vector<edge>& a_edges,
 		const std::vector<edge>& b_edges,
-		const epa_result& epa_result);
+		const epa_result& epa_result) const;
 
 	epa_result EPA(
 		const std::vector<vector2>& a_vertices,
 		const std::vector<vector2>& b_vertices,
-		const gjk_result& gjk_result);
+		const gjk_result& gjk_result) const;
 
 	gjk_result GJK(
 		const std::vector<vector2>& a_vertices,
-		const std::vector<vector2>& b_vertices);
+		const std::vector<vector2>& b_vertices) const;
 
 	bool contains_point(
 		const std::vector<vector2>& vertices,
-		const vector2& point);
+		const vector2& point) const;
 
 private:
 	static epa_result get_collider_result(

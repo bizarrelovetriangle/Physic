@@ -10,7 +10,7 @@ clipping_result gjk_functions::clipping(
 	const std::vector<vector2>& b_vertices,
 	const std::vector<edge>& a_edges,
 	const std::vector<edge>& b_edges,
-	const epa_result& epa_result) 
+	const epa_result& epa_result) const
 {
 	vector2 collision_normal_from_a_to_b = epa_result.is_object_1_normal
 		? epa_result.collision_normal : -epa_result.collision_normal;
@@ -80,7 +80,7 @@ clipping_result gjk_functions::clipping(
 epa_result gjk_functions::EPA(
 	const std::vector<vector2>& a_vertices,
 	const std::vector<vector2>& b_vertices,
-	const gjk_result& gjk_result)
+	const gjk_result& gjk_result) const
 {
 	double a_b_distance_o = line_point_distance_convex(
 		gjk_result.mink_a.distance, gjk_result.mink_b.distance, vector2::zero_vector);
@@ -141,7 +141,7 @@ epa_result gjk_functions::get_collider_result(
 
 gjk_result gjk_functions::GJK(
 	const std::vector<vector2>& a_vertices,
-	const std::vector<vector2>& b_vertices)
+	const std::vector<vector2>& b_vertices) const
 {
 	vector2 direction(1, 0);
 	auto mink_a = support_function(a_vertices, b_vertices, direction);
@@ -188,7 +188,7 @@ minkowski_difference gjk_functions::support_function(
 
 bool gjk_functions::contains_point(
 	const std::vector<vector2>& vertices,
-	const vector2& point)
+	const vector2& point) const
 {
 	vector2 direction(1, 0);
 

@@ -4,8 +4,8 @@
 
 class vector2 : public sf::Vector2f{
 public:
-	double x = 0., y = 0.;
-	static vector2 zero_vector;
+	double x = 0, y = 0;
+	static const vector2 zero_vector;
 	vector2();
 	vector2(const double& v);
 	vector2(const double& x, const double& y);
@@ -16,7 +16,7 @@ public:
 	bool is_nan() const;
 	double length() const;
 	double distance(const vector2& o) const;
-	auto negate() const;
+	vector2 negate() const;
 	double dot_product(const vector2& o) const;
 	double cross_product(const vector2& o) const;
 	bool is_clockwise(const vector2& o) const;
@@ -33,5 +33,5 @@ public:
 	void operator-=(const vector2& v);
 	void operator=(const vector2& v);
 	vector2 operator-() const;
-	bool operator==(const vector2& a);
+	bool operator==(const vector2& a) const;
 };

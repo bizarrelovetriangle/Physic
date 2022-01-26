@@ -15,7 +15,7 @@ public:
 
 private:
 	const primitives_drawer& drawer;
-	gjk_functions gjk;
+	const gjk_functions gjk;
 	const main_scene& scene;
 	const int resolve_collision_iterations = 20;
 
