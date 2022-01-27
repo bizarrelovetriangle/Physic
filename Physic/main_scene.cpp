@@ -27,12 +27,12 @@ void main_scene::start()
 		scene_update();
 		scene_draw();
 
-		int fps = 60;
+		int fps = 120;
 		double time = clock.getElapsedTime().asSeconds();
 		if (1. / fps > time) sf::sleep(sf::seconds(1. / fps - time));
 
 		frame_interval = clock.restart().asSeconds();
-		frame_interval = 1. / 60;
+		//frame_interval = 1. / 60;
 
 		frame_speed = frame_interval * 50;
 	}
@@ -81,28 +81,28 @@ void main_scene::create_blocks()
 	//auto box1 = new box_block({ 0, -120 }, { 200 });
 	//auto box2 = new box_block({ 0, 100 }, 200);
 	//auto box3 = new box_block({ 0, 320 }, 200);
-	//box1->acceleration.y = 0.5;
-	//box2->acceleration.y = 1.0;
-	//box3->acceleration.y = 1.0;
+	////box1->acceleration.y = 0.5;
+	////box2->acceleration.y = 1.0;
+	////box3->acceleration.y = 1.0;
 	//box1->name = "box1";
 	//box2->name = "box2";
 	//box3->name = "box3";
-	//physic_objects.emplace_back(box3);
+	////physic_objects.emplace_back(box3);
 	//physic_objects.emplace_back(box2);
 	//physic_objects.emplace_back(box1);
 
-	//for (int i = 0; i < 7; i++) {
-	//	for (int i2 = 0; i2 < 2; i2++) {
-	//		star* star_block = new star(
-	//			vector2(-550. + 171. * i2, -400 + 131. * i),
-	//			i * i2 % 2 ? 100 : 70);
-	//
-	//		star_block->acceleration.y = 0.5;
-	//
-	//		physic_objects.emplace_back(star_block);
-	//	}
-	//}
-
+	for (int i = 0; i < 7; i++) {
+		for (int i2 = 0; i2 < 2; i2++) {
+			star* star_block = new star(
+				vector2(-550. + 171. * i2, -400 + 131. * i),
+				i * i2 % 2 ? 100 : 70);
+	
+			star_block->acceleration.y = 0.5;
+	
+			physic_objects.emplace_back(star_block);
+		}
+	}
+	
 	for (int i = 0; i < 9; i++) {
 		for (int i2 = 0; i2 < 2; i2++) {
 			box_block* _box = new box_block(
@@ -114,7 +114,7 @@ void main_scene::create_blocks()
 			physic_objects.emplace_back(_box);
 		}
 	}
-
+	
 	for (int i = 0; i < 20; i++) {
 		for (int i2 = 0; i2 < 1; i2++) {
 			box_block* _box = new box_block(

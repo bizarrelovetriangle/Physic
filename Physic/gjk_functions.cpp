@@ -26,9 +26,6 @@ clipping_result gjk_functions::clipping(
 	std::vector<vector2> incident_vertices = { incident_edge->a, incident_edge->b };
 	std::vector<vector2> reference_vertices = { reference_edge->a, reference_edge->b };
 
-	double incident_edge_a_dot = incident_edge->a.dot_product(reference_edge_nolmalize);
-	double incident_edge_b_dot = incident_edge->b.dot_product(reference_edge_nolmalize);
-
 	// cut incident_vertices into reference_vertices projection
 	for (int i = 0; i < 2; i++) {
 		double reference_vertex_dot = reference_vertices[i].dot_product(reference_edge_nolmalize);
@@ -38,8 +35,10 @@ clipping_result gjk_functions::clipping(
 
 			if (incident_vertex_dot > reference_vertex_dot != (i == 1)) {
 				// finding the projection of the reference point on the incident edge
-				double d = (reference_vertex_dot - incident_edge_b_dot) / (incident_edge_a_dot - incident_edge_b_dot);
-				incident_vertex = (incident_edge->a - incident_edge->b) * d + incident_edge->b;
+				double dot_product_reference_on_incident =
+					(reference_vertices[i] - incident_edge->b).dot_product(reference_edge_nolmalize) /
+					incident_edge_normalize.dot_product(reference_edge_nolmalize);
+				incident_vertex = incident_edge_normalize * dot_product_reference_on_incident + incident_edge->b;
 			}
 		}
 	}
@@ -50,13 +49,12 @@ clipping_result gjk_functions::clipping(
 		if (reference_edge->a.is_clockwise(incident_vertex, reference_edge->b) ^
 			reference_edge_nolmalize.is_clockwise(epa_result.collision_normal))
 		{
+			drawer.draw_cross(incident_vertex, sf::Color::Red);
 			contact_points.push_back(incident_vertex);
 		}
 	}
 
-	if (contact_points.empty()) {
-		return clipping_result();
-	}
+	if (contact_points.empty()) throw std::exception("how it can be possible?");
 
 	auto central_point = std::reduce(contact_points.cbegin(), contact_points.cend()) / contact_points.size();
 	auto central_proj_point = central_point.projection_to(reference_edge->a, reference_edge->b);
