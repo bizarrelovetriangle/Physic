@@ -1,4 +1,4 @@
-### Simple 2d-physical-graphic program
+### Simple 2D phisics simulator
 
 The program uses GJK and EPA algorithms, so it can support any 2D body shapes if we disassemble them into conves shapes  
 Here is a link to youtube :)  
