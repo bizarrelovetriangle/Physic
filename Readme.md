@@ -1,5 +1,6 @@
 ### Simple 2D phisics simulator
 
-The program uses GJK and EPA algorithms, so it can support any 2D body shapes if we disassemble them into conves shapes  
+The program uses GJK and EPA algorithms, so it can support any 2D body shapes if we disassemble them into convex shapes.  
 Here is a link to youtube :)  
+  
 [![Presentetion](https://img.youtube.com/vi/5xlnS8qcirc/0.jpg)](https://youtu.be/5xlnS8qcirc "Presentetion")
