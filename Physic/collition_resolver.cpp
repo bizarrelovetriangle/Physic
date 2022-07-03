@@ -73,16 +73,16 @@ void collition_resolver::resolve_collision(
 	double moment_of_mass = 0;
 
 	if (!object_a.is_infiniti_mass) {
-		vector2 object_a_sholder_vector = clipping_res.collision_point - object_a.position;
+		vector2 object_a_shoulder_vector = clipping_res.collision_point - object_a.position;
 		moment_of_mass += (1 / object_a.mass) +
-			(pow(object_a_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
+			(pow(object_a_shoulder_vector.cross_product(clipping_res.collision_normal), 2) /
 				object_a.moment_of_inertia);
 	}
 
 	if (!object_b.is_infiniti_mass) {
-		vector2 object_b_sholder_vector = clipping_res.collision_point - object_b.position;
+		vector2 object_b_shoulder_vector = clipping_res.collision_point - object_b.position;
 		moment_of_mass += (1 / object_b.mass) +
-			(pow(object_b_sholder_vector.cross_product(clipping_res.collision_normal), 2) /
+			(pow(object_b_shoulder_vector.cross_product(clipping_res.collision_normal), 2) /
 				object_b.moment_of_inertia);
 	}
 
@@ -117,8 +117,8 @@ void collition_resolver::apply_impulse(
 	physic_object& object, const vector2& point, const vector2& impulse)
 {
 	if (object.is_infiniti_mass) return;
-	vector2 sholder_vector = point - object.position;
-	object.radians_velocity += sholder_vector.cross_product(impulse) / object.moment_of_inertia;
+	vector2 shoulder_vector = point - object.position;
+	object.radians_velocity += shoulder_vector.cross_product(impulse) / object.moment_of_inertia;
 	object.velocity += impulse / object.mass;
 }
 
@@ -127,17 +127,17 @@ void collition_resolver::apply_velocity(
 	physic_object& object, const vector2& point, const vector2& velocity)
 {
 	if (object.is_infiniti_mass) return;
-	vector2 sholder_vector = point - object.position;
-	vector2 sholder_perpendicular = -sholder_vector.clockwise_perpendicular();
+	vector2 shoulder_vector = point - object.position;
+	vector2 shoulder_perpendicular = -shoulder_vector.clockwise_perpendicular();
 
 	// The linear algebra magic. Here we able to find impulse required to get a certain velocity in point
-	double ratio = pow(sholder_perpendicular.length(), 2) * object.mass / object.moment_of_inertia;
+	double ratio = pow(shoulder_perpendicular.length(), 2) * object.mass / object.moment_of_inertia;
 	vector2 velocity_change_ratio = velocity * object.mass * ratio / (1 + (ratio - 1) / 2);
-	vector2 impulse = velocity * object.mass - (velocity_change_ratio / 2).projection_to(sholder_perpendicular);
+	vector2 impulse = velocity * object.mass - (velocity_change_ratio / 2).projection_to(shoulder_perpendicular);
 	
 	// Should be equal to velocity_change
 	//vector2 actual_velocity_impact = impulse / object.mass +
-	// 	-sholder_vector.clockwise_perpendicular() * sholder_vector.cross_product(impulse) / object.moment_of_inertia;
+	// 	-shoulder_vector.clockwise_perpendicular() * shoulder_vector.cross_product(impulse) / object.moment_of_inertia;
 
 	apply_impulse(object, point, impulse);
 }
@@ -153,7 +153,7 @@ void collition_resolver::set_velocity_in_point(
 vector2 collition_resolver::point_velocity(
 	const physic_object& object, const vector2& point)
 {
-	vector2 sholder_vector = point - object.position;
-	auto angle_point_velosity = -sholder_vector.clockwise_perpendicular() * object.radians_velocity;
+	vector2 shoulder_vector = point - object.position;
+	auto angle_point_velosity = -shoulder_vector.clockwise_perpendicular() * object.radians_velocity;
 	return object.velocity + angle_point_velosity;
 }
