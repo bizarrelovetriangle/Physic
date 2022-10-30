@@ -54,7 +54,7 @@ clipping_result gjk_functions::clipping(
 		}
 	}
 
-	if (contact_points.empty()) throw std::exception("how it can be possible?");
+	if (contact_points.empty()) throw std::exception("How can it be possible?");
 
 	auto central_point = std::reduce(contact_points.cbegin(), contact_points.cend()) / contact_points.size();
 	auto central_proj_point = central_point.projection_to(reference_edge->a, reference_edge->b);
