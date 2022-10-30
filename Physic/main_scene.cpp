@@ -27,7 +27,7 @@ void main_scene::start()
 		scene_update();
 		scene_draw();
 
-		int fps = 120;
+		int fps = 60;
 		double time = clock.getElapsedTime().asSeconds();
 		if (1. / fps > time) sf::sleep(sf::seconds(1. / fps - time));
 
@@ -99,7 +99,7 @@ void main_scene::create_blocks()
 	
 			star_block->acceleration.y = 0.5;
 	
-			physic_objects.emplace_back(star_block);
+			//physic_objects.emplace_back(star_block);
 		}
 	}
 	

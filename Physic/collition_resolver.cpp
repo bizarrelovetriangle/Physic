@@ -6,6 +6,8 @@ collition_resolver::collition_resolver(const primitives_drawer& drawer, const ma
 {
 }
 
+// todo: accumulate all impulses before applying
+//		 resolve penetration only for top lying object
 void collition_resolver::resolve_collisions(std::vector<physic_object*>& physic_objects)
 {
 	std::vector<std::tuple<physic_object*, physic_object*, clipping_result>> penetrationMap;
@@ -19,10 +21,12 @@ void collition_resolver::resolve_collisions(std::vector<physic_object*>& physic_
 		}
 	}
 
+	// resolve_collision_iterations * 20 ??
 	for (int i = 0; i < resolve_collision_iterations; i++) {
 		for (auto& penetration : penetrationMap) {
 			resolve_collision(*std::get<0>(penetration), *std::get<1>(penetration), std::get<2>(penetration));
 		}
+		// apply impulses
 	}
 
 	for (auto& penetration : penetrationMap) {
@@ -132,12 +136,12 @@ void collition_resolver::apply_velocity(
 
 	// The linear algebra magic. Here we able to find impulse required to get a certain velocity in point
 	double ratio = pow(shoulder_perpendicular.length(), 2) * object.mass / object.moment_of_inertia;
-	vector2 velocity_change_ratio = velocity * object.mass * ratio / (1 + (ratio - 1) / 2);
-	vector2 impulse = velocity * object.mass - (velocity_change_ratio / 2).projection_to(shoulder_perpendicular);
-	
+	vector2 velocity_change_ratio = velocity * object.mass * ratio / (ratio + 1);
+	vector2 impulse = velocity * object.mass - velocity_change_ratio.projection_to(shoulder_perpendicular);
+
 	// Should be equal to velocity_change
 	//vector2 actual_velocity_impact = impulse / object.mass +
-	// 	-shoulder_vector.clockwise_perpendicular() * shoulder_vector.cross_product(impulse) / object.moment_of_inertia;
+	//	shoulder_perpendicular * shoulder_perpendicular.dot_product(impulse) / object.moment_of_inertia;
 
 	apply_impulse(object, point, impulse);
 }
